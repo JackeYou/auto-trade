@@ -26,6 +26,8 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
 @media(max-width:680px){#indicatorMarket{padding:16px;width:96vw}.imSearchRow{grid-template-columns:minmax(0,1fr) 100px}#imTabs{gap:3px}#imTabs button{padding:5px 7px}.imLayout{grid-template-columns:1fr}.imDetail{border-left:0;border-top:1px solid var(--line);padding:13px 15px}.imDetail h3{margin-top:8px}#imList{max-height:19vh;min-height:65px}.imDescription{margin-top:9px}.imImportFields{grid-template-columns:1fr 1fr}.imImportFields label:first-child{grid-column:span 2}.sectionhead{flex-wrap:wrap;row-gap:8px}.sectionButtons{justify-content:flex-start}.imMore{justify-content:flex-start}}
 
 #indicatorMarket .modalhead #imImportBtn{font-size:13px;white-space:nowrap}#imForm{margin:0 0 14px;border:1px solid var(--line);border-radius:8px;padding:9px 12px 12px;background:var(--panel)}#imMessage:not(:empty){color:var(--green);margin:0 0 10px}.imDraft{color:var(--gold);font-size:13px;overflow-wrap:anywhere}.imDetail>.imPrimary{border-radius:5px;padding:6px 11px}
+.studyGroup{display:inline-flex;align-items:center;max-width:100%;border:1px solid var(--line);border-radius:6px;padding:0 2px}.studyGroup .legendEntry{display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-width:0}.studyGroup .legendEntry i:not(:first-child){margin-left:4px}.studyRemove{align-self:stretch;min-width:26px;border-left:1px solid var(--line);font-size:16px;color:var(--dim);line-height:1}.studyRemove:hover,.studyRemove:focus-visible{color:var(--red)}.toolbar{flex-wrap:wrap;gap:5px}.periods{flex-wrap:wrap}.periods select.morePeriods{width:auto;min-height:28px;padding:3px 6px;font-size:12px;border:1px solid var(--line);border-radius:4px}.codeDetail{border-top:1px solid var(--line);margin-top:15px;padding-top:12px;overflow-wrap:anywhere}.codeDetail h4{font-size:16px;margin:0 0 8px}.codeDetail strong{font-size:13px}.codeDetail p{margin:5px 0 10px;font-size:13px;line-height:1.6}.codeDetail pre,.codeSteps code{background:#11161a;border-radius:5px;padding:8px 10px;color:#d9ddd9;font:12px/1.65 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}.codeDetail pre{margin:5px 0 10px}.codeSteps{padding-left:19px;margin:8px 0}.codeSteps li{font-size:12px;line-height:1.5;margin:5px 0}.codeSteps code{display:block}.fullCode summary{color:var(--gold);cursor:pointer;font-size:12px}.imDetail{max-height:min(60vh,590px);overflow-y:auto}#imThsHub{justify-content:flex-start;padding:0 0 12px;margin-top:0;font-size:13px}#imThsHub a{margin-left:auto}#imThsHub .imInfo{flex-basis:100%}#imFormulaPane select{width:auto;margin-left:8px}@media(max-width:680px){.imDetail{max-height:47vh}.toolbar .feed{margin-left:auto}.periods button{padding:4px 6px}}
+#imThsBoard{flex-basis:100%;min-width:0}#imThsBoard iframe{display:block;width:100%;height:min(430px,56vh);border:1px solid var(--line);border-radius:5px;background:#fff}#indicatorMarket .imListPane .imListHead{min-height:35px}
 </style>
 </head>
 <body>
@@ -76,16 +78,17 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
  <div class="dateline"><span id="dataOrigin"></span><button id="retry">刷新行情</button></div>
 </main></div>
 <dialog id="indicatorMarket" aria-labelledby="imHeading">
- <div class="modalhead"><div><h2 id="imHeading">指标市场</h2><p class="imCaption">发现 TradingView 内置指标和社区作品</p></div><div class="imFormActions"><button type="button" id="imImportBtn" class="imPrimary">收录社区指标</button><button class="icon close" aria-label="关闭指标市场">✕</button></div></div>
- <form id="imForm" hidden><div class="imImportFields"><label>TradingView 作品链接<input id="imUrl" type="text" inputmode="url" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="粘贴作品链接或分享文字"></label><label>名称（选填）<input id="imName" maxlength="120" placeholder="留空自动命名"></label><label>作者（选填）<input id="imAuthor" maxlength="80" placeholder="TradingView 用户名"></label></div><label>可选 Pine 源码<textarea id="imCode" spellcheck="false" placeholder="兼容的源码可以看图和筛选，其他源码可保存为草稿。"></textarea></label><div class="imFormActions"><button type="submit" class="imPrimary">收录指标</button><button type="button" id="imCancel">取消</button><span id="imError" role="status"></span></div></form>
+ <div class="modalhead"><div><h2 id="imHeading">指标市场</h2><p class="imCaption">TradingView 与同花顺的指标和公式</p></div><div class="imFormActions"><button type="button" id="imImportBtn" class="imPrimary">收录社区指标</button><button class="icon close" aria-label="关闭指标市场">✕</button></div></div>
+ <form id="imForm" hidden><div class="imImportFields"><label>指标作品链接<input id="imUrl" type="text" inputmode="url" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="粘贴 TradingView 或同花顺作品页链接"></label><label>名称（选填）<input id="imName" maxlength="120" placeholder="留空自动命名"></label><label>作者（选填）<input id="imAuthor" maxlength="80" placeholder="作者名"></label></div><label><span id="imCodeLabel">Pine 源码（选填）</span><textarea id="imCode" spellcheck="false" placeholder="兼容的源码可以看图和筛选，其他源码可保存为草稿。"></textarea></label><label id="imFormulaPane" hidden>同花顺公式的绘制位置<select id="imFormulaOverlay"><option value="pane">独立副图</option><option value="overlay">叠加主图</option></select></label><div class="imFormActions"><button type="submit" class="imPrimary">收录指标</button><button type="button" id="imCancel">取消</button><span id="imError" role="status"></span></div></form>
  <p id="imMessage" role="status" aria-live="polite"></p>
- <div class="imSearchRow"><input id="imQuery" type="search" aria-label="搜索指标、作者或粘贴作品链接" placeholder="搜索指标、作者，或粘贴 TradingView 作品链接" autocomplete="off"><select id="imCategory" aria-label="指标分类"><option value="">全部分类</option></select></div>
- <nav id="imTabs" class="filters" aria-label="指标来源和状态"><button data-kind="all" aria-pressed="true">全部</button><button data-kind="built">内置指标</button><button data-kind="community">社区脚本</button><button data-kind="imported">我的收录</button><button data-kind="local">本站可用</button><button data-kind="star">已收藏</button><button data-kind="on">图表上</button></nav>
+ <div class="imSearchRow"><input id="imQuery" type="search" aria-label="搜索指标、作者或粘贴作品链接" placeholder="搜索指标、作者，或粘贴作品链接" autocomplete="off"><select id="imCategory" aria-label="指标分类"><option value="">全部分类</option></select></div>
+ <nav id="imTabs" class="filters" aria-label="指标来源和状态"><button data-kind="all" aria-pressed="true">全部</button><button data-kind="built">TradingView 内置</button><button data-kind="community">TradingView 社区</button><button data-kind="ths">同花顺指标广场</button><button data-kind="imported">我的收录</button><button data-kind="local">本站可用</button><button data-kind="star">已收藏</button><button data-kind="on">图表上</button></nav>
+ <div id="imThsHub" class="imMore" hidden><strong>同花顺指标广场</strong><button type="button" id="imThsBrowse" aria-expanded="false" aria-controls="imThsBoard">站内浏览官方排行</button><a href="https://poi.10jqka.com.cn/default/index/index/channel/phb/" target="_blank" rel="noopener noreferrer">在同花顺打开 ↗</a><span class="imInfo">可搜索已收录的公式，或从官方广场复制作品详情链接。</span><div id="imThsBoard" hidden></div></div>
  <div class="imLayout">
   <section class="imListPane" aria-label="指标目录"><div class="imListHead"><strong id="imCount" aria-live="polite"></strong><span id="imPage"></span></div><div id="imList" aria-label="选择指标"></div><div id="imPager" class="imPager"><button id="imPrev">上一页</button><button id="imNext">下一页</button></div></section>
   <section id="imDetail" class="imDetail" aria-label="指标详情" tabindex="-1"></section>
  </div>
- <div class="imMore"><a id="imCommunityLink" href="https://www.tradingview.com/scripts/?script_type=indicators" target="_blank" rel="noopener noreferrer">浏览 TradingView 社区指标 ↗</a><a href="https://cn.tradingview.com/support/folders/43000587405/" target="_blank" rel="noopener noreferrer">官方内置指标目录 ↗</a></div>
+ <div class="imMore"><a id="imCommunityLink" href="https://www.tradingview.com/scripts/?script_type=indicators" target="_blank" rel="noopener noreferrer">浏览 TradingView 社区指标 ↗</a><a href="https://cn.tradingview.com/support/folders/43000587405/" target="_blank" rel="noopener noreferrer">TradingView 内置指标目录 ↗</a></div>
 </dialog>
 
 <dialog id="screenDialog" aria-labelledby="screenHeading">
@@ -194,6 +197,9 @@ function pine(source,bars){
     }
     if(fn==='bb'){allowed(['series','length','mult'],3);const src=get(0,'series'),len=get(1,'length'),mult=get(2,'mult');if(!Number.isFinite(mult))fail('缺少布林带倍数');const mid=rolling(src,len,'sma'),dev=rolling(src,len,'stdev');return {tuple:[mid,mid.map((v,i)=>v+mult*dev[i]),mid.map((v,i)=>v-mult*dev[i])]}}
     if(fn==='macd'){allowed(['source','fastlen','slowlen','siglen'],4);const src=get(0,'source'),fast=rolling(src,get(1,'fastlen'),'ema'),slow=rolling(src,get(2,'slowlen'),'ema'),diff=fast.map((v,i)=>v-slow[i]),sig=rolling(diff,get(3,'siglen'),'ema');return {tuple:[diff,sig,diff.map((v,i)=>v-sig[i])]}}
+    if(name==='ths.std'){allowed([],2);if(args.length!==2)fail('STD 需要两个参数');const len=period(args[1]);return rolling(args[0],len,'stdev').map(v=>len>1?v*Math.sqrt(len/(len-1)):NaN)}
+    if(name==='ths.ref'){allowed([],2);const offset=args[1];if(args.length!==2||!Number.isInteger(offset)||offset<0||offset>2000)fail('REF 偏移须为 0 至 2000 的整数');const a=series(args[0]);return a.map((_,idx)=>a[idx-offset]??NaN)}
+    if(name==='ths.sma'){allowed([],3);const len=period(args[1]),weight=args[2];if(args.length!==3||!Number.isInteger(weight)||weight<1||weight>len)fail('SMA 权重须为 1 至周期的整数');let prior=NaN;return series(args[0]).map(v=>{if(!Number.isFinite(v))return NaN;prior=Number.isFinite(prior)?(weight*v+(len-weight)*prior)/len:v;return prior})}
     if(['math.abs','math.max','math.min'].includes(name)){allowed([],name==='math.abs'?1:2);if(args.length!==(name==='math.abs'?1:2))fail('参数数量不正确');return math(args[0],args[1],name==='math.abs'?Math.abs:name==='math.max'?Math.max:Math.min)}
     fail('暂不支持 '+name);
    }
@@ -309,8 +315,30 @@ function symbolRecord(payload,symbol){
  if(!row||row.symbol!==symbol)throw Error('行情与所选标的不符');
  return row;
 }
-const periods={'1m':60,'5m':300,'15m':900,'1h':3600,'1d':86400};
-const validBars=list=>Array.from(new Map(list.filter(b=>Object.values(b).every(Number.isFinite)&&b.time>0&&b.close>0&&b.low<=b.high).map(b=>[b.time,b])).values()).sort((a,b)=>a.time-b.time).slice(-320);
+const periods={'1m':60,'3m':180,'5m':300,'15m':900,'30m':1800,'1h':3600,'2h':7200,'4h':14400,'6h':21600,'8h':28800,'12h':43200,'1d':86400,'3d':259200,'1w':604800,'1M':2592000,'3M':7776000,'1y':31536000};
+const periodNames={'1m':'1 分钟','3m':'3 分钟','5m':'5 分钟','15m':'15 分钟','30m':'30 分钟','1h':'1 小时','2h':'2 小时','4h':'4 小时','6h':'6 小时','8h':'8 小时','12h':'12 小时','1d':'日线','3d':'3 日','1w':'周线','1M':'月线','3M':'季线','1y':'年线'};
+const stockPeriods={'1m':'sina','5m':'m5','15m':'m15','30m':'m30','1h':'m60','2h':'m60','1d':'day','1w':'week','1M':'month','3M':'month','1y':'month'};
+const cryptoPeriods=Object.keys(periods).filter(p=>p!=='3M'&&p!=='1y');
+const validBars=(list,limit=320)=>Array.from(new Map(list.filter(b=>Object.values(b).every(Number.isFinite)&&b.time>0&&b.close>0&&b.low<=b.high).map(b=>[b.time,b])).values()).sort((a,b)=>a.time-b.time).slice(-limit);
+function candleBucket(time,p,stock=false){
+ const offset=stock?28800:0,local=time+offset;
+ if(stock&&p==='2h'){const day=Math.floor(local/86400)*86400;return day+(local-day<=41400?41400:54000)-offset}
+ if(p==='1M'||p==='3M'||p==='1y'){
+  const date=new Date(local*1000),months=p==='1y'?12:p==='3M'?3:1;
+  return Date.UTC(date.getUTCFullYear(),Math.floor(date.getUTCMonth()/months)*months,1)/1000-offset;
+ }
+ if(p==='1w')return Math.floor((local+3*86400)/604800)*604800-3*86400-offset;
+ return Math.floor(local/periods[p])*periods[p]-offset;
+}
+function groupCandles(bars,p,stock=false){
+ const groups=[];
+ for(const bar of validBars(bars,Infinity)){
+  const time=candleBucket(bar.time,p,stock),last=groups.at(-1);
+  if(!last||last.time!==time)groups.push({...bar,time});
+  else{last.high=Math.max(last.high,bar.high);last.low=Math.min(last.low,bar.low);last.close=bar.close;last.volume+=bar.volume}
+ }
+ return groups.slice(-320);
+}
 function coinBars(rows){return validBars(rows.map(([time,low,high,open,close,volume])=>({time,open:+open,high:+high,low:+low,close:+close,volume:+volume})))}
 async function json(url){
  const ctrl=new AbortController(),id=setTimeout(()=>ctrl.abort(),7500);
@@ -332,19 +360,52 @@ function shTime(raw){
  const s=String(raw).replace(/\D/g,'');if(s.length<8)return NaN;
  return Date.UTC(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8),+(s.slice(8,10)||0)-8,+(s.slice(10,12)||0),+(s.slice(12,14)||0))/1000;
 }
-async function candles(a,p){
+async function candles(a,p,onRecent){
  if(a.market==='stock'){
-  const tf={ '5m':'m5','15m':'m15','1h':'m60','1d':'day' }[p], daily=p==='1d';
-  const key='cdk'+(++reqId),path=daily?'fqkline/get':'kline/mkline',param=daily?a.id+',day,,,300,':a.id+','+tf+',,300';
+  const tf=stockPeriods[p],key='cdk'+(++reqId);
+  if(tf==='sina'){
+   const url='https://quotes.sina.cn/cn/api/jsonp_v2.php/var%20'+key+'=/CN_MarketDataService.getKLineData?symbol='+encodeURIComponent(a.id)+'&scale=1&ma=no&datalen=300';
+   const [rows]=await remoteVars(url,[key]);if(!Array.isArray(rows))throw Error('无 1 分钟 K 线');
+   return validBars(rows.map(b=>({time:shTime(b.day),open:+b.open,high:+b.high,low:+b.low,close:+b.close,volume:+b.volume})));
+  }
+  const calendar=['day','week','month'].includes(tf),path=calendar?'fqkline/get':'kline/mkline',param=calendar?a.id+','+tf+',,,300,':a.id+','+tf+',,300';
   const url='https://web.ifzq.gtimg.cn/appstock/app/'+path+'?_var='+key+'&param='+param+'&r='+Date.now();
   const [resp]=await remoteVars(url,[key]);const data=resp?.data?.[a.id];const rows=data?.[tf];if(!Array.isArray(rows))throw Error('无该周期数据');
-  return validBars(rows.map(([time,open,close,high,low,volume])=>({time:shTime(time),open:+open,close:+close,high:+high,low:+low,volume:+volume})));
+  const bars=validBars(rows.map(([time,open,close,high,low,volume])=>({time:shTime(time),open:+open,close:+close,high:+high,low:+low,volume:+volume})));
+  return ['2h','3M','1y'].includes(p)?groupCandles(bars,p,true):bars;
  }
  if(binance(a)){
   const rows=await json(binanceUrl(a,'klines',{interval:p,limit:300}));
   return validBars(rows.map(([t,o,h,l,c,v])=>({time:t/1000,open:+o,high:+h,low:+l,close:+c,volume:+v})));
  }
- return coinBars(await json('https://api.exchange.coinbase.com/products/'+a.id+'/candles?granularity='+periods[p]));
+ return coinbaseHistory(a,p,onRecent);
+}
+const coinBasePeriod={'3m':'1m','30m':'15m','2h':'1h','4h':'1h','8h':'1h','12h':'6h','3d':'1d','1w':'1d','1M':'1d'};
+const coinHistoryPages=new Map();
+function coinGroups(bars,p){
+ const grouped=groupCandles(bars,p);
+ if(grouped.length>1&&bars[0].time>grouped[0].time)grouped.shift();
+ return grouped;
+}
+async function coinbaseHistory(a,p,onRecent){
+ const base=coinBasePeriod[p]||p,seconds=periods[base],url='https://api.exchange.coinbase.com/products/'+encodeURIComponent(a.id)+'/candles?granularity='+seconds;
+ const latest=coinBars(await json(url));if(base===p||!latest.length)return latest;
+ if(onRecent)onRecent(coinGroups(latest,p));
+ const size=seconds*299,now=Math.floor(Date.now()/1000),edge=Math.floor(now/size)*size;
+ const target=latest.at(-1).time-95*periods[p];
+ const pageCount=Math.min(10,Math.ceil(95*periods[p]/size)),pages=[];
+ for(let i=0;i<pageCount;i++){
+  const end=edge-i*size,key=a.id+'|'+base+'|'+end;
+  if(latest[0].time<=target||end<target-size)break;
+  if(!coinHistoryPages.has(key)){
+   const iso=t=>encodeURIComponent(new Date(t*1000).toISOString());
+   const page=json(url+'&start='+iso(end-size)+'&end='+iso(end)).then(coinBars).catch(e=>{coinHistoryPages.delete(key);throw e});
+   coinHistoryPages.set(key,page);if(coinHistoryPages.size>140)coinHistoryPages.delete(coinHistoryPages.keys().next().value);
+  }
+  try{const page=await coinHistoryPages.get(key);if(!page.length)break;pages.push(...page);if(page[0].time<=target)break}catch{break}
+ }
+ const bars=validBars([...pages,...latest],Infinity);
+ return coinGroups(bars,p);
 }
 async function stockQuotes(items){
  if(!items.length)return [];
@@ -427,7 +488,12 @@ function drawChart(){
  panes.forEach((s,j)=>{const top=volBottom+j*each,available=each-14;stroke(x0,top,x1,top,grid);const [low,high]=bounds(s.plots.flatMap(p=>p.values.slice(start,end)));const sy=v=>top+8+(high-v)/(high-low)*available;
   s.plots.forEach(p=>poly(p.values.slice(start,end),sy,p.color,p.width));txt(s.title,x0+3,top+9,'#aab3ba');txt(num(high),x1+5,top+8);if(each>40)txt(num(low),x1+5,top+each-9);
  });
- for(let j=0;j<ticks;j++){const i=Math.round((n-1)*j/(ticks-1)),b=bars[i];const s=activePeriod==='1d'?dt(b.time):j===0||dt(b.time)!==dt(bars[Math.max(0,i-Math.floor(n/ticks))].time)?dt(b.time):hhmm(b.time);txt(s,Math.min(x1-20,Math.max(x0+20,x(i))),h-11,muted,'center')}
+ for(let j=0;j<ticks;j++){
+  const i=Math.round((n-1)*j/(ticks-1)),b=bars[i],newDate=j===0||dt(b.time)!==dt(bars[Math.max(0,i-Math.floor(n/ticks))].time);
+  let label=periods[activePeriod]>=86400||newDate?dt(b.time):hhmm(b.time);
+  if(periods[activePeriod]>=604800){const iso=new Date((b.time+28800)*1000).toISOString();label=activePeriod==='1y'?iso.slice(0,4):iso.slice(0,7)}
+  txt(label,Math.min(x1-20,Math.max(x0+20,x(i))),h-11,muted,'center');
+ }
  let chosen=last;const pointer=state.cursor,tip=$('tooltip');tip.hidden=true;
  if(pointer&&pointer.x>=x0&&pointer.x<=x1&&pointer.y>=0&&pointer.y<=axisY){
   const i=Math.max(0,Math.min(n-1,Math.floor((pointer.x-x0)/spacing)));chosen=bars[i];
@@ -515,14 +581,29 @@ function feed(){
  if(active.expiry&&active.expiry<=Date.now()){label='已交割 · 历史行情';kind='stale'}
  $('feed').textContent=label;$('feed').className='feed '+kind;
  const bar=state.bars.at(-1);$('barDate').textContent=bar?'最新 K 线 '+dt(bar.time,true):'';
- const q=quotes.get(active.id);$('dataOrigin').textContent='数据源 · '+sourceOf(active)+(q?.stamp?'　报价 '+dt(q.stamp,true):sample?'　历史快照':'')+(active.market==='stock'?'　以源站时间为准':'');
+ const q=quotes.get(active.id);$('dataOrigin').textContent='数据源 · '+sourceOf(active)+(active.market==='stock'&&activePeriod==='1m'?' · 分钟 K 线来自新浪财经':'')+(q?.stamp?'　报价 '+dt(q.stamp,true):sample?'　历史快照':'')+(active.market==='stock'?'　以源站时间为准':'');
  $('empty').hidden=!!state.bars.length;$('empty').textContent=pollFailed?'行情暂不可用，可点击下方「刷新行情」重试。':'正在获取 K 线…';
 }
+let legendSignature='';
+function removeChartStudy(study){
+ if(study.market){marketActive.delete(study.id);storeWrite('indicator-chart',[...marketActive])}
+ else{scripts=scripts.map(s=>s.id===study.id?{...s,onChart:false}:s);storeWrite('scripts',scripts)}
+ calcStudies();
+}
 function calcStudies(){
- state.studies=[];for(const s of scripts){try{state.studies.push({...pine(s.source,state.bars),id:s.id})}catch{}}
+ state.studies=[];for(const s of scripts){if(s.onChart===false)continue;try{state.studies.push({...pine(s.source,state.bars),id:s.id})}catch{}}
  state.studies.push(...marketChartStudies(state.bars));
- const host=$('legend');host.replaceChildren();
- for(const s of state.studies)for(const p of s.plots){const e=elm('button','legendEntry'),i=elm('i');i.style.background=p.color;e.append(i,document.createTextNode(p.name));e.title=(s.market?'指标市场 · ':'编辑 ')+s.title;e.onclick=()=>s.market?openIndicatorMarket(s.id):openEditor(s.id);host.append(e)}
+ const signature=JSON.stringify(state.studies.map(s=>[!!s.market,s.id,s.title,s.plots.map(p=>[p.name,p.color])]));
+ if(signature!==legendSignature){
+  const host=$('legend');host.replaceChildren();legendSignature=signature;
+  for(const s of state.studies){
+   const group=elm('span','studyGroup'),entry=elm('button','legendEntry'),remove=elm('button','studyRemove','×');
+   for(const p of s.plots){const i=elm('i');i.style.background=p.color;entry.append(i,document.createTextNode(p.name))}
+   entry.title=(s.market?'指标市场 · ':'编辑 ')+s.title;entry.onclick=()=>s.market?openIndicatorMarket(s.id):openEditor(s.id);
+   remove.title='从图表移除「'+s.title+'」';remove.setAttribute('aria-label',remove.title);remove.onclick=()=>removeChartStudy(s);
+   group.append(entry,remove);host.append(group);
+  }
+ }
  drawSoon();
 }
 function refreshScreen(){header();feed();calcStudies();renderWatch()}
@@ -532,7 +613,7 @@ function tick(token,bar,q,time){
  if(epoch!==token)return;lastStream=Date.now();if(q)putQuote(q);
  const last=state.bars.at(-1),interval=periods[activePeriod];
  if(!bar&&q&&!binance(active)&&last&&!sample){
-  const t=Math.floor(time/interval)*interval;
+  const t=candleBucket(time,activePeriod);
   if(t>=last.time)bar=t===last.time?{...last,high:Math.max(last.high,q.price),low:Math.min(last.low,q.price),close:q.price}:{time:t,open:q.price,high:q.price,low:q.price,close:q.price,volume:0};
  }
  if(bar&&(!last||bar.time>=last.time)&&bar.close>0&&Object.values(bar).every(Number.isFinite)){
@@ -548,7 +629,8 @@ async function getHistory(){
  const token=epoch;if(historyJob===token)return;historyJob=token;const a=active,p=activePeriod,began=Date.now();
  refreshContractStats(a,token);
  try{
-  const data=await candles(a,p);if(!data.length)throw Error('暂无 K 线');if(epoch!==token)return;
+  const data=await candles(a,p,recent=>{if(epoch===token&&!state.bars.length&&recent.length){state.bars=recent;chartAt=Date.now();sample=false;refreshScreen()}});
+  if(!data.length)throw Error('暂无 K 线');if(epoch!==token)return;
   if(lastBarUpdate>=began&&!sample&&state.bars.length){const live=state.bars.at(-1),tail=data.at(-1);
    if(live.time===tail.time){tail.close=live.close;tail.high=Math.max(live.high,tail.high);tail.low=Math.min(live.low,tail.low);if(binance(a))tail.volume=Math.max(tail.volume,live.volume)}
    else if(live.time>tail.time)data.push(live);
@@ -561,15 +643,21 @@ function refreshQuotes(){
  for(const a of watch.filter(a=>a.market==='crypto')){if(quoteJobs.has(a.id))continue;quoteJobs.add(a.id);coinQuote(a).then(q=>{putQuote(q);renderWatch();if(active.id===a.id){header();feed()}}).catch(()=>{}).finally(()=>quoteJobs.delete(a.id))}
 }
 function choose(a,p=activePeriod){
- stopStream();active=a;activePeriod=Object.hasOwn(periods,p)?p:'1d';if(a.market==='stock'&&activePeriod==='1m')activePeriod='5m';
+ stopStream();active=a;const available=a.market==='stock'?Object.keys(stockPeriods):cryptoPeriods;
+ activePeriod=available.includes(p)?p:'1d';
  const token=++epoch,key=a.id+activePeriod,lastSaved=storeRead('last-chart',{});chartAt=0;lastStream=0;lastBarUpdate=0;pollFailed=false;sample=false;
  const cached=cache.get(key)||(lastSaved.key===key&&Array.isArray(lastSaved.data)?lastSaved.data:null);
  state.bars=cached?validBars(cached):[];sample=!!state.bars.length;
  if(!state.bars.length&&key==='BTC-USD1d'){state.bars=coinBars(SNAPSHOT);sample=true}
  storeWrite('active',a.id);storeWrite('period',activePeriod);const host=$('periods');host.replaceChildren();
- for(const [period,label] of [['1m','1分'],['5m','5分'],['15m','15分'],['1h','1时'],['1d','日线']]){
-  if(a.market==='stock'&&period==='1m')continue;const b=elm('button','',label);b.setAttribute('aria-pressed',String(period===activePeriod));b.onclick=()=>choose(a,period);host.append(b)
+ const quickPeriods=['1m','5m','15m','1h','1d','1w'];
+ for(const period of quickPeriods){
+  const b=elm('button','',periodNames[period]);b.setAttribute('aria-pressed',String(period===activePeriod));b.onclick=()=>choose(a,period);host.append(b)
  }
+ const select=elm('select','morePeriods');select.setAttribute('aria-label','全部 K 线周期');scrOpt(select,'','更多周期');
+ for(const period of available)scrOpt(select,period,periodNames[period]);
+ select.value=quickPeriods.includes(activePeriod)?'':activePeriod;
+ select.onchange=()=>{if(select.value)choose(a,select.value)};host.append(select);
  displayContractStats(a);resetChart();refreshScreen();getHistory();
  if(a.market==='crypto')stopStream=cryptoStream(a,activePeriod,(bar,q,t)=>tick(token,bar,q,t),()=>{if(epoch===token){lastStream=0;feed()}});
 }
@@ -638,7 +726,7 @@ function setFilter(){for(const b of $('filters').children)b.setAttribute('aria-p
 function scriptTitle(s){try{return pine(s.source,[]).title}catch{return '自定义指标'}}
 let editing='';
 function editSelect(id){
- const sel=$('scripts');sel.replaceChildren();for(const s of scripts){const o=elm('option','',scriptTitle(s));o.value=s.id;sel.append(o)}
+ const sel=$('scripts');sel.replaceChildren();for(const s of scripts){const o=elm('option','',scriptTitle(s)+(s.onChart===false?'（已从图表移除）':''));o.value=s.id;sel.append(o)}
  const o=elm('option','','新指标');o.value='';sel.append(o);sel.value=id;editing=id;
  $('code').value=scripts.find(s=>s.id===id)?.source??templates.ma;$('deleteScript').disabled=!id;$('editorMsg').textContent='';
 }
@@ -648,7 +736,7 @@ function setupEditor(){
  for(const b of document.querySelectorAll('[data-template]'))b.onclick=()=>{code.value=templates[b.dataset.template];msg.textContent='模板已载入，点击保存并应用。';msg.className=''};
  $('deleteScript').onclick=()=>{scripts=scripts.filter(s=>s.id!==editing);storeWrite('scripts',scripts);editSelect(scripts[0]?.id||'');calcStudies()};
  $('apply').onclick=()=>{try{
-  pine(code.value,state.bars);if(!editing&&scripts.length>=6)throw Error('最多可同时展示 6 个指标');const id=editing||('s'+Date.now());
+  pine(code.value,state.bars);if(scripts.filter(s=>s.id!==editing&&s.onChart!==false).length>=6)throw Error('最多可同时展示 6 个自定义指标');const id=editing||('s'+Date.now());
   const item={id,source:code.value};scripts=editing?scripts.map(s=>s.id===editing?item:s):[...scripts,item];storeWrite('scripts',scripts);calcStudies();$('editorDialog').close()
  }catch(e){msg.className='error';msg.textContent=e.message}};
  $('importScript').onclick=()=>$('file').click();$('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>80000){msg.textContent='文件过大';return}const src=await f.text();editSelect('');code.value=src;msg.textContent='已导入，点击保存并应用。';e.target.value=''};
@@ -751,6 +839,15 @@ function screenMetrics(includeEditor=true){
   return avg(price.map((v,i)=>screenDivide(v-esa[i],.015*dev[i])),21,'ema');
  });
  add('wt2','WaveTrend 信号线 WT2',osc,c=>avg(c.get('wt1'),4));
+ add('thsEarlyFast','超前 MACD · 快线',osc,c=>{
+  const close=c.get('close'),mean=avg(close,13);
+  return avg(close.map((v,i)=>(v-mean[i])*100),7);
+ });
+ add('thsEarlySignal','超前 MACD · 信号线',osc,c=>avg(c.get('thsEarlyFast'),7,'ema'));
+ add('thsEarlyBar','超前 MACD · 双倍柱差',osc,c=>{const slow=c.get('thsEarlySignal');return c.get('thsEarlyFast').map((v,i)=>2*(v-slow[i]))});
+ add('thsMacdBar','同花顺 MACD · 双倍柱差',osc,c=>c.get('hist').map(v=>v*2));
+ for(const n of [14,25,99,144])add('thsEma'+n,'有福均线 · EMA '+n,ma,c=>avg(c.get('close'),n,'ema'),n);
+ add('thsBbi','BBI（3、6、12、24）',ma,c=>{const lines=[3,6,12,24].map(n=>avg(c.get('close'),n));return c.bars.map((_,i)=>screenMean(lines.map(line=>line[i])))});
  add('sqMom','Squeeze Momentum 动量',osc,c=>{
   const mean=c.get('sma20'),mid=c.get('dcMid');
   const values=c.bars.map((b,i)=>b.close-(mean[i]+mid[i])/2);
@@ -1030,22 +1127,63 @@ const directoryIndicators=builtInTitles.filter(title=>!featuredTitles.has(title)
  outputs:[],description:'这个条目来自 TradingView 内置指标目录。打开官方目录并选择该指标，即可查看原版说明。',
  directory:true,url:tvFolder+'#:~:text='+encodeURIComponent(original)
 }));
-const baseIndicators=[...featuredIndicators.slice(0,3),...communityIndicators.slice(0,2),...featuredIndicators.slice(3),...communityIndicators.slice(2),...directoryIndicators];
+const thsHome='https://poi.10jqka.com.cn/default/index/index/channel/phb/';
+const thsIndicators=[
+ [329,'超前MACD','同花顺小牛',catOsc,'thsEarlyFast thsEarlySignal thsEarlyBar',false,'已适配快线、信号线与柱差三项数值。原作另绘制低位交叉、二次交叉及背离标记。'],
+ [629,'有福均线','同花顺小牛',catTrend,'thsEma14 thsEma25 thsEma99 thsEma144',true,'已适配工作线、二号线、八号线和一号线。原作还使用指数行情、其他长周期均线及图形标记。'],
+ [53204,'MACD买入指标','mo_220******',catOsc,'macd signal thsMacdBar',false,'已适配 DIFF、DEA 与双倍柱差。原作另有柱体配色、顶底背离和金叉标注。'],
+ [12177,'一目均衡指标','ffa***',catTrend,'thsBbi close',true,'原作输出四条简单均线的平均值 BBI 和收盘价。本站将四个可变周期设为 3、6、12、24。']
+].map(([num,name,author,category,outputs,overlay,description])=>({id:'ths-'+num,name,original:'',author,category,outputs:outputs.split(' '),overlay,description,kind:'ths',url:'https://poi.10jqka.com.cn/store/formula/detail/indexid/'+num}));
+const baseIndicators=[...featuredIndicators.slice(0,3),...communityIndicators.slice(0,2),...featuredIndicators.slice(3),...communityIndicators.slice(2),...thsIndicators,...directoryIndicators];
+const builtinSources=new Map(baseIndicators.filter(e=>e.kind==='built').map(e=>[e.id,e]));
+function savedIndicatorLink(entry){
+ if(!entry||typeof entry.name!=='string')return null;
+ const built=builtinSources.get(entry.id);if(built&&entry.url===built.url)return built;
+ const link=indicatorLink(entry.url);return link?.id===entry.id?link:null;
+}
 
-function tvScriptLink(raw){
+function indicatorLink(raw){
  const tokens=String(raw).match(/(?:https?:\/\/|[\w.-]+\.[a-z]{2,}\/)[^\s<>"'()[\]{}，。；！？、（）【】《》“”‘’「」]+/gi)||[];
  for(const token of tokens){
   let url;try{url=new URL((/^https?:\/\//i.test(token)?token:'https://'+token).replace(/[.,;!]+$/,''))}catch{continue}
-  if(url.username||url.password||url.port||!/(^|\.)tradingview\.com$/i.test(url.hostname))continue;
+  if(url.username||url.password||url.port)continue;
+  if(url.hostname==='poi.10jqka.com.cn'){
+   const item=url.pathname.match(/^\/store\/formula\/detail\/indexid\/([1-9]\d*)\/?$/i);
+   if(item)return {id:'ths-'+item[1],kind:'ths',url:'https://poi.10jqka.com.cn/store/formula/detail/indexid/'+item[1],name:'同花顺指标 '+item[1]};
+   continue;
+  }
+  if(!/(^|\.)tradingview\.com$/i.test(url.hostname))continue;
   const match=url.pathname.match(/^\/(?:script|v)\/([a-z\d]{8})(?:-([^/]+))?\/?$/i);if(!match)continue;
   const [,id,slug]=match;let name=slug||'';
   try{name=decodeURIComponent(name)}catch{}
-  return {id:'tv-'+id,url:'https://www.tradingview.com/script/'+id+(slug?'-'+slug:'')+'/',name:name.replace(/[-_]+/g,' ').trim()||'社区指标 '+id};
+  return {id:'tv-'+id,kind:'community',url:'https://www.tradingview.com/script/'+id+(slug?'-'+slug:'')+'/',name:name.replace(/[-_]+/g,' ').trim()||'社区指标 '+id};
  }
  return null;
 }
+function translateThs(code,title,overlay){
+ if(code.length>20000)throw Error('公式超过 20,000 字符');
+ const fields={C:'close',CLOSE:'close',O:'open',OPEN:'open',H:'high',HIGH:'high',L:'low',LOW:'low',V:'volume',VOL:'volume',VOLUME:'volume'};
+ const fns={MA:'ta.sma',EMA:'ta.ema',SMA:'ths.sma',REF:'ths.ref',STD:'ths.std',STDP:'ta.stdev',HHV:'ta.highest',LLV:'ta.lowest',ABS:'math.abs',MAX:'math.max',MIN:'math.min'};
+ const variables=new Map(),lines=['indicator('+JSON.stringify(title)+', overlay='+overlay+')'];
+ const statements=code.replace(/\{[^}]*\}|\/\/[^\n]*/g,'').split(/[;；]/).map(s=>s.trim()).filter(Boolean);
+ for(const [i,statement] of statements.entries()){
+  const match=statement.match(/^([\p{L}_][\p{L}\p{N}_]*)\s*(:=|:|=)\s*([\s\S]+)$/u);
+  if(!match)throw Error('第 '+(i+1)+' 条公式暂不支持');
+  const [,name,assign,rhs]=match;
+  const expression=rhs.replace(/(?:\s*,\s*(?:COLOR(?:[a-f\d]{6}|RED|GREEN|BLUE|WHITE|YELLOW|CYAN|MAGENTA|BLACK)|LINETHICK\d+|POINTDOT|COLORSTICK))+\s*$/i,'');
+  const mapped=expression.replace(/(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?|[\p{L}_][\p{L}\p{N}_]*/giu,(token,offset)=>{
+   if(/^[\d.]/.test(token))return token;
+   const key=token.toUpperCase(),call=expression.slice(offset+token.length).trimStart().startsWith('(');
+   const value=call?Object.hasOwn(fns,key)&&fns[key]:variables.get(key)||(Object.hasOwn(fields,key)&&fields[key]);
+   if(!value)throw Error('第 '+(i+1)+' 条公式含未支持的'+(call?'函数 ':'字段 ')+token);return value;
+  }).replace(/\s+/g,' ');
+  const key=name.toUpperCase(),variable=variables.get(key)||'v'+variables.size;variables.set(key,variable);
+  lines.push(variable+' = '+mapped);if(assign===':')lines.push('plot('+variable+', '+JSON.stringify(name)+')');
+ }
+ return lines.join('\n');
+}
 function readList(key){const value=storeRead(key,[]);return Array.isArray(value)?value:[]}
-const marketImports=readList('indicator-imports').filter(entry=>entry&&typeof entry.name==='string'&&tvScriptLink(entry.url)?.id===entry.id);
+const marketImports=readList('indicator-imports').filter(savedIndicatorLink);
 const marketStars=new Set(readList('indicator-stars')),marketActive=new Set(readList('indicator-chart'));
 const marketUi={tab:'all',query:'',category:'',page:0,selected:'rsi'};
 const marketPageSize=12,studyColors=[colors.orange,colors.blue,colors.teal,colors.purple,colors.red];
@@ -1053,10 +1191,10 @@ let marketCatalog=new Map(),marketDefs;
 function rebuildMarket(){
  marketCatalog=new Map(baseIndicators.map(entry=>[entry.id,entry]));
  for(const saved of marketImports){
-  const known=marketCatalog.get(saved.id),entry=known?{...known,name:saved.name||known.name}:{id:saved.id,name:saved.name,original:'',url:tvScriptLink(saved.url).url,author:saved.author||'作者未填写',kind:'community',category:catOther,outputs:[],description:'你收录的 TradingView 社区作品。'};
-  entry.imported=true;entry.draft=saved.draft||'';entry.draftError=saved.draftError||'';
+  const link=savedIndicatorLink(saved),known=marketCatalog.get(saved.id),entry=known?{...known,name:saved.name||known.name}:{id:saved.id,name:saved.name,original:'',url:link.url,author:saved.author||'作者未填写',kind:link.kind,category:catOther,outputs:[],description:link.kind==='ths'?'你收录的同花顺指标广场作品。':'你收录的 TradingView 社区作品。'};
+  entry.imported=true;entry.draft=saved.draft||'';entry.draftError=saved.draftError||'';entry.formula=saved.formula||'';entry.draftOverlay=saved.draftOverlay;
   if(saved.source){
-   try{const study=pine(saved.source,[]);entry.source=saved.source;entry.overlay=study.overlay;entry.outputs=study.plots.map((p,i)=>'marketPine:'+entry.id+':'+i);entry.description='已录入兼容的 Pine 源码，可将输出线添加到图表或设为筛选条件。'}catch{}
+   try{const study=pine(saved.source,[]);entry.source=saved.source;entry.overlay=study.overlay;entry.outputs=study.plots.map((p,i)=>'marketPine:'+entry.id+':'+i);entry.description='已录入可运行的源码，可将输出线添加到图表或设为筛选条件。'}catch{}
   }
   marketCatalog.set(entry.id,entry);
  }
@@ -1076,14 +1214,14 @@ function marketChartStudies(bars){
 }
 function marketMatches(){
  const {query,category,tab}=marketUi,words=query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
- const link=tvScriptLink(query);
+ const link=indicatorLink(query);
  if(link)return marketCatalog.has(link.id)?[marketCatalog.get(link.id)]:[];
  return [...marketCatalog.values()].filter(entry=>{
   if(category&&entry.category!==category)return false;
   if(tab==='imported'&&!entry.imported)return false;
   if(tab==='star'&&!marketStars.has(entry.id)||tab==='on'&&!marketActive.has(entry.id)||tab==='local'&&!entry.outputs.length)return false;
-  if((tab==='built'||tab==='community')&&entry.kind!==tab)return false;
-  const searchable=[entry.name,entry.original,entry.author,entry.category,...entry.outputs].join(' ').toLocaleLowerCase();
+  if(['built','community','ths'].includes(tab)&&entry.kind!==tab)return false;
+  const searchable=[entry.name,entry.original,entry.author,entry.category,entry.kind==='ths'?'同花顺指标广场':'TradingView',...entry.outputs].join(' ').toLocaleLowerCase();
   return words.every(word=>searchable.includes(word));
  });
 }
@@ -1098,20 +1236,115 @@ function marketToggle(entry,active){
  renderMarket();
  marketInfo('「'+entry.name+'」'+(active?(adding?'已添加到当前图表。':'已从图表移除。'):(adding?'已加入收藏。':'已移出收藏。')));
 }
+let editingBuiltin=null;
 function marketForm(entry,link){
+ editingBuiltin=entry?.kind==='built'?builtinSources.get(entry.id):null;$('imUrl').readOnly=!!editingBuiltin;
  $('imForm').hidden=false;$('imUrl').value=link?.url||entry?.url||'';$('imName').value=entry?.name||'';$('imAuthor').value=entry?.author==='作者未填写'?'':entry?.author||'';
- $('imCode').value=entry?.draft||entry?.source||'';$('imError').textContent='';marketInfo('');
+ $('imCode').value=entry?.draft||entry?.formula||entry?.source||'';$('imError').textContent='';marketInfo('');
+ $('imFormulaOverlay').value=(entry?.draftOverlay??entry?.overlay)?'overlay':'pane';marketFormLanguage();
  (entry&&!link?$('imCode'):$('imUrl')).focus();
+}
+function marketFormLanguage(){const ths=indicatorLink($('imUrl').value)?.kind==='ths'||(!$('imUrl').value&&marketUi.tab==='ths');$('imFormulaPane').hidden=!ths;$('imCodeLabel').textContent=ths?'同花顺公式源码（选填）':'Pine 源码（选填）'}
+// These formulas document the numeric outputs of screenMetrics, which both the chart and the screener use.
+const calculationNotes={
+ rsi:['收盘价，周期 14。','变化 = 本根收盘 − 前收盘\nU = RMA(max(变化, 0), 14)\nD = RMA(max(−变化, 0), 14)\nRSI = 100 − 100 / (1 + U / D)','RMA 从 14 个涨跌值的均值开始，之后每根以 1/14 的权重更新。只有上涨时取 100，涨跌均为零时留空。'],
+ macd:['收盘价，快线 12、慢线 26、信号 9。','DIF = EMA(C,12) − EMA(C,26)\nDEA = EMA(DIF,9)\n柱差 = DIF − DEA','DIF 与 DEA 的交叉反映快慢趋势差的变化。本站在第 26 根开始显示 DIF，第 34 根开始显示信号线和柱差。'],
+ bb:['收盘价，窗口 20，标准差倍数 2。','中轨 = SMA(C,20)\nσ = sqrt(Σ(C − 中轨)² / 20)\n上轨 / 下轨 = 中轨 ± 2σ','三条输出与价格同单位。收盘价离均值越分散，通道越宽。'],
+ sma:['最近 20 根收盘价。','SMA20 = Σ最近20根收盘价 / 20','每根 K 线权重相同。窗口向前移动时移出最早的收盘价，加入最新收盘价。'],
+ ema:['收盘价，周期 20。','α = 2 / (20 + 1)\nEMA[t] = EMA[t−1] + α × (C[t] − EMA[t−1])','从首个有效收盘价递推，本站在满 20 根后显示。近期价格对输出的影响较大。'],
+ atr:['最高价 H、最低价 L 和前收盘价 P，周期 14。','TR = max(H−L, |H−P|, |L−P|)\nATR = RMA(TR,14)','开盘跳空也计入真实波幅。第一根用本根开盘价代替前收盘，输出以报价单位表示波动幅度。'],
+ stoch:['收盘价和 14 根的最高、最低价，平滑周期 3、3。','原始值 = 100 × (C − 最低14) / (最高14 − 最低14)\n%K = SMA(原始值,3)\n%D = SMA(%K,3)','%K 衡量收盘价在近期区间的位置，%D 进一步平滑。最高与最低相等时该根无有效原始值。'],
+ srsi:['从收盘价计算 RSI 14，再观察 RSI 自身的 14 期区间。','R = RSI(C,14)\n值 = 100 × (R − 最低R14) / (最高R14 − 最低R14)\nK = SMA(值,3)；D = SMA(K,3)','这两条线刻画 RSI 在近期自身范围内的位置。分母为零时没有可比数值。'],
+ adx:['相邻 K 线的最高价、最低价、真实波幅；两级平滑各 14 期。','+DI、−DI 由方向变化除以 ATR 得到\nDX = 100 × |+DI − (−DI)| / (+DI + (−DI))\nADX = RMA(DX,14)','ADX 量度方向差异的强度。两条方向线都为零时，本站将该根 DX 记为 0。'],
+ dmi:['最高价、最低价、前收盘，周期 14。','U = H − 前高；D = 前低 − L\n+DM 取大于 D 的正 U，否则为 0；−DM 对称处理\n±DI = 100 × RMA(±DM,14) / ATR14\nADX = RMA(DX,14)','+DI 和 −DI 分别度量上、下方向运动。DX 为两者差的绝对值除以两者之和，再乘 100。'],
+ cci:['典型价 T = (H + L + C) / 3，窗口 20。','M = SMA(T,20)\n偏差 = 20 期内 |T − M| 的均值\nCCI = (T − M) / (0.015 × 偏差)','零点代表典型价等于窗口均价，正负表示偏离方向。窗口内价格完全一致时留空。'],
+ obv:['本根和前根收盘价，以及本根成交量 V。','OBV[首根] = 0\nOBV[t] = OBV[t−1] + sign(C − 前收盘) × V','上涨加量，下跌减量，平盘沿用前值。累计起点是本站加载行情的第一根。'],
+ donchian:['20 根 K 线内的最高价和最低价。','上轨 = max(H, 最近20根)\n下轨 = min(L, 最近20根)\n中轨 = (上轨 + 下轨) / 2','上下轨含当前 K 线，表示窗口两端的实际价格，三条线均可独立筛选。'],
+ hma:['使用收盘价和周期 9，内部加权周期为 4、9、3。','原始线 = 2 × WMA(C,4) − WMA(C,9)\nHMA = WMA(原始线,3)','WMA 给最近的数据更大线性权重。快慢线差先修正滞后，再平滑为最终输出。'],
+ vwma:['最近 20 根的收盘价和成交量。','VWMA = Σ(C × V,20) / Σ(V,20)','成交量大的 K 线贡献更高。20 根合计成交量为 0 时没有有效值。'],
+ wma:['收盘价，周期 9。','WMA = (1 × 最早收盘 + … + 9 × 最新收盘) / 45','9 根的权重由 1 到 9 递增，输出与行情报价同单位。'],
+ ribbon:['收盘价，四个窗口 20、50、100、200。','输出 = SMA(C,20)、SMA(C,50)、SMA(C,100)、SMA(C,200)','每条线独立等待自己的窗口积满。短周期对变动响应更快，可选其中任意一条比较。'],
+ ichi:['转换线 9 期、基准线 26 期、云带 B 52 期。','中点(N) = (N期最高 + N期最低) / 2\n转换 = 中点(9)；基准 = 中点(26)\nA = 25根前的(转换 + 基准)/2\nB = 25根前的中点(52)','A/B 使用位移后落在当前 K 线上的数值，筛选器与图表遵循同一对齐方式。'],
+ ao:['每根先计算中间价 M = (H + L) / 2。','AO = SMA(M,5) − SMA(M,34)','输出经过零轴表示短期中间价均值越过长期均值。最早需 34 根。'],
+ bbp:['最高价、最低价和收盘价的 13 期 EMA。','均线 = EMA(C,13)\n多头 = H − 均线；空头 = L − 均线\nBBP = 多头 + 空头','三项都是价格差；合计为正，表示这两项相加后位于零上方。'],
+ mom:['本根收盘与 10 根之前的收盘。','MOM = C[t] − C[t−10]','输出是报价差额，可与零比较。至少需要当前及之前 10 根。'],
+ roc:['收盘价和 9 根前收盘价。','ROC = 100 × (C[t] − C[t−9]) / C[t−9]','结果以百分比度量这段区间的价格变化。'],
+ uo:['最高、最低、收盘、前收盘；窗口 7、14、28。','BP = C − min(L,前收盘)\nTR = max(H,前收盘) − min(L,前收盘)\nR(N) = ΣBP / ΣTR，取最近 N 根\nUO = 100 × (4R7 + 2R14 + R28) / 7','短周期权重最大。每个窗口必须有有效真实波幅，三个比例才可合成为输出。'],
+ wpr:['最高、最低、收盘，最近 14 根。','%R = 100 × (C − 最低14) / (最高14 − 最低14) − 100','收盘触及窗口最高时为 0，触及最低时为 −100。区间宽度为零时留空。'],
+ vol:['行情源返回的每根 K 线成交量 V。','输出[t] = V[t]','按当前粒度读取成交量，合成周期会把组成 K 线成交量相加。合约、币和股票的数量单位跟随行情源。'],
+ st:['最高、最低、前收盘，ATR 长度 10、倍数 3。','中点 = (H + L)/2\n候选轨 = 中点 ± 3 × ATR10\n依据前收盘与上一轨道收紧上下轨，再用当根收盘判定切换','本站从空头轨开始。收盘突破上轨时切到下轨，跌破下轨时切回上轨，图上输出当前方向的那条轨道。'],
+ bbpct:['20 期布林带，倍数 2，使用本根收盘。','%b = (C − 下轨) / (上轨 − 下轨)','下轨对应 0，上轨对应 1，超出通道可以小于 0 或大于 1。'],
+ bbw:['20 期布林带的上、中、下轨，倍数 2。','BBW = 100 × (上轨 − 下轨) / 中轨','用中轨归一化通道宽度，结果以百分比表示；中轨为零时留空。'],
+ kc:['收盘价的 20 期 EMA，以及 10 期 Wilder 平滑的真实波幅。','中轨 = EMA(C,20)\n上轨 = 中轨 + 2 × ATR10\n下轨 = 中轨 − 2 × ATR10','通道距离随真实波幅而变。可用中轨或任一外轨作为筛选字段。'],
+ mfi:['典型价 T = (H+L+C)/3、成交量 V、窗口 14。','流量 = T × V\n按 T 较前根的涨跌分别累计正、负流量\nMFI = 100 × 正流量 / (正流量 + 负流量)','典型价持平不计入两侧。总流量为零时留空。'],
+ cmf:['最近 20 根的最高、最低、收盘和成交量。','位置 = (2C − H − L) / (H − L)\nCMF = Σ(位置 × V,20) / Σ(V,20)','收盘靠近最高时贡献为正，靠近最低时为负。单根无振幅的贡献按 0 处理。'],
+ adl:['每根 K 线的高、低、收盘与成交量。','单根贡献 = V × (2C − H − L) / (H − L)\nADL = 从历史起点逐根累加贡献','当根高低相等时加入 0。绝对值受载入历史起点影响。'],
+ 'tv-2KE8wTuF':['典型价 T = (H+L+C)/3，通道长度 10、平滑长度 21。','E = EMA(T,10)；D = EMA(|T−E|,10)\nWT1 = EMA((T−E)/(0.015D),21)\nWT2 = SMA(WT1,4)','WT1 是标准化后平滑的偏离度，WT2 是信号线。两者分别用于看图及交叉筛选。'],
+ 'tv-nqQ1DT5a':['收盘价、20 期高低区间、波动和真实波幅。','基准 = (区间中点20 + SMA(C,20))/2\n动量 = 对 (C−基准) 做 20 期线性回归，取右端拟合值\n挤压 = 2 × 标准差20 < 1.5 × SMA(TR,20)','动量是连续数值；挤压输出为 1 或 0，代表布林带是否完整缩入同中线的肯特纳通道。'],
+ 'tv-AqXxNS7j':['原作默认 ATR 22、系数 3，极值使用收盘价。','多头候选 = 22期最高收盘 − 3 × ATR22\n空头候选 = 22期最低收盘 + 3 × ATR22\n依据前收盘收紧已有止损轨，再将本根收盘与前轨比较。','方向由负转正或由正转负时产生原作信号。作者提供可选的收盘确认。'],
+ 'tv-U1SJ8ubc':['原作默认价格窗口 2、通道偏差 2，波幅基于 100 期 ATR。','分别跟踪区间高低点及高低价均线\n向下翻转要求高价均线跌破跟踪低点且收盘低于前低，反向条件对称\n通道半宽 = 偏差 × ATR100 / 2','上下状态决定采用递升的支撑线还是递降的阻力线。箭头标在方向切换的位置。'],
+ 'tv-r6dAP7yi':['原作默认中间价 (H+L)/2、ATR 长度 10、系数 3。','候选支撑 / 阻力 = 中间价 ∓ 3 × ATR\n按之前的收盘位置收紧轨道\n收盘越过上一方向的轨道时切换方向','原作将上行区间和下行区间分开绘制。ATR 的计算方式可在作者的指标设置中切换。'],
+ 'ths-329':['收盘价，偏离窗口 13、两级平滑 7。','偏离 = 100 × (C − SMA(C,13))\n快线 = SMA(偏离,7)\n信号线 = EMA(快线,7)\n柱差 = 2 × (快线 − 信号线)','原作的 1 期 EMA 等于输入本身。本站提供三条数值；原作还依据跨线与历史高低点绘制文字和图标。'],
+ 'ths-629':['取原作使用收盘价的四条 EMA，长度为 14、25、99、144。','工作线 = EMA(C,14)；二号线 = EMA(C,25)\n八号线 = EMA(C,99)；一号线 = EMA(C,144)','每条均线按 2/(N+1) 递推。原作的大盘线还需指数收盘数据；本站这四项只使用当前标的。'],
+ 'ths-53204':['收盘价，快慢周期 12、26，信号平滑 9。','DIFF = EMA(C,12) − EMA(C,26)\nDEA = EMA(DIFF,9)\nMACD = 2 × (DIFF − DEA)','与本站 TradingView MACD 相比，同一根上的柱差扩大为两倍。原作的柱体颜色与背离文字是额外的绘图逻辑。'],
+ 'ths-12177':['原作使用 M1 至 M4；本站采用 3、6、12、24，并同步输出收盘价。','BBI = (SMA(C,3) + SMA(C,6) + SMA(C,12) + SMA(C,24)) / 4\n另一输出 = C','四条均线各占四分之一权重。可将收盘线和 BBI 作交叉比较。']
+};
+const formulaTerms={sma:'对窗口求算术平均',ema:'给近期数据更高的指数权重',rma:'使用 Wilder 平滑',rsi:'按平滑上涨与下跌幅度求相对强弱值',stdev:'求窗口总体标准差',highest:'取窗口最高值',lowest:'取窗口最低值',macd:'依次返回快慢均线差、信号线和柱差',bb:'返回均线及上下标准差轨',atr:'平滑真实波幅',smaThs:'按参数 N 和权重 M 递推平滑',ref:'引用指定根数以前的值',cross:'检测前后两根是否发生上穿',crossover:'检测上穿',crossunder:'检测下穿',barssince:'计数距上次条件成立的 K 线',security:'从指定标的和周期读取序列',abs:'取绝对值',max:'取较大值',min:'取较小值',if:'按条件在两个值之间选择'};
+function describeCodeLine(line,ths){
+ const clean=line.replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g,'""'),notes=[];
+ if(!ths&&/\b(?:indicator|study)\s*\(/.test(clean))notes.push(/overlay\s*=\s*true/.test(clean)?'声明主图指标':'声明指标及绘图设置');
+ if(!ths&&/\binput(?:\.\w+)?\s*\(/.test(clean))notes.push('定义可调参数，源码中的 defval 或首个位置参数给出默认值');
+ const assignment=clean.match(ths?/^\s*([\p{L}_]\w*|[\p{L}_][\p{L}\p{N}_]*)\s*(:=|:|=)/u:/^\s*(?:var\s+)?(?:(?:int|float|bool|string)\s+)?([\w]+|\[[\w,\s]+\])\s*(:?=)/);
+ if(assignment)notes.push((ths&&assignment[2]===':'?'输出公式线 ':'计算并保存 ')+assignment[1]);
+ for(const match of clean.matchAll(/(?:\b(?:ta|math|request)\.)?([A-Za-z_]\w*)\s*\(/g)){
+  let key=match[1].toLowerCase();if(ths&&key==='std'){notes.push('按 N−1 计算样本标准差');continue}
+  if(ths)key=({ma:'sma',sma:'smaThs',hhv:'highest',llv:'lowest',stdp:'stdev',barslast:'barssince'})[key]||key;
+  if(Object.hasOwn(formulaTerms,key)&&!notes.includes(formulaTerms[key]))notes.push(formulaTerms[key]);
+ }
+ if(!ths&&/\bplot\s*\(/.test(clean))notes.push('绘制这一表达式的输出线');
+ if(!ths&&/\bhline\s*\(/.test(clean))notes.push('绘制固定水平参考线');
+ if(/alertcondition\s*\(|DRAWTEXT\s*\(|plotshape\s*\(/i.test(clean))notes.push('根据表达式触发提示或标记');
+ if(!ths&&/\b\w+\[\d+\]/.test(clean))notes.push('方括号内的数值为回看根数');
+ return notes.join('，')||'源码表达式，具体运算见原文';
+}
+function appendSourceNotes(box,source,ths){
+ const steps=elm('ol','codeSteps');
+ const lines=ths?source.replace(/\{[^}]*\}/g,'').split(/[;；]/):source.split(/\r?\n/);
+ let shown=0;
+ for(const [idx,raw] of lines.entries()){
+  const line=raw.trim();if(!line||line.startsWith('//'))continue;
+  const li=elm('li');li.append(elm('span','', (ths?'语句 ':'第 ')+(idx+1)+(ths?'':' 行')+' · '+describeCodeLine(line,ths)),elm('code','',line));steps.append(li);
+  if(++shown===12)break;
+ }
+ if(shown)box.append(steps);
+ const full=elm('details','fullCode'),summary=elm('summary','','查看完整'+(ths?'同花顺公式':' Pine 源码'));full.append(summary,elm('pre','',source));box.append(full);
+}
+function marketCodeDetail(host,entry){
+ const box=elm('section','codeDetail');box.append(elm('h4','','代码解读'));
+ if(entry.source){box.append(elm('p','imInfo','按当前用于图表和筛选的源码解析。'));appendSourceNotes(box,entry.formula||entry.source,!!entry.formula)}
+ else if(Object.hasOwn(calculationNotes,entry.id)){
+  const [input,formula,reading]=calculationNotes[entry.id];
+  box.append(elm('p','imInfo',entry.outputs.length?'根据本站计算实现':'根据作者公开公式'),elm('strong','','输入和参数'),elm('p','',input),elm('strong','','计算步骤'),elm('pre','',formula),elm('strong','','输出与读法'),elm('p','',reading));
+  const src=({rsi:templates.rsi,macd:templates.macd,bb:templates.boll})[entry.id];
+  if(src){const details=elm('details','fullCode');details.append(elm('summary','','查看本站使用的 Pine 源码'),elm('pre','',src));box.append(details)}
+  else if(entry.outputs.length){
+   const details=elm('details','fullCode');details.append(elm('summary','','查看本站输出线计算代码'));
+   for(const key of entry.outputs){const def=marketDefs.get(key);details.append(elm('p','imInfo',def.label),elm('pre','',String(def.compute)))}
+   box.append(details);
+  }
+ }else if(!entry.draft)box.append(elm('p','imInfo','此条目目前只有原作索引。录入有权使用的源码后，这里会按实际语句解释参数、计算步骤和输出。'));
+ if(entry.draft){const details=elm('details','fullCode');details.open=!entry.source&&!entry.outputs.length;details.append(elm('summary','','草稿代码解读（静态）'),elm('p','imInfo','以下说明来自源码文本。此草稿尚不能用于计算。'));appendSourceNotes(details,entry.draft,entry.kind==='ths');box.append(details)}
+ host.append(box);
 }
 function showMarketDetail(entry){
  const host=$('imDetail');host.replaceChildren();
  if(!entry){
-  const link=tvScriptLink(marketUi.query);
+  const link=indicatorLink(marketUi.query);
   if(link)host.append(elm('h3','',link.name),marketButton('收录此作品',()=>marketForm(null,link),'imPrimary'));
   else host.append(elm('p','imEmpty','没有符合条件的指标。可以更换关键词或分类。'));
   return;
  }
- const kind=entry.kind==='built'?'内置指标':'社区脚本',starred=marketStars.has(entry.id);
+ const kind=entry.kind==='ths'?'同花顺指标广场':entry.kind==='built'?'TradingView 内置指标':'TradingView 社区脚本',starred=marketStars.has(entry.id);
  const top=elm('div','imDetailTop'),star=marketButton(starred?'★ 已收藏':'☆ 收藏',()=>marketToggle(entry,false),'imStar');
  star.setAttribute('aria-pressed',String(starred));top.append(elm('span','imKind',kind+' · '+entry.category),star);
  host.append(top,elm('h3','',entry.name));
@@ -1124,7 +1357,7 @@ function showMarketDetail(entry){
   field.htmlFor='imOutput';select.id='imOutput';select.setAttribute('aria-label','用于筛选的指标输出线');
   for(const key of entry.outputs)scrOpt(select,key,marketDefs.get(key).label);
   select.value=entry.outputs[0];
-  host.append(elm('p','imInfo',(entry.source?'使用已录入的 Pine 源码':'按原作公开定义在本站计算')+' · '+(entry.overlay?'叠加主图':'独立副图')),field,select);
+  host.append(elm('p','imInfo',(entry.source?'使用已录入的源码':'按原作公开定义在本站计算')+' · '+(entry.overlay?'叠加主图':'独立副图')),field,select);
   actions.append(marketButton(on?'从图表移除':'添加到图表',()=>marketToggle(entry,true),on?'':'imPrimary'),
    marketButton('用于筛选',()=>{$('indicatorMarket').close();openScreener(select.value)}));
   if(on)actions.append(marketButton('查看图表',()=>{$('indicatorMarket').close();$('chartcard').scrollIntoView?.({block:'nearest'})}));
@@ -1132,19 +1365,24 @@ function showMarketDetail(entry){
  }else{
   host.append(elm('p','imInfo','当前可查看原版和收藏。'));
  }
- const url=entry.directory?entry.url:(entry.kind==='built'?entry.url:tvScriptLink(entry.url).url);
- host.append(marketLink(entry.directory?'在官方目录中查看该指标 ↗':entry.kind==='built'?'查看 TradingView 官方说明 ↗':'查看作者的 TradingView 原作 ↗',url,'imSource'));
- if(entry.kind==='community'){
+ const url=entry.directory?entry.url:(entry.kind==='built'?entry.url:indicatorLink(entry.url).url);
+ host.append(marketLink(entry.kind==='ths'?'查看同花顺原作及公式 ↗':entry.directory?'在官方目录中查看该指标 ↗':entry.kind==='built'?'查看 TradingView 官方说明 ↗':'查看作者的 TradingView 原作 ↗',url,'imSource'));
+ if(entry.kind==='community'||entry.kind==='ths'){
   const box=elm('div','imActions');
-  if(!entry.imported)box.append(marketButton('收录此作品',()=>marketForm(entry,tvScriptLink(entry.url))));
-  box.append(marketButton(entry.draft?'编辑源码草稿':entry.source?'更新已录入的 Pine 源码':entry.imported?'编辑收录信息 / Pine 源码':'录入此作品的 Pine 源码',()=>marketForm(entry)));host.append(box);
+  if(!entry.imported)box.append(marketButton('收录此作品',()=>marketForm(entry,indicatorLink(entry.url))));
+  const language=entry.kind==='ths'?'同花顺公式':'Pine 源码';
+  box.append(marketButton(entry.draft?'编辑源码草稿':entry.source?'更新已录入的'+(entry.kind==='ths'?'公式':' Pine 源码'):entry.imported?'编辑收录信息 / '+language:'录入此作品的 '+language,()=>marketForm(entry)));host.append(box);
+ }else if(entry.kind==='built'){
+  const actions=elm('div','imActions');actions.append(marketButton(entry.draft||entry.source?'编辑已录入的 Pine 源码':'为此条目录入 Pine 源码',()=>marketForm(entry)));host.append(actions);
  }
+ marketCodeDetail(host,entry);
 }
 function renderMarket(){
  const rows=marketMatches(),pages=Math.max(1,Math.ceil(rows.length/marketPageSize));
- const query=marketUi.query.trim(),link=$('imCommunityLink'),scriptLink=tvScriptLink(query);
- link.href=scriptLink?.url||'https://www.tradingview.com/scripts/'+(query?'search/'+encodeURIComponent(query)+'/':'')+'?script_type=indicators';
- link.textContent=scriptLink?'查看这项 TradingView 原作 ↗':query?'用此关键词搜索 TradingView 全部社区指标 ↗':'浏览 TradingView 社区指标 ↗';
+ const query=marketUi.query.trim(),link=$('imCommunityLink'),scriptLink=indicatorLink(query);
+ $('imThsHub').hidden=marketUi.tab!=='ths';const ths=marketUi.tab==='ths';
+ link.href=scriptLink?.url||(ths?thsHome:'https://www.tradingview.com/scripts/'+(query?'search/'+encodeURIComponent(query)+'/':'')+'?script_type=indicators');
+ link.textContent=scriptLink?'查看这项指标原作 ↗':ths?'打开同花顺官方广场 ↗':query?'用此关键词搜索 TradingView 全部社区指标 ↗':'浏览 TradingView 社区指标 ↗';
  marketUi.page=Math.max(0,Math.min(marketUi.page,pages-1));
  const list=rows.slice(marketUi.page*marketPageSize,(marketUi.page+1)*marketPageSize);
  if(!list.some(entry=>entry.id===marketUi.selected))marketUi.selected=list[0]?.id||'';
@@ -1153,12 +1391,12 @@ function renderMarket(){
  $('imPrev').disabled=marketUi.page===0;$('imNext').disabled=marketUi.page>=pages-1;$('imPager').hidden=pages===1;
  const host=$('imList');host.replaceChildren();
  for(const entry of list){
-  const row=marketButton('',()=>{marketUi.selected=entry.id;marketInfo('');renderMarket();$('imDetail').focus({preventScroll:true})},'imItem'),left=elm('span');
+  const row=marketButton('',()=>{marketUi.selected=entry.id;marketInfo('');renderMarket();$('imDetail').scrollTop=0;$('imDetail').focus({preventScroll:true})},'imItem'),left=elm('span');
   row.dataset.id=entry.id;row.setAttribute('aria-pressed',String(entry.id===marketUi.selected));left.append(elm('strong','',entry.name),elm('small','',entry.author+' · '+(entry.original&&entry.original!==entry.name?entry.original:entry.category)));
   row.append(left);if(marketActive.has(entry.id)||marketStars.has(entry.id)||entry.outputs.length)row.append(elm('em','',[(marketStars.has(entry.id)?'★':''),(marketActive.has(entry.id)?'图表上':entry.outputs.length?'本站可用':'')].filter(Boolean).join(' ')));
   host.append(row);
  }
- if(!list.length)host.append(elm('p','imEmpty',scriptLink?'已识别 TradingView 作品链接。':marketUi.tab==='imported'?'收录的社区作品会出现在这里。':marketUi.tab==='star'?'收藏的指标会出现在这里。':marketUi.tab==='on'?'添加到图表的指标会出现在这里。':'暂无匹配'));
+ if(!list.length)host.append(elm('p','imEmpty',scriptLink?'已识别指标作品链接。':marketUi.tab==='imported'?'收录的作品会出现在这里。':marketUi.tab==='star'?'收藏的指标会出现在这里。':marketUi.tab==='on'?'添加到图表的指标会出现在这里。':'暂无匹配'));
  showMarketDetail(marketCatalog.get(marketUi.selected));
 }
 function marketReveal(id,tab='all'){
@@ -1172,21 +1410,22 @@ function openIndicatorMarket(id){
 }
 function importMarketEntry(event){
  event.preventDefault();
- const raw=$('imUrl').value,link=tvScriptLink(raw),code=$('imCode').value,error=$('imError');
+ const raw=$('imUrl').value,link=editingBuiltin||indicatorLink(raw),code=$('imCode').value,error=$('imError');
  if(!link){
-  error.textContent=/tradingview\.com\/(?:chart|x)\//i.test(raw)?'这是图表分享链接。请打开指标的作者作品页，复制该作品链接。':'请粘贴 TradingView 指标的作品链接，例如 tradingview.com/script/… 或 tradingview.com/v/… 。';
+  error.textContent=/tradingview\.com\/(?:chart|x)\//i.test(raw)?'这是图表分享链接。请打开指标的作者作品页，复制该作品链接。':'请粘贴 TradingView 的 /script/ 或 /v/ 作品链接，或同花顺指标平台的 /store/formula/detail/indexid/ 作品链接。';
   $('imUrl').focus();return;
  }
- const revised=readList('indicator-imports').filter(entry=>entry&&typeof entry.name==='string'&&tvScriptLink(entry.url)?.id===entry.id);
+ const revised=readList('indicator-imports').filter(savedIndicatorLink);
  const at=revised.findIndex(row=>row.id===link.id),previous=revised[at],known=marketCatalog.get(link.id);
- let source=previous?.source||'',draft=previous?.draft||'',draftError=previous?.draftError||'',pineTitle='';
+ let source=previous?.source||'',formula=previous?.formula||'',draft=previous?.draft||'',draftError=previous?.draftError||'',pineTitle='';
+ const overlay=$('imFormulaOverlay').value==='overlay';
  if(code.trim()){
-  try{pineTitle=pine(code,state.bars.slice(-40)).title;source=code;draft='';draftError=''}
+  try{const candidate=link.kind==='ths'?translateThs(code,$('imName').value.trim()||known?.name||link.name,overlay):code;pineTitle=pine(candidate,state.bars.slice(-40)).title;source=candidate;formula=link.kind==='ths'?code:'';draft='';draftError=''}
   catch(e){draft=code;draftError=e.message}
  }
  const name=($('imName').value.trim()||previous?.name||known?.name||pineTitle||link.name).slice(0,120);
  const author=($('imAuthor').value.trim()||previous?.author||(known?.author==='作者未填写'?'':known?.author)||'').slice(0,80);
- const saved={id:link.id,url:link.url,name,author,source};if(draft)Object.assign(saved,{draft,draftError});
+ const saved={id:link.id,url:link.url,name,author,source};if(formula)saved.formula=formula;if(draft)Object.assign(saved,{draft,draftError,draftOverlay:overlay});
  if(at<0)revised.push(saved);else revised[at]=saved;
  try{localStorage.setItem('candledesk-v1:indicator-imports',JSON.stringify(revised))}catch{error.textContent='当前浏览器无法保存。请允许此网站使用本地存储并确认有可用空间，表单内容已保留。';return}
  marketImports.splice(0,marketImports.length,...revised);rebuildMarket();marketStars.add(link.id);storeWrite('indicator-stars',[...marketStars]);
@@ -1195,18 +1434,23 @@ function importMarketEntry(event){
 }
 function setupIndicatorMarket(){
  $('indicatorMarketBtn').onclick=()=>openIndicatorMarket();
+ $('imThsBrowse').onclick=()=>{
+  const board=$('imThsBoard'),button=$('imThsBrowse'),open=board.hidden;board.hidden=!open;button.setAttribute('aria-expanded',String(open));button.textContent=open?'收起官方排行':'站内浏览官方排行';
+  if(open&&!board.children.length){const frame=elm('iframe');frame.title='同花顺官方指标排行榜';frame.src=thsHome;frame.referrerPolicy='no-referrer';board.append(frame,elm('p','imInfo','若官方页面未显示，可点击「在同花顺打开」。'))}
+ };
  for(const category of [catTrend,catOsc,catVol,catQty,catChain,catOther])scrOpt($('imCategory'),category,category);
  for(const button of $('imTabs').children)button.onclick=()=>{marketUi.tab=button.dataset.kind;marketUi.page=0;marketInfo('');renderMarket()};
  $('imQuery').oninput=()=>{marketUi.query=$('imQuery').value;marketUi.page=0;marketInfo('');renderMarket()};
  $('imCategory').onchange=()=>{marketUi.category=$('imCategory').value;marketUi.page=0;marketInfo('');renderMarket()};
  for(const [id,step] of [['imPrev',-1],['imNext',1]])$(id).onclick=()=>{marketUi.page+=step;marketInfo('');renderMarket();$('imList').scrollTop=0};
- $('imImportBtn').onclick=()=>{const link=tvScriptLink($('imQuery').value);marketForm(link&&marketCatalog.get(link.id),link)};
- $('imCancel').onclick=()=>{$('imForm').hidden=true};$('imForm').onsubmit=importMarketEntry;
+ $('imImportBtn').onclick=()=>{const link=indicatorLink($('imQuery').value);marketForm(link&&marketCatalog.get(link.id),link)};
+ $('imUrl').oninput=marketFormLanguage;$('imCancel').onclick=()=>{$('imForm').hidden=true};$('imForm').onsubmit=importMarketEntry;
  if(typeof location!=='undefined'){
   const openHash=()=>{
-   if(!['#indicators','#indicators/import'].includes(location.hash))return;
+   if(!['#indicators','#indicators/import','#indicators/ths'].includes(location.hash))return;
    if(!$('indicatorMarket').open)openIndicatorMarket();
    if(location.hash==='#indicators/import')marketForm();
+   if(location.hash==='#indicators/ths'){marketReveal('ths-329','ths');renderMarket()}
   };
   openHash();if(typeof window!=='undefined')window.addEventListener('hashchange',openHash);
  }
