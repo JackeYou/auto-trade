@@ -17,6 +17,11 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
 .contractStats div{display:flex;align-items:baseline;gap:8px}.contractStats span{color:var(--dim);font-size:13px}.contractStats b{font:500 14px var(--mono)}
 .searchMarkets{margin:12px 0}.groupAdd{color:var(--gold);font:inherit;padding:0 4px}.groupHeading .groupTotal{margin-left:auto;margin-right:6px}
 .tag.contractTag{background:#30291e;border-color:#5b492c;color:var(--gold)}.resultBtn small{text-align:right;margin-left:8px}.watchTicker{overflow-wrap:anywhere}
+.sectionButtons,.scrActions,.scrPresets,.scrReports,.scrPager,.scrTvHeader,.scrAccount{display:flex;align-items:center;gap:9px}.sectionButtons{flex-wrap:wrap;justify-content:flex-end}.sectionButtons .editorBtn:last-child{background:transparent;color:var(--dim);border-color:var(--line)}
+#screenDialog{width:min(1050px,96vw);padding:clamp(12px,2.4vw,26px)}.scrTabs{max-width:420px;margin-bottom:16px}.scrSettings{display:grid;grid-template-columns:2fr 1fr 1.5fr;gap:10px}.scrSettings label,.scrTvHeader label{display:grid;gap:4px}.scrPresets{flex-wrap:wrap;margin:14px 0 10px;color:var(--dim);font-size:13px}
+#screenDialog :is(.scrPresets,.scrActions,.scrPager) button,.scrRemove,.scrOpen,.scrSave{border:1px solid #3c454b;padding:6px 10px;font-size:13px}#screenDialog .runBtn{background:var(--gold);color:#241c10;border-color:var(--gold);font-weight:650}#screenDialog button:disabled{opacity:.45;cursor:default}
+.scrRule{display:grid;grid-template-columns:minmax(160px,2fr) minmax(90px,1fr) minmax(80px,.8fr) minmax(120px,1.6fr) auto;gap:6px;align-items:center;margin-bottom:7px}.scrRule select,.scrRule input{min-width:0;width:100%;padding:7px;font-size:14px}.scrActions{justify-content:flex-end;flex-wrap:wrap}.scrActions button:first-child{margin-right:auto}.scrReports{margin:19px 0 6px;flex-wrap:wrap}.scrReports span,.scrHint,.scrPager{color:var(--dim);font-size:13px}.scrScroll{max-height:42vh;overflow:auto}.scrScroll table{width:100%;border-collapse:collapse;font-size:14px;text-align:left}.scrScroll th,.scrScroll td{white-space:nowrap;padding:7px 8px;border-bottom:1px solid var(--line)}.scrScroll th{position:sticky;top:0;background:#20262b;z-index:1}.scrScroll th button,.scrScroll .scrOpen{padding:0;border:0;text-align:left;font-size:inherit}.scrScroll .scrOpen{color:var(--gold)}.scrScroll td small{display:block;font-size:12px;color:var(--dim)}.scrPager{justify-content:flex-end;margin-top:7px}.scrHint{margin:10px 0 2px}.scrTvHeader,.scrAccount{justify-content:space-between;flex-wrap:wrap;margin:12px 0}.scrTvHeader a,.scrAccount a,.tradingview-widget-copyright a{color:var(--gold);font-size:14px}.scrTvHeader select{min-width:145px}.scrAccount{border-top:1px solid var(--line);padding-top:12px}.scrAccount p{margin:2px 0}.scrWidgetBox{height:min(54vh,580px);min-height:300px}.tradingview-widget-container__widget{width:100%;height:100%}.tradingview-widget-copyright{margin:5px 0}#scrTvStatus{margin-top:20px}
+@media(max-width:680px){.sectionButtons{gap:4px}.sectionButtons .editorBtn{padding:5px 7px;font-size:12px}.sectionButtons .editorBtn svg{display:none}.scrRule{grid-template-columns:1fr 1fr auto;padding:8px 0;border-bottom:1px solid var(--line)}.scrRule>*:first-child{grid-column:span 2}.scrRule .scrRemove{grid-column:3;grid-row:1}.scrRule>*:nth-child(4){grid-column:span 2}.scrSettings{grid-template-columns:1fr 1fr}.scrSettings label:first-child{grid-column:span 2}.scrScroll{max-height:38vh}.scrActions{gap:5px}}
 </style>
 </head>
 <body>
@@ -46,7 +51,7 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
  <div class="sidefoot"><span class="sourceDot"></span><span>公开市场数据</span><span class="sideNum" id="watchCount"></span></div>
 </aside>
 <main id="main">
- <div class="sectionhead"><div><div class="eyebrow"><i></i> MARKET TERMINAL</div><h1>行情总览</h1></div><button class="editorBtn" id="editorBtn"><svg><use href="#i-code"/></svg>指标编辑器</button></div>
+ <div class="sectionhead"><div><div class="eyebrow"><i></i> MARKET TERMINAL</div><h1>行情总览</h1></div><div class="sectionButtons"><button class="editorBtn" id="screenBtn">市场筛选</button><button class="editorBtn" id="editorBtn"><svg><use href="#i-code"/></svg>指标编辑器</button></div></div>
  <section class="quote">
   <div class="instrument"><div id="bigBadge"></div><div><div class="titleline"><h2 id="assetName">比特币</h2><span id="marketTag" class="tag">现货</span></div><div class="symbolLine" id="symbolLine"></div></div></div>
   <div class="priceblock"><strong id="price">—</strong><span id="change">—</span></div>
@@ -66,6 +71,29 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
  </section>
  <div class="dateline"><span id="dataOrigin"></span><button id="retry">刷新行情</button></div>
 </main></div>
+<dialog id="screenDialog" aria-labelledby="screenHeading">
+ <div class="modalhead"><h2 id="screenHeading">市场筛选</h2><button class="icon close" aria-label="关闭市场筛选">✕</button></div>
+ <nav class="filters scrTabs" id="scrTabs" aria-label="筛选来源"><button data-tab="site" aria-pressed="true">按本站指标筛选</button><button data-tab="tv" aria-pressed="false">TradingView 官方筛选</button></nav>
+ <section id="scrLocal">
+  <div class="scrSettings">
+   <label>标的范围<select id="scrScope"><option value="watch">全部自选</option><option value="stocks">自选 A 股</option><option value="spotwatch">自选加密现货</option><option value="futwatch">自选加密合约</option><option value="spot">币安 USDT 现货</option><option value="um">币安 U 本位合约</option><option value="cm">币安币本位合约</option></select></label>
+   <label>K 线周期<select id="scrTf"><option value="5m">5 分钟</option><option value="15m">15 分钟</option><option value="1h">1 小时</option><option value="1d" selected>日线</option></select></label>
+   <label>匹配方式<select id="scrMode"><option value="all">满足全部条件</option><option value="any">满足任一条件</option></select></label>
+  </div>
+  <div class="scrPresets"><span>常用条件</span><button data-preset="rsi">RSI 超卖</button><button data-preset="macd">MACD 金叉</button><button data-preset="volume">放量站上均线</button></div>
+  <div id="scrRules"></div>
+  <div class="scrActions"><button id="scrAdd">＋ 添加条件</button><button id="scrStop" hidden>停止扫描</button><button id="scrRun" class="runBtn">开始筛选</button></div>
+  <div class="scrReports"><strong>筛选结果</strong><span id="scrStatus" role="status"></span></div>
+  <div class="scrScroll"><table id="scrTable"><thead id="scrHead"></thead><tbody id="scrBody"></tbody></table></div>
+  <div class="scrPager" id="scrPager" hidden><button id="scrPrev">上一页</button><span id="scrPage"></span><button id="scrNext">下一页</button></div>
+  <p class="scrHint">指标按本站数据源最新一根 K 线计算，未收盘数值会变化。已保存的 Pine 输出线也可作为筛选条件。</p>
+ </section>
+ <section id="scrOfficial" hidden>
+  <div class="scrTvHeader"><label>市场<select id="scrTvMarket"><option value="china">中国股票</option><option value="crypto">加密交易对</option></select></label><a id="scrTvFull" href="https://www.tradingview.com/screener/" target="_blank" rel="noopener noreferrer">打开官方完整版 ↗</a></div>
+  <div id="scrWidget"></div><p id="scrTvStatus" class="scrHint" role="status"></p>
+  <div class="scrAccount"><div><strong>我的 TradingView 指标</strong><p class="scrHint">用已登录的账号在 Pine 筛选器中选择个人或获授权的脚本，可用范围以账号套餐为准。</p></div><a href="https://www.tradingview.com/pine-screener/" target="_blank" rel="noopener noreferrer">打开 Pine 筛选器 ↗</a></div>
+ </section>
+</dialog>
 <dialog id="symbolDialog"><div class="modalhead"><h2>添加行情标的</h2><button class="icon close" aria-label="关闭">✕</button></div>
  <input id="query" aria-label="搜索名称或交易代码" placeholder="搜索名称或代码，如 BTC、ETHUSDT、600519" autocomplete="off">
  <nav class="filters searchMarkets" id="searchMarkets" aria-label="搜索市场"><button data-market="all">全部</button><button data-market="crypto">现货</button><button data-market="um">U 本位合约</button><button data-market="cm">币本位合约</button></nav>
@@ -84,19 +112,8 @@ const templates={
  boll:'//@version=6\nindicator("布林带", overlay=true)\n[basis, upper, lower] = ta.bb(close, 20, 2)\nplot(basis, "中轨", color=color.orange)\nplot(upper, "上轨", color=color.aqua)\nplot(lower, "下轨", color=color.aqua)',
  rsi:'//@version=6\nindicator("RSI", overlay=false)\nlength = input.int(14, "周期")\nplot(ta.rsi(close, length), "RSI", color=color.purple)\nhline(70, "超买", color=color.red)\nhline(30, "超卖", color=color.teal)',
  macd:'//@version=6\nindicator("MACD", overlay=false)\n[dif, dea, hist] = ta.macd(close, 12, 26, 9)\nplot(dif, "DIF", color=color.orange)\nplot(dea, "DEA", color=color.blue)\nplot(hist, "柱差", color=color.teal)'};
-function pine(source,bars){
- const fail=msg=>{throw Error(msg)};
- if(source.length>20000)fail('源码限 20,000 字符');
- const env=Object.create(null), plots=[], n=bars.length;
- for(const key of ['open','high','low','close','volume'])env[key]=bars.map(b=>b[key]);
- const series=v=>Array.isArray(v)?v:Array(n).fill(v);
- const math=(a,b,op)=>Array.isArray(a)||Array.isArray(b)?series(a).map((v,i)=>op(v,Array.isArray(b)?b[i]:b)):op(a,b);
- env.hl2=bars.map(b=>(b.high+b.low)/2);env.hlc3=bars.map(b=>(b.high+b.low+b.close)/3);env.ohlc4=bars.map(b=>(b.high+b.low+b.open+b.close)/4);
- Object.assign(env,{true:true,false:false,na:NaN});
- for(const [name,v] of Object.entries(colors))env['color.'+name]=v;
- const period=v=>Number.isInteger(v)&&v>=1&&v<=2000?v:fail('周期须为 1 到 2000 的整数');
- function rolling(data,len,kind){
-  len=period(len);const input=series(data);let prior=NaN;const buf=[];
+function rollingSeries(input,len,kind){
+  let prior=NaN;const buf=[];
   return input.map(v=>{
    if(!Number.isFinite(v))return NaN;
    if(kind==='ema'){prior=Number.isFinite(prior)?prior+(v-prior)*2/(len+1):v;return prior}
@@ -108,6 +125,18 @@ function pine(source,bars){
    prior=mean;return mean;
   });
  }
+function pine(source,bars){
+ const fail=msg=>{throw Error(msg)};
+ if(source.length>20000)fail('源码限 20,000 字符');
+ const env=Object.create(null), plots=[], n=bars.length;
+ for(const key of ['open','high','low','close','volume'])env[key]=bars.map(b=>b[key]);
+ const series=v=>Array.isArray(v)?v:Array(n).fill(v);
+ const math=(a,b,op)=>Array.isArray(a)||Array.isArray(b)?series(a).map((v,i)=>op(v,Array.isArray(b)?b[i]:b)):op(a,b);
+ env.hl2=bars.map(b=>(b.high+b.low)/2);env.hlc3=bars.map(b=>(b.high+b.low+b.close)/3);env.ohlc4=bars.map(b=>(b.high+b.low+b.open+b.close)/4);
+ Object.assign(env,{true:true,false:false,na:NaN});
+ for(const [name,v] of Object.entries(colors))env['color.'+name]=v;
+ const period=v=>Number.isInteger(v)&&v>=1&&v<=2000?v:fail('周期须为 1 到 2000 的整数');
+ const rolling=(data,len,kind)=>rollingSeries(series(data),period(len),kind);
  let title='自定义指标',overlay=false;
  const lines=source.split(/\r?\n/);
  for(let line=0;line<lines.length;line++){
@@ -197,7 +226,7 @@ function symbolFrom(input){
  const found=catalog.find(a=>a.id.toUpperCase()===value||a.name===input);if(found)return found;
  let ticker=value.match(/^(?:(SH|SZ))?(\d{6})(?:\.(SH|SZ))?$/);
  if(ticker){const ex=ticker[1]||ticker[3]||(/^[569]/.test(ticker[2])?'SH':'SZ'),id=ex.toLowerCase()+ticker[2];return catalog.find(a=>a.id===id)||asset([id,ticker[2],ex,'#a4bbd9','#27303c'],'stock')}
- const pair=value.match(/^([A-Z0-9]{2,14}?)[-/]?(USDT|USD)$/)||(/^[A-Z][A-Z0-9]{1,9}$/.test(value)?[null,value,'USD']:null);
+ const pair=value.match(/^([\p{L}\p{N}]{1,40}?)[-/]?(USDT|USD)$/u)||(/^[A-Z][A-Z0-9]{1,9}$/.test(value)?[null,value,'USD']:null);
  if(pair){const id=pair[2]==='USD'?pair[1]+'-USD':pair[1]+'USDT';return catalog.find(a=>a.id===id)||asset([id,pair[1],pair[1][0],'#a3c4e1','#26313a'],'crypto')}
  return null;
 }
@@ -268,7 +297,7 @@ const validBars=list=>Array.from(new Map(list.filter(b=>Object.values(b).every(N
 function coinBars(rows){return validBars(rows.map(([time,low,high,open,close,volume])=>({time,open:+open,high:+high,low:+low,close:+close,volume:+volume})))}
 async function json(url){
  const ctrl=new AbortController(),id=setTimeout(()=>ctrl.abort(),7500);
- try{const res=await fetch(url,{signal:ctrl.signal,cache:'no-store'});if(!res.ok)throw Error('行情源返回 '+res.status);return await res.json()}finally{clearTimeout(id)}
+ try{const res=await fetch(url,{signal:ctrl.signal,cache:'no-store'});if(!res.ok){const error=Error('行情源返回 '+res.status);error.status=res.status;throw error}return await res.json()}finally{clearTimeout(id)}
 }
 let reqId=0;
 function remoteVars(url,keys,charset='utf-8'){
@@ -610,8 +639,246 @@ function setupEditor(){
 for(const d of document.querySelectorAll('dialog')){d.querySelector('.close').onclick=()=>d.close();d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close()}})}
 for(const b of $('filters').children)b.onclick=()=>{filter=b.dataset.filter;setFilter()};
 $('retry').onclick=()=>{getHistory();refreshQuotes()};
+function screenWindow(a,n,fn){
+ const out=Array(a.length).fill(NaN);
+ for(let i=n-1;i<a.length;i++){
+  const window=a.slice(i-n+1,i+1);
+  if(window.every(Number.isFinite))out[i]=fn(window);
+ }
+ return out;
+}
+function screenMean(a){return a.reduce((sum,v)=>sum+v,0)/a.length}
+function screenWma(a,n){return screenWindow(a,n,w=>w.reduce((s,v,i)=>s+v*(i+1),0)/(n*(n+1)/2))}
+function screenDivide(n,d){return Number.isFinite(n)&&Number.isFinite(d)&&d!==0?n/d:NaN}
+function screenMetrics(){
+ const defs=new Map(),ma='均线与趋势',osc='振荡指标',volume='价格与量能',vol='波动与通道';
+ const add=(id,label,group,compute,min=1)=>defs.set(id,{id,label,group,compute,min});
+ const avg=(series,n,type='sma')=>rollingSeries(series,n,type);
+ const col=key=>ctx=>ctx.bars.map(b=>b[key]);
+ for(const [id,label] of [['open','开盘价'],['high','最高价'],['low','最低价'],['close','收盘价'],['volume','本期成交量']])add(id,label,volume,col(id));
+ add('change','本期涨跌幅（%）',volume,({bars})=>bars.map((b,i)=>100*screenDivide(b.close-bars[i-1]?.close,bars[i-1]?.close)));
+ add('rvol','相对成交量（前 20 根均量）',volume,ctx=>{const v=ctx.get('volume'),mean=avg(v,20);return v.map((x,i)=>screenDivide(x,mean[i-1]))});
+ for(const n of [10,20,30,50,100,200])for(const type of ['sma','ema'])add(type+n,type.toUpperCase()+' '+n,ma,c=>avg(c.get('close'),n,type),n);
+ add('hma','Hull 均线 9',ma,c=>{const a=c.get('close'),half=screenWma(a,4),full=screenWma(a,9);return screenWma(half.map((v,i)=>2*v-full[i]),3)});
+ add('vwma','成交量加权均线 20',ma,c=>{const v=c.get('volume'),cv=c.bars.map(b=>b.close*b.volume),w=avg(v,20);return avg(cv,20).map((x,i)=>screenDivide(x,w[i]))});
+ function midrange(c,n){
+  const hi=avg(c.get('high'),n,'highest'),lo=avg(c.get('low'),n,'lowest');
+  return hi.map((v,i)=>(v+lo[i])/2);
+ }
+ add('tenkan','一目转换线 9',ma,c=>midrange(c,9));add('kijun','一目基准线 26',ma,c=>midrange(c,26));
+ add('spanA','一目云上当前先行带 A',ma,c=>{const a=c.get('tenkan'),b=c.get('kijun');return a.map((_,i)=>(a[i-25]+b[i-25])/2)});
+ add('spanB','一目云上当前先行带 B',ma,c=>{const mid=midrange(c,52);return mid.map((_,i)=>mid[i-25]??NaN)});
+ const output=(src,idx)=>ctx=>ctx.study(src)[idx].values;
+ add('rsi','RSI 14',osc,output(templates.rsi,0));
+ for(const [idx,id,name] of [[0,'macd','MACD 线'],[1,'signal','MACD 信号线'],[2,'hist','MACD 柱']])add(id,name+'（12,26,9）',osc,output(templates.macd,idx),idx===0?26:34);
+ function position(a,hi,lo,n){
+  const h=avg(hi,n,'highest'),l=avg(lo,n,'lowest');return a.map((v,i)=>100*screenDivide(v-l[i],h[i]-l[i]));
+ }
+ add('stochK','随机指标 %K（14,3）',osc,c=>avg(position(c.get('close'),c.get('high'),c.get('low'),14),3));
+ add('stochD','随机指标 %D（14,3,3）',osc,c=>avg(c.get('stochK'),3));
+ add('srsiK','Stoch RSI %K（14,14,3）',osc,c=>{const a=c.get('rsi');return avg(position(a,a,a,14),3)});
+ add('srsiD','Stoch RSI %D（14,14,3,3）',osc,c=>avg(c.get('srsiK'),3));
+ add('wpr','威廉 %R 14',osc,c=>position(c.get('close'),c.get('high'),c.get('low'),14).map(v=>v-100));
+ add('cci','CCI 20',osc,c=>screenWindow(c.bars.map(b=>(b.high+b.low+b.close)/3),20,w=>{const m=screenMean(w);return screenDivide(w.at(-1)-m,.015*screenMean(w.map(v=>Math.abs(v-m))))}));
+ add('ao','动量震荡指标 AO（5,34）',osc,c=>{const mid=c.bars.map(b=>(b.high+b.low)/2),slow=avg(mid,34);return avg(mid,5).map((x,i)=>x-slow[i])});
+ add('mom','动量 MOM 10',osc,c=>c.bars.map((b,i)=>b.close-c.bars[i-10]?.close));
+ const directional=(bars,up)=>bars.map((b,i)=>{const p=bars[i-1];if(!p)return NaN;const u=b.high-p.high,d=p.low-b.low;return up?(u>d&&u>0?u:0):(d>u&&d>0?d:0)});
+ add('atr','ATR 14',vol,c=>avg(c.bars.map((b,i)=>{const p=c.bars[i-1]?.close??b.open;return Math.max(b.high-b.low,Math.abs(b.high-p),Math.abs(b.low-p))}),14,'rma'));
+ for(const plus of [true,false])add(plus?'diP':'diM',(plus?'+DI':'−DI')+' 14',osc,c=>{const tr=c.get('atr'),dm=avg(directional(c.bars,plus),14,'rma');return dm.map((x,i)=>100*screenDivide(x,tr[i]))});
+ add('adx','ADX（14,14）',osc,c=>{const p=c.get('diP'),m=c.get('diM');return avg(p.map((v,i)=>v+m[i]===0?0:100*screenDivide(Math.abs(v-m[i]),v+m[i])),14,'rma')});
+ for(const [id,k,name] of [['bull','high','多头力量'],['bear','low','空头力量']])add(id,name+' 13',osc,c=>{const e=avg(c.get('close'),13,'ema');return c.bars.map((b,i)=>b[k]-e[i])},13);
+ add('bbp','多空力量 BBP 13',osc,c=>{const b=c.get('bear');return c.get('bull').map((v,i)=>v+b[i])});
+ add('uo','终极振荡指标 UO（7,14,28）',osc,c=>{
+  const bp=c.bars.map((b,i)=>b.close-Math.min(b.low,c.bars[i-1]?.close??NaN)),tr=c.bars.map((b,i)=>Math.max(b.high,c.bars[i-1]?.close??NaN)-Math.min(b.low,c.bars[i-1]?.close??NaN));
+  const ratios=[7,14,28].map(n=>{const r=avg(tr,n);return avg(bp,n).map((v,i)=>screenDivide(v,r[i]))});
+  return bp.map((_,i)=>100*(4*ratios[0][i]+2*ratios[1][i]+ratios[2][i])/7);
+ });
+ for(const [idx,id,name] of [[0,'bbmid','中轨'],[1,'bbhigh','上轨'],[2,'bblow','下轨']])add(id,'布林带'+name+'（20,2）',vol,output(templates.boll,idx));
+ for(const script of scripts){
+  try{const parsed=pine(script.source,[]);parsed.plots.forEach((p,i)=>add('pine:'+script.id+':'+i,parsed.title+' / '+p.name,'我的 Pine 输出线',output(script.source,i)))}catch{}
+ }
+ return defs;
+}
+function screenValues(bars,defs,ids){
+ const cache=new Map(),studies=new Map();
+ const ctx={bars,get(id){
+  if(!cache.has(id)){
+   const metric=defs.get(id);if(!metric)throw Error('已移除的指标');
+   const series=metric.compute(ctx);for(let i=0;i<Math.min(series.length,metric.min-1);i++)series[i]=NaN;
+   cache.set(id,series);
+  }return cache.get(id);
+ },study(src){if(!studies.has(src))studies.set(src,pine(src,bars).plots);return studies.get(src)}};
+ const result={};
+ for(const id of ids){const s=ctx.get(id);result[id]=[s.at(-2)??NaN,s.at(-1)??NaN]}
+ return result;
+}
+function screenTest(rule,v){
+ const [lp,lc]=v[rule.left], [rp,rc]=rule.rhs==='metric'?v[rule.right]:[Number(rule.num),Number(rule.num)];
+ if(!Number.isFinite(lc)||!Number.isFinite(rc))return null;
+ switch(rule.op){
+  case 'gt':return lc>rc;case 'lt':return lc<rc;case 'gte':return lc>=rc;case 'lte':return lc<=rc;
+  case 'up':case 'down':if(!Number.isFinite(lp)||!Number.isFinite(rp))return null;return rule.op==='up'?lp<=rp&&lc>rc:lp>=rp&&lc<rc;
+  default:throw Error('未知比较条件');
+ }
+}
+const screenOps={gt:'大于',gte:'大于或等于',lt:'小于',lte:'小于或等于',up:'上穿',down:'下穿'};
+const rule=(left,op,value,rhs='number')=>({left,op,rhs,num:rhs==='number'?String(value):'0',right:rhs==='metric'?value:'close'});
+const screenPresets={
+ rsi:[rule('rsi','lt',30)], macd:[rule('macd','up','signal','metric')],
+ volume:[rule('close','up','sma20','metric'),rule('rvol','gt',1.5)]
+};
+const screening={token:0,running:false,defs:null,rules:[],rows:[],fields:[],page:0,sort:null,desc:true,status:'',timer:0};
+const scrPageSize=25;
+function scrNote(msg){screening.status=msg;$('scrStatus').textContent=msg}
+function scrButtonState(active){screening.running=active;$('scrStop').hidden=!active;$('scrRun').disabled=active}
+function scrClear(){
+ screening.token++;screening.rows=[];screening.fields=[];screening.page=0;screening.sort=null;
+ clearTimeout(screening.timer);screening.timer=0;scrButtonState(false);scrNote('设置条件后点击「开始筛选」。');scrTable();
+}
+function scrPersist(){
+ storeWrite('screen-config',{scope:$('scrScope').value,tf:$('scrTf').value,mode:$('scrMode').value,rules:screening.rules});
+}
+function scrOpt(parent,value,label){const option=elm('option','',label);option.value=value;parent.append(option)}
+function scrMetricSelect(id,caption){
+ const select=elm('select');select.setAttribute('aria-label',caption);const groups=new Map();
+ for(const item of screening.defs.values()){
+  if(!groups.has(item.group)){const group=elm('optgroup');group.label=item.group;groups.set(item.group,group);select.append(group)}
+  scrOpt(groups.get(item.group),item.id,item.label);
+ }
+ if(!screening.defs.has(id))scrOpt(select,id,'指标已移除，请重新选择');
+ select.value=id;return select;
+}
+function scrRules(){
+ const host=$('scrRules');host.replaceChildren();
+ for(const [index,r] of screening.rules.entries()){
+  const row=elm('div','scrRule'),left=scrMetricSelect(r.left,'条件指标 '+(index+1)),op=elm('select'),kind=elm('select'),remove=elm('button','scrRemove','移除');
+  op.setAttribute('aria-label','比较方式');kind.setAttribute('aria-label','比较对象类型');
+  for(const [key,label] of Object.entries(screenOps))scrOpt(op,key,label);
+  scrOpt(kind,'number','数值');scrOpt(kind,'metric','另一指标');op.value=r.op;kind.value=r.rhs;
+  const right=r.rhs==='metric'?scrMetricSelect(r.right,'对照指标'):elm('input');
+  if(r.rhs==='number'){right.type='number';right.step='any';right.value=r.num;right.setAttribute('aria-label','阈值')}
+  const change=()=>{scrClear();scrPersist()};
+  left.onchange=()=>{r.left=left.value;change()};op.onchange=()=>{r.op=op.value;change()};
+  kind.onchange=()=>{r.rhs=kind.value;change();scrRules()};
+  if(r.rhs==='metric')right.onchange=()=>{r.right=right.value;change()};else right.oninput=()=>{r.num=right.value;change()};
+  remove.disabled=screening.rules.length===1;remove.onclick=()=>{screening.rules.splice(index,1);change();scrRules()};
+  row.append(left,op,kind,right,remove);host.append(row);
+ }
+}
+function scrTable(){
+ const head=$('scrHead'),body=$('scrBody');head.replaceChildren();body.replaceChildren();
+ const tr=elm('tr');tr.append(elm('th','','标的 / 市场'));
+ for(const id of screening.fields){
+  const th=elm('th'),label=screening.defs.get(id)?.label??id;
+  const b=elm('button','',label+(screening.sort===id?(screening.desc?' ↓':' ↑'):''));
+  b.title='按'+label+'排序';b.onclick=()=>{screening.desc=screening.sort===id?!screening.desc:true;screening.sort=id;screening.page=0;scrTable()};th.append(b);tr.append(th);
+ }
+ tr.append(elm('th','','K 线时间（UTC+8）'),elm('th','','自选'));head.append(tr);
+ const rows=screening.rows.slice(),sort=screening.sort;
+ if(sort)rows.sort((a,b)=>{const x=a.values[sort][1],y=b.values[sort][1];if(!Number.isFinite(x))return Number.isFinite(y)?1:0;if(!Number.isFinite(y))return -1;return screening.desc?y-x:x-y});
+ const pages=Math.max(1,Math.ceil(rows.length/scrPageSize));screening.page=Math.min(pages-1,screening.page);
+ for(const item of rows.slice(screening.page*scrPageSize,(screening.page+1)*scrPageSize)){
+  const a=item.asset,row=elm('tr'),name=elm('td'),open=elm('button','scrOpen',a.name+' · '+ticker(a));
+  open.title='打开该周期的 K 线';open.onclick=()=>{$('screenDialog').close();choose(a,item.tf)};
+  name.append(open,elm('small','',productName(a)+' · '+sourceOf(a)));row.append(name);
+  for(const id of screening.fields){const v=item.values[id][1];row.append(elm('td','',Number.isFinite(v)?v.toLocaleString('zh-CN',{maximumSignificantDigits:7}):'—'))}
+  row.append(elm('td','',dt(item.time,true)));const action=elm('td'),save=elm('button','scrSave');const exists=watch.some(w=>w.id===a.id);save.disabled=exists;save.textContent=exists?'已自选':'加入';
+  save.onclick=()=>{if(watch.length>=40){save.textContent='自选已满';return}watch.push(a);storeWrite('symbols',watch.map(w=>w.id));renderWatch();scrTable()};action.append(save);row.append(action);body.append(row);
+ }
+ $('scrPager').hidden=pages<=1;$('scrPage').textContent=(screening.page+1)+' / '+pages;$('scrPrev').disabled=!screening.page;$('scrNext').disabled=screening.page+1>=pages;
+}
+let scrSpotList=null,scrSpotAt=0;
+async function scrUniverse(scope){
+ if(scope==='um'||scope==='cm'){
+  await loadContracts(scope);const d=directories[scope];
+  if(!d.updated)throw Error('未能取得币安合约清单，可改选「自选加密合约」。');
+  return {assets:[...d.items.values()].filter(a=>!a.expiry||a.expiry>Date.now()),note:d.failed?' · 使用缓存目录':''};
+ }
+ if(scope==='spot'){
+  if(!scrSpotList||Date.now()-scrSpotAt>600000){
+   const data=await json(venues.spot.rest+'/exchangeInfo');if(!Array.isArray(data.symbols))throw Error('未能取得币安现货清单。');
+   scrSpotList=data.symbols.filter(s=>s.status==='TRADING'&&s.quoteAsset==='USDT'&&s.isSpotTradingAllowed!==false).map(s=>asset([s.symbol,s.baseAsset,s.baseAsset[0],'#a3c4e1','#26313a'],'crypto'));scrSpotAt=Date.now();
+  }return {assets:scrSpotList,note:''};
+ }
+ return {assets:watch.filter(a=>scope==='watch'||(scope==='stocks'&&a.market==='stock')||(scope==='spotwatch'&&marketOf(a)==='crypto')||(scope==='futwatch'&&Boolean(a.kind))),note:''};
+}
+function scrStop(){
+ if(!screening.running)return;
+ screening.token++;clearTimeout(screening.timer);screening.timer=0;scrButtonState(false);scrNote('已停止 · '+screening.status);scrTable();
+}
+async function runScreen(){
+ const rules=screening.rules.map(r=>({...r})),defs=screening.defs,tf=$('scrTf').value,scope=$('scrScope').value,any=$('scrMode').value==='any';
+ if(!rules.length||rules.some(r=>!defs.has(r.left)||!Object.hasOwn(screenOps,r.op)||(r.rhs==='metric'?!defs.has(r.right):String(r.num).trim()===''||!Number.isFinite(Number(r.num))))){scrNote('请为每条条件选择有效指标并填写数值。');return}
+ scrClear();scrPersist();scrButtonState(true);scrNote('正在获取标的清单…');const token=screening.token;
+ const requested=new Set(['close']);for(const r of rules){requested.add(r.left);if(r.rhs==='metric')requested.add(r.right)}
+ screening.fields=[...requested];
+ try{
+  const {assets,note}=await scrUniverse(scope);if(token!==screening.token)return;
+  let next=0,done=0,failed=0,missing=0,throttled=false,startSlot=Date.now();
+  const status=()=>done+'/'+assets.length+' 已查 · '+screening.rows.length+' 命中'+(missing?' · '+missing+' 指标值不足':'')+(failed?' · '+failed+' 数据请求失败':'')+note;
+  const paint=()=>{if(token!==screening.token)return;screening.timer=0;scrNote(status());scrTable()};
+  const worker=async()=>{
+   while(next<assets.length&&token===screening.token&&!throttled){
+    const a=assets[next++],delay=Math.max(0,startSlot-Date.now());startSlot=Math.max(startSlot,Date.now())+240;
+    if(delay)await new Promise(resolve=>setTimeout(resolve,delay));if(token!==screening.token||throttled)return;
+    try{
+     const bars=await candles(a,tf);if(token!==screening.token)return;if(!bars.length)throw Error('无行情');
+     const values=screenValues(bars,defs,requested),tests=rules.map(r=>screenTest(r,values));
+     const match=any?tests.includes(true):tests.every(v=>v===true);
+     if(match)screening.rows.push({asset:a,tf,time:bars.at(-1).time,values});
+     else if(tests.includes(null)&&(any||!tests.includes(false)))missing++;
+    }catch(e){if(token!==screening.token)return;failed++;if(e.status===429||e.status===418)throttled=true}
+    done++;if(!screening.timer)screening.timer=setTimeout(paint,180);
+   }
+  };
+  scrNote(status());await Promise.all(Array.from({length:Math.min(3,assets.length)},worker));if(token!==screening.token)return;
+  clearTimeout(screening.timer);screening.timer=0;scrTable();
+  scrNote(!assets.length?'该范围内暂无标的。':(throttled?'行情源限流，已停止 · ':'完成 · ')+status());
+ }catch(e){if(token===screening.token)scrNote('筛选失败 · '+e.message)}finally{if(token===screening.token)scrButtonState(false)}
+}
+const tvTargets={china:{label:'股票筛选器',url:'https://www.tradingview.com/screener/'},crypto:{label:'加密交易对筛选器',url:'https://www.tradingview.com/cex-screener/'}};
+let widgetGeneration=0,widgetMarket='';
+function mountOfficial(){
+ const market=$('scrTvMarket').value,target=tvTargets[market],host=$('scrWidget');
+ if(widgetMarket===market&&host.children.length)return;
+ widgetMarket=market;const generation=++widgetGeneration;
+ $('scrTvFull').href=target.url;$('scrTvStatus').textContent='正在载入 TradingView。若网络无法连接，请打开官方完整版。';
+ const box=elm('div','tradingview-widget-container'),frame=elm('div','tradingview-widget-container__widget'),outer=elm('div','scrWidgetBox');
+ const credit=elm('div','tradingview-widget-copyright'),link=elm('a','',target.label+' by TradingView');link.href=target.url;link.target='_blank';link.rel='noopener nofollow';credit.append(link);
+ const script=elm('script');script.type='text/javascript';script.async=true;script.src='https://s3.tradingview.com/external-embedding/embed-widget-screener.js';
+ script.textContent=JSON.stringify({market,showToolbar:true,defaultColumn:'overview',defaultScreen:market==='crypto'?'top_gainers':'most_capitalized',locale:'zh_CN',colorTheme:'dark',isTransparent:false,width:'100%',height:'100%'});
+ script.onerror=()=>{if(generation===widgetGeneration){widgetMarket='';$('scrTvStatus').textContent='当前网络未能载入组件。可以打开官方完整版，或切回本站指标筛选。'}};
+ script.onload=()=>{if(generation===widgetGeneration)$('scrTvStatus').textContent='行情、筛选字段及覆盖市场由 TradingView 提供。若组件未显示，请打开官方完整版。'};
+ outer.append(box);box.style.height='100%';box.append(frame,credit);host.replaceChildren(outer);box.append(script);
+}
+function scrTab(tab){
+ $('scrLocal').hidden=tab!=='site';$('scrOfficial').hidden=tab!=='tv';
+ for(const b of $('scrTabs').children)b.setAttribute('aria-pressed',String(b.dataset.tab===tab));
+ if(tab==='tv'){scrStop();mountOfficial()}
+}
+function openScreener(){
+ const prefs=storeRead('screen-config',{}),defs=screenMetrics();screening.defs=defs;
+ for(const [id,key,fallback] of [['scrScope','scope','watch'],['scrTf','tf','1d'],['scrMode','mode','all']]){
+  const el=$(id),value=prefs?.[key];el.value=Array.from(el.options).some(o=>o.value===value)?value:fallback;
+ }
+ const saved=Array.isArray(prefs?.rules)?prefs.rules.filter(r=>r&&typeof r.left==='string'&&Object.hasOwn(screenOps,r.op)&&['number','metric'].includes(r.rhs)):[];
+ screening.rules=(saved.length?saved:screenPresets.rsi).map(r=>({...r}));scrClear();scrRules();
+ $('screenDialog').showModal();scrTab('site');
+}
+function setupScreener(){
+ $('screenBtn').onclick=openScreener;$('scrRun').onclick=runScreen;$('scrStop').onclick=scrStop;$('screenDialog').addEventListener('close',scrStop);
+ for(const b of $('scrTabs').children)b.onclick=()=>scrTab(b.dataset.tab);
+ $('scrTvMarket').onchange=mountOfficial;
+ for(const id of ['scrScope','scrTf','scrMode'])$(id).onchange=()=>{scrClear();scrPersist()};
+ for(const b of document.querySelectorAll('[data-preset]'))b.onclick=()=>{
+  screening.rules=screenPresets[b.dataset.preset].map(r=>({...r}));$('scrMode').value='all';scrClear();scrRules();scrPersist();
+ };
+ $('scrAdd').onclick=()=>{screening.rules.push(rule('close','gt','sma20','metric'));scrClear();scrRules();scrPersist()};
+ $('scrPrev').onclick=()=>{screening.page--;scrTable()};$('scrNext').onclick=()=>{screening.page++;scrTable()};
+ if(typeof location!=='undefined'&&location.hash==='#screener')openScreener();
+}
 function clock(){$('clock').textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Shanghai',hour12:false})}
-clock();setInterval(clock,1000);setupEditor();setupSearch();chartEvents();choose(active);refreshQuotes();
+clock();setInterval(clock,1000);setupEditor();setupSearch();chartEvents();choose(active);refreshQuotes();setupScreener();
 let nextBars=0,nextQuotes=0;
 setInterval(()=>{if(document.hidden)return;const now=Date.now();if(now>=nextBars){nextBars=now+(active.market==='stock'?10000:15000);getHistory()}if(now>=nextQuotes){nextQuotes=now+10000;refreshQuotes()}feed()},2000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){getHistory();refreshQuotes()}});</script></body></html>
