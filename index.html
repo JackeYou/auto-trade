@@ -75,7 +75,7 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
   <div class="chartLegend" id="legend"></div><div class="ohlc" id="ohlc"></div>
   <div class="plot" id="plot"><canvas id="canvas" tabindex="0" aria-label="行情图。左右方向键平移，加减键缩放"></canvas><div class="empty" id="empty" hidden></div><div id="tooltip" hidden></div></div>
   <div class="chartfoot"><div class="viewControls"><button class="icon small" id="zoomOut" title="缩小" aria-label="缩小"><svg><use href="#i-minus"/></svg></button><button class="icon small" id="zoomIn" title="放大" aria-label="放大"><svg><use href="#i-plus"/></svg></button><button class="icon small" id="resetView" title="回到最新" aria-label="回到最新"><svg><use href="#i-reset"/></svg></button></div><span id="barDate"></span><span>UTC+8</span></div>
-  <div class="historyRange" id="historyRange" aria-label="图表时间范围"><strong>时间范围</strong><button id="rangeRecent" aria-pressed="true">近期</button><button id="rangeAll" aria-pressed="false" title="用日线显示当前交易对或合约的全部交易历史">上市至今</button><button id="rangeFirst" hidden>查看首日</button><span id="rangeStatus" role="status"></span></div>
+  <div class="historyRange" id="historyRange" aria-label="图表时间范围"><strong>时间范围</strong><button id="rangeAll" aria-pressed="true" title="显示当前交易对或合约从首个交易日至今的完整走势">上市至今</button><button id="rangeFirst" hidden>查看首日</button><span id="rangeStatus" role="status"></span></div>
  </section>
  <div class="dateline"><span id="dataOrigin"></span><button id="retry">刷新行情</button></div>
 </main></div>
@@ -332,14 +332,14 @@ function candleBucket(time,p,stock=false){
  if(p==='1w')return Math.floor((local+3*86400)/604800)*604800-3*86400-offset;
  return Math.floor(local/periods[p])*periods[p]-offset;
 }
-function groupCandles(bars,p,stock=false){
+function groupCandles(bars,p,stock=false,limit=320){
  const groups=[];
  for(const bar of validBars(bars,Infinity)){
   const time=candleBucket(bar.time,p,stock),last=groups.at(-1);
   if(!last||last.time!==time)groups.push({...bar,time});
   else{last.high=Math.max(last.high,bar.high);last.low=Math.min(last.low,bar.low);last.close=bar.close;last.volume+=bar.volume}
  }
- return groups.slice(-320);
+ return groups.slice(-limit);
 }
 function coinBars(rows){return validBars(rows.map(([time,low,high,open,close,volume])=>({time,open:+open,high:+high,low:+low,close:+close,volume:+volume})))}
 function binanceBars(rows,limit=320){return validBars(rows.map(([time,o,h,l,c,v])=>({time:time/1000,open:+o,high:+h,low:+l,close:+c,volume:+v})),limit)}
@@ -452,27 +452,38 @@ const archivedPages=new Map(),completeDailyArchives=new Map();
 let listingView=null;
 const historyDate=t=>new Date(t*1000).toISOString().slice(0,10);
 function paintListingControls(){
- const v=listingView;$('historyRange').hidden=active.market!=='crypto';$('rangeRecent').setAttribute('aria-pressed',String(!v));
- $('rangeAll').setAttribute('aria-pressed',String(!!v));$('rangeAll').textContent=v?.error?'重试全部历史':'上市至今';$('rangeFirst').hidden=!v?.complete;
+ const v=listingView;$('historyRange').hidden=active.market!=='crypto';$('rangeFirst').hidden=!v?.complete;
+ const resetLabel=v?'显示上市至今':'回到最新';$('resetView').title=resetLabel;$('resetView').setAttribute('aria-label',resetLabel);
  let message='';
  if(v){
-  const first=state.bars[0],last=state.bars.at(-1);
+  const first=v.daily[0],last=v.daily.at(-1);
   const span=first&&last?historyDate(first.time)+' 至 '+historyDate(last.time):'';
-  if(v.complete)message=sourceOf(active)+' · 首根日线 '+span+' · '+state.bars.length+' 根'+(v.onboard&&first&&historyDate(v.onboard)!==historyDate(first.time)?' · 交易所登记挂牌日 '+historyDate(v.onboard):'');
-  else if(v.error)message='全历史尚未加载完成 · '+v.error+(span?' · 已取得 '+span:'');
+  if(v.complete)message=sourceOf(active)+' · '+span+(v.onboard&&first&&historyDate(v.onboard)!==historyDate(first.time)?' · 交易所登记挂牌日 '+historyDate(v.onboard):'');
+  else if(v.error)message='全历史尚未加载完成 · '+v.error+'，点「上市至今」重试'+(span?' · 已取得 '+span:'');
   else message='正在按日线加载'+(v.total?' · '+v.done+'/'+v.total+' 段':'')+(span?' · 已取得 '+span:'');
+  if(v.detailError)message+=' · '+v.detailError;
+  else if(v.pending)message+=' · 正在载入'+periodNames[activePeriod]+'线';
+  else if(periods[activePeriod]<historyDay)message+=v.detail?' · '+periodNames[activePeriod]+'线':' · 全景按日线显示，放大可看'+periodNames[activePeriod]+'线';
  }
  $('rangeStatus').textContent=message;
 }
 function fitListing(view){
- view.fit=true;view.firstFocus=false;state.offset=0;state.count=Math.max(1,state.bars.length);state.cursor=null;drawSoon();
+ clearTimeout(view.detailTimer);view.pending=null;view.detail=null;view.detailError='';syncDetailStream(view);
+ view.fit=true;view.firstFocus=false;if(view.overview.length||!sample)state.bars=view.overview;
+ state.offset=0;state.count=Math.max(1,state.bars.length);state.cursor=null;refreshScreen();paintListingControls();
 }
 function mergeListing(view,bars,olderOnly=false){
  if(view!==listingView)return;
  for(const bar of bars)if(!olderOnly||!view.bars.has(bar.time))view.bars.set(bar.time,bar);
- state.bars=[...view.bars.values()].sort((a,b)=>a.time-b.time);
- if(view.fit)fitListing(view);
- if(state.bars.length)sample=false;
+ view.daily=[...view.bars.values()].sort((a,b)=>a.time-b.time);
+ view.overview=periods[activePeriod]>historyDay?groupCandles(view.daily,activePeriod,false,Infinity):view.daily;
+ if(view.overview!==view.daily&&view.overview.length)view.overview[0].time=view.daily[0].time;
+ if(!view.detail){
+  state.bars=view.overview;
+  if(view.fit){state.count=Math.max(1,state.bars.length);state.offset=0}
+  else if(view.firstFocus)state.offset=Math.max(0,state.bars.length-state.count);
+ }
+ if(bars.length)sample=false;
 }
 async function archiveRequest(url,view){
  try{return await json(url,view.cancel.signal)}catch(e){
@@ -481,15 +492,15 @@ async function archiveRequest(url,view){
   return json(url,view.cancel.signal);
  }
 }
-async function dailyArchivePage(a,start,end,view){
- const key=a.id+'|'+start+'|'+end;
+async function archivePage(a,start,end,view,period='1d'){
+ const key=a.id+'|'+period+'|'+start+'|'+end;
  if(archivedPages.has(key))return archivedPages.get(key);
  let bars;
  if(binance(a)){
-  const url=binanceUrl(a,'klines',{interval:'1d',startTime:start*1000,endTime:Math.min(Date.now(),end*1000-1),limit:a.kind?200:1000});
+  const url=binanceUrl(a,'klines',{interval:period,startTime:start*1000,endTime:Math.min(Date.now(),end*1000-1),limit:a.kind?200:1000});
   bars=binanceBars(await archiveRequest(url,view),Infinity);
  }else{
-  const url='https://api.exchange.coinbase.com/products/'+encodeURIComponent(a.id)+'/candles?'+new URLSearchParams({granularity:'86400',start:new Date(start*1000).toISOString(),end:new Date(Math.min(Date.now(),end*1000)).toISOString()});
+  const url='https://api.exchange.coinbase.com/products/'+encodeURIComponent(a.id)+'/candles?'+new URLSearchParams({granularity:String(periods[period]),start:new Date(start*1000).toISOString(),end:new Date(Math.min(Date.now(),end*1000)).toISOString()});
   bars=coinBars(await archiveRequest(url,view));
  }
  bars=bars.filter(b=>b.time>=start&&b.time<end);
@@ -514,7 +525,7 @@ async function loadListingHistory(view){
   for(let i=0;i<windows.length;){
    if(view!==listingView)return;
    const batch=windows.slice(i,i+2);i+=batch.length;
-   const results=await Promise.allSettled(batch.map(([start,stop])=>dailyArchivePage(a,start,stop,view)));
+   const results=await Promise.allSettled(batch.map(([start,stop])=>archivePage(a,start,stop,view)));
    if(view!==listingView)return;
    const passed=results.filter(r=>r.status==='fulfilled'),received=passed.flatMap(r=>r.value);view.done+=passed.length;
    receivedCount+=received.length;if(expected&&received.some(b=>b.time===expected))sawExpected=true;
@@ -523,9 +534,9 @@ async function loadListingHistory(view){
    const failure=results.find(r=>r.status==='rejected');if(failure)throw failure.reason;
    if(i<windows.length&&!binance(a))await new Promise(resolve=>setTimeout(resolve,230));
   }
-  if(!receivedCount||!state.bars.length)throw Error('历史区间没有返回日线');
-  if(expected&&(!sawExpected||state.bars[0].time!==expected))throw Error('首根日线与行情源记录不一致');
-  view.complete=true;completeDailyArchives.set(a.id,{end,bars:state.bars.slice()});
+  if(!receivedCount||!view.daily.length)throw Error('历史区间没有返回日线');
+  if(expected&&(!sawExpected||view.daily[0].time!==expected))throw Error('首根日线与行情源记录不一致');
+  view.complete=true;completeDailyArchives.set(a.id,{end,bars:view.daily.slice()});
   if(completeDailyArchives.size>8)completeDailyArchives.delete(completeDailyArchives.keys().next().value);
  }catch(e){
   if(view===listingView)view.error=e.status===429||e.status===418?'行情源限流，稍后可重试':e.message||'行情源连接失败';
@@ -533,18 +544,90 @@ async function loadListingHistory(view){
 }
 function showListingHistory(){
  if(active.market!=='crypto')return;
- if(listingView&&!listingView.error){fitListing(listingView);return}
- const previous=listingView?.previous||activePeriod,retained=listingView?.bars;
- if(activePeriod!=='1d')choose(active,'1d');
- const initial=sample?[]:state.bars;listingView?.cancel.abort();
- const onboard=active.kind?(active.onboard||directories[active.kind].items.get(active.id)?.onboard||0)/1000:0;
- const view={previous,onboard,cancel:new AbortController(),bars:retained||new Map(initial.map(b=>[b.time,b])),fit:true,firstFocus:false,complete:false,loading:true,error:'',done:0,total:0};
- listingView=view;mergeListing(view,[]);paintListingControls();return loadListingHistory(view);
+ if(listingView){
+  fitListing(listingView);if(!listingView.error)return;
+  listingView.error='';listingView.done=0;listingView.total=0;listingView.loading=true;
+ }else{
+  const onboard=active.kind?(active.onboard||directories[active.kind].items.get(active.id)?.onboard||0)/1000:0;
+  listingView={onboard,cancel:new AbortController(),bars:new Map(),daily:[],overview:[],fit:true,firstFocus:false,complete:false,loading:true,error:'',done:0,total:0};
+  if(!sample)mergeListing(listingView,state.bars);
+  state.count=Math.max(1,state.bars.length);state.offset=0;
+ }
+ paintListingControls();return loadListingHistory(listingView);
 }
 function viewListingDay(){
- if(!listingView?.complete||!state.bars.length)return;
- listingView.fit=false;listingView.firstFocus=true;state.count=Math.min(state.bars.length,innerWidth<680?45:88);
+ if(!listingView?.complete||!listingView.daily.length)return;
+ const count=innerWidth<680?45:88;
+ if(periods[activePeriod]<historyDay)return requestDetail(listingView,listingView.daily[0].time+count*periods[activePeriod],count,true);
+ listingView.fit=false;listingView.firstFocus=true;state.count=Math.min(state.bars.length,count);
  state.offset=state.bars.length-state.count;state.cursor=null;drawSoon();
+}
+function detailLimit(){return Math.max(360,Math.ceil(historyDay/periods[activePeriod]))}
+function requestDetail(view,end,count,first=false){
+ if(!view.daily.length)return;
+ const seconds=periods[activePeriod],earliest=view.daily[0].time;
+ const lastDay=view.daily.at(-1).time,latest=Math.min(lastDay+historyDay,candleBucket(Math.min(Date.now(),active.expiry||Infinity)/1000,activePeriod)+seconds);
+ const width=Math.max(1,Math.min(detailLimit(),Math.round(count)));
+ const stop=Math.min(latest,Math.max(earliest+width*seconds,Math.round(end/seconds)*seconds));
+ const start=Math.max(earliest,stop-width*seconds);
+ const request={start,stop,count:width,first,live:!first&&stop===latest&&latest>Date.now()/1000-seconds};
+ clearTimeout(view.detailTimer);view.pending=request;view.detailError='';paintListingControls();
+ view.detailTimer=setTimeout(()=>loadDetail(view,request),90);
+}
+async function loadDetail(view,request){
+ const a=active,p=activePeriod,base=binance(a)?p:coinBasePeriod[p]||p;
+ const seconds=periods[p],step=periods[base]*(a.kind?199:binance(a)?999:299);
+ const begin=Math.max(view.daily[0].time,request.start-100*seconds);
+ const end=Math.min(Math.floor(Math.min(Date.now(),active.expiry||Infinity)/1000)+1,request.first?Math.max(request.stop,begin+historyDay):request.stop);
+ const rows=[];
+ try{
+  for(let start=begin;start<end;start+=step){
+   if(view!==listingView||view.pending!==request)return;
+   rows.push(...await archivePage(a,start,Math.min(start+step,end),view,base));
+  }
+  if(view!==listingView||view.pending!==request)return;
+  const bars=base===p?validBars(rows,Infinity):groupCandles(rows,p,false,Infinity);
+  const visible=bars.filter(b=>b.time>=request.start);
+  if(!visible.length)throw Error('这段时间没有成交记录');
+  if(request.first)request.stop=visible[Math.min(request.count,visible.length)-1].time+seconds;
+  const data=bars.filter(b=>b.time<request.stop);
+  view.pending=null;view.detail=request;view.fit=false;view.firstFocus=request.first;
+  state.bars=data;state.count=Math.max(1,data.filter(b=>b.time>=request.start).length);state.offset=0;state.cursor=null;
+  syncDetailStream(view);refreshScreen();
+ }catch(e){
+  if(view!==listingView||view.pending!==request)return;
+  view.pending=null;view.detailError=e.message||'分时数据连接失败';
+ }finally{if(view===listingView)paintListingControls()}
+}
+function updateDetailBar(view,bar,q,time){
+ const detail=view.detail;if(!detail?.live||view!==listingView||!state.bars.length)return;
+ const last=state.bars.at(-1),seconds=periods[activePeriod];
+ if(!bar&&q&&!binance(active)){
+  const t=candleBucket(time,activePeriod);
+  bar=t===last.time?{...last,high:Math.max(last.high,q.price),low:Math.min(last.low,q.price),close:q.price}:{time:t,open:q.price,high:q.price,low:q.price,close:q.price,volume:0};
+ }
+ if(!bar||bar.time<last.time||!Object.values(bar).every(Number.isFinite))return;
+ if(bar.time===last.time)state.bars[state.bars.length-1]=bar;
+ else{state.bars.push(bar);if(state.bars.length>detail.count+100)state.bars.shift()}
+ detail.stop=bar.time+seconds;detail.start=detail.stop-detail.count*seconds;state.count=Math.min(detail.count,state.bars.length);scheduleScreen();
+}
+function syncDetailStream(view){
+ if(!view.detail?.live||view!==listingView){view.stopDetail?.();view.stopDetail=null;return}
+ if(view.stopDetail)return;
+ view.stopDetail=cryptoStream(active,activePeriod,(bar,q,t)=>{view.detailTick=Date.now();updateDetailBar(view,bar,q,t)},()=>{view.detailTick=0});
+}
+async function pollDetail(view){
+ const detail=view.detail;
+ if(!detail?.live||view.detailPoll||Date.now()-(view.detailTick||0)<15000)return;
+ view.detailPoll=true;
+ const a=active,p=activePeriod,base=binance(a)?p:coinBasePeriod[p]||p;
+ const start=candleBucket(Date.now()/1000,p)-periods[p],end=Math.floor(Date.now()/1000)+1,began=Date.now();
+ try{
+  const rows=await archivePage(a,start,end,view,base);
+  if(view===listingView&&view.detail===detail&&!(view.detailTick>began)){
+   for(const bar of base===p?rows:groupCandles(rows,p))updateDetailBar(view,bar,null,bar.time);
+  }
+ }catch{}finally{view.detailPoll=false}
 }
  const state={bars:[],studies:[],count:88,offset:0,line:false,cursor:null,frame:0,geom:null};
 const num=(v,places)=>Number.isFinite(v)?v.toLocaleString('en-US',{minimumFractionDigits:places??(v>=1?2:4),maximumFractionDigits:places??(v>=1?2:6)}):'—';
@@ -552,9 +635,32 @@ const compact=v=>Number.isFinite(v)?new Intl.NumberFormat('en',{notation:'compac
 const dt=(t,full=false)=>new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',year:full?'numeric':undefined,month:'2-digit',day:'2-digit',hour:full?'2-digit':undefined,minute:full?'2-digit':undefined,hour12:false}).format(t*1000);
 const hhmm=t=>new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',hour:'2-digit',minute:'2-digit',hour12:false}).format(t*1000);
 function drawSoon(){if(!state.frame)state.frame=requestAnimationFrame(()=>{state.frame=0;drawChart()})}
-function setZoom(k){if(listingView){listingView.fit=false;listingView.firstFocus=false}state.count=Math.min(Math.max(15,state.bars.length),Math.max(15,Math.round(state.count*k)));setOffset(state.offset)}
-function setOffset(v){if(listingView){listingView.fit=false;listingView.firstFocus=false}state.offset=Math.min(Math.max(0,state.bars.length-Math.min(state.count,state.bars.length)),Math.max(0,Math.round(v)));drawSoon()}
-function resetChart(){if(listingView){listingView.fit=false;listingView.firstFocus=false}state.count=innerWidth<680?45:88;state.offset=0;state.cursor=null;drawSoon()}
+function setZoom(k){
+ const v=listingView,seconds=periods[activePeriod],detail=v?.pending||v?.detail;
+ if(v&&seconds<historyDay&&v.daily.length){
+  if(detail){
+   const count=Math.max(3,Math.round(detail.count*k));
+   if(count<=detailLimit())return requestDetail(v,detail.first?detail.start+count*seconds:detail.stop,count,detail.first);
+   const right=detail.stop;fitListing(v);v.fit=false;
+   state.count=Math.min(v.daily.length,Math.max(2,Math.ceil(count*seconds/historyDay)));
+   state.offset=v.daily.filter(b=>b.time>=right).length;drawSoon();return;
+  }
+  const count=k<1?Math.max(1,Math.min(state.count-1,Math.round(state.count*k))):Math.max(state.count+1,Math.round(state.count*k));
+  if(k<1&&count*historyDay<=detailLimit()*seconds){
+   const right=v.daily[v.daily.length-1-state.offset]?.time??v.daily.at(-1).time;
+   return requestDetail(v,right+historyDay,Math.round(count*historyDay/seconds));
+  }
+  state.count=Math.min(v.daily.length,count);
+ }else state.count=Math.min(Math.max(15,state.bars.length),Math.max(15,Math.round(state.count*k)));
+ setOffset(state.offset);if(v&&state.count>=v.overview.length){v.fit=true;state.offset=0}
+}
+function setOffset(value){
+ const v=listingView,d=v?.pending||v?.detail;
+ if(d)return requestDetail(v,d.stop-(Math.round(value)-state.offset)*periods[activePeriod],d.count);
+ if(v){v.fit=false;v.firstFocus=false}
+ state.offset=Math.min(Math.max(0,state.bars.length-Math.min(state.count,state.bars.length)),Math.max(0,Math.round(value)));drawSoon();
+}
+function resetChart(){if(listingView)return fitListing(listingView);state.count=innerWidth<680?45:88;state.offset=0;state.cursor=null;drawSoon()}
 function drawChart(){
  const canvas=$('canvas'),ctx=canvas.getContext('2d'),box=canvas.getBoundingClientRect(),w=box.width,h=box.height;if(w<1||h<1)return;
  const dpr=Math.min(devicePixelRatio||1,3);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
@@ -591,9 +697,10 @@ function drawChart(){
  panes.forEach((s,j)=>{const top=volBottom+j*each,available=each-14;stroke(x0,top,x1,top,grid);const [low,high]=bounds(s.plots.flatMap(p=>p.values.slice(start,end)));const sy=v=>top+8+(high-v)/(high-low)*available;
   s.plots.forEach(p=>poly(p.values.slice(start,end),sy,p.color,p.width));txt(s.title,x0+3,top+9,'#aab3ba');txt(num(high),x1+5,top+8);if(each>40)txt(num(low),x1+5,top+each-9);
  });
+ const displayedPeriod=listingView&&!listingView.detail&&periods[activePeriod]<historyDay?'1d':activePeriod;
  for(let j=0;j<ticks;j++){
   const i=Math.round((n-1)*j/(ticks-1)),b=bars[i],newDate=j===0||dt(b.time)!==dt(bars[Math.max(0,i-Math.floor(n/ticks))].time);
-  let label=periods[activePeriod]>=86400||newDate?dt(b.time):hhmm(b.time);
+  let label=periods[displayedPeriod]>=86400||newDate?dt(b.time):hhmm(b.time);
   const duration=bars[n-1].time-bars[0].time;
   if(periods[activePeriod]>=604800||duration>31536000){const iso=new Date((b.time+28800)*1000).toISOString();label=activePeriod==='1y'||duration>3*31536000?iso.slice(0,4):iso.slice(0,7)}
   txt(label,Math.min(x1-20,Math.max(x0+20,x(i))),h-11,muted,'center');
@@ -609,13 +716,12 @@ function drawChart(){
 function chartEvents(){
  const c=$('canvas');let drag=null;
  new ResizeObserver(drawSoon).observe($('plot'));
- c.onpointerdown=e=>{c.setPointerCapture(e.pointerId);drag={x:e.clientX,offset:state.offset};c.focus({preventScroll:true})};
- c.onpointermove=e=>{const r=c.getBoundingClientRect();state.cursor={x:e.clientX-r.left,y:e.clientY-r.top};if(drag&&state.geom)setOffset(drag.offset+(e.clientX-drag.x)/state.geom.spacing);drawSoon()};
+ c.onpointerdown=e=>{c.setPointerCapture(e.pointerId);drag={x:e.clientX,offset:state.offset,detail:listingView?.detail&&{...listingView.detail}};c.focus({preventScroll:true})};
+ c.onpointermove=e=>{const r=c.getBoundingClientRect();state.cursor={x:e.clientX-r.left,y:e.clientY-r.top};if(drag&&state.geom){const shift=Math.round((e.clientX-drag.x)/state.geom.spacing);if(drag.detail&&shift!==drag.shift)requestDetail(listingView,drag.detail.stop-shift*periods[activePeriod],drag.detail.count);else if(!drag.detail)setOffset(drag.offset+shift);drag.shift=shift}drawSoon()};
  c.onpointerup=c.onpointercancel=()=>{drag=null};c.onpointerleave=()=>{state.cursor=null;drawSoon()};
  c.addEventListener('wheel',e=>{e.preventDefault();setZoom(e.deltaY>0?1.18:.85)},{passive:false});
  $('zoomIn').onclick=()=>setZoom(.8);$('zoomOut').onclick=()=>setZoom(1.25);$('resetView').onclick=resetChart;
  $('rangeAll').onclick=showListingHistory;$('rangeFirst').onclick=viewListingDay;
- $('rangeRecent').onclick=()=>{if(listingView)choose(active,listingView.previous);else resetChart()};
  c.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','+','=','-','Home','End'].includes(e.key))return;e.preventDefault();if(e.key==='ArrowLeft'||e.key==='ArrowRight')setOffset(state.offset+(e.key==='ArrowLeft'?5:-5));else if(['+','=','-'].includes(e.key))setZoom(e.key==='-'?1.2:.8);else if(e.key==='Home'&&listingView?.complete)viewListingDay();else resetChart()};
  $('expand').onclick=()=>{$('chartcard').classList.toggle('expanded');drawSoon()};
  document.addEventListener('keydown',e=>{if(e.key==='Escape')$('chartcard').classList.remove('expanded')});
@@ -650,7 +756,7 @@ function renderWatch(){
  $('watchCount').textContent=watch.length+' 个标的';
 }
 function header(){
- const a=active,q=quotes.get(a.id),last=state.bars.at(-1),prev=state.bars.at(-2);
+ const a=active,q=quotes.get(a.id),quoteBars=listingView?.detail?listingView.daily:state.bars,last=quoteBars.at(-1),prev=quoteBars.at(-2);
  $('bigBadge').replaceChildren(badge(a,true));$('assetName').textContent=a.name;$('marketTag').textContent=productName(a);$('marketTag').classList.toggle('contractTag',Boolean(a.kind));$('symbolLine').textContent=ticker(a)+' · '+(a.market==='stock'?(a.id.startsWith('sh')?'上交所':'深交所'):sourceOf(a));
  const current=q?.price??last?.close,change=q?priceChange(q):prev?(last.close/prev.close-1)*100:NaN;
  $('price').textContent=num(current);$('change').textContent=pct(change)+(Number.isFinite(change)?' · '+(q?a.market==='stock'?'较昨收':'24h':'较上根 K 线'):'');$('change').className=Number.isFinite(change)?change>=0?'up':'down':'muted';
@@ -686,7 +792,7 @@ function feed(){
  else if(state.bars.length&&(chartAt||live)){if(live){label='实时推送';kind='live'}else{label=active.market==='stock'?'行情轮询 · 10秒':'行情轮询 · 15秒';kind='live'}}
  if(active.expiry&&active.expiry<=Date.now()){label='已交割 · 历史行情';kind='stale'}
  $('feed').textContent=label;$('feed').className='feed '+kind;
- const bar=state.bars.at(-1);$('barDate').textContent=bar?'最新 K 线 '+dt(bar.time,true):'';
+ const bar=state.bars.at(-1),historical=listingView?.detail&&!listingView.detail.live;$('barDate').textContent=bar?(historical?'区间末根 K 线 ':'最新 K 线 ')+dt(bar.time,true):'';
  const q=quotes.get(active.id);$('dataOrigin').textContent='数据源 · '+sourceOf(active)+(active.market==='stock'&&activePeriod==='1m'?' · 分钟 K 线来自新浪财经':'')+(q?.stamp?'　报价 '+dt(q.stamp,true):sample?'　历史快照':'')+(active.market==='stock'?'　以源站时间为准':'');
  $('empty').hidden=!!state.bars.length;$('empty').textContent=pollFailed?'行情暂不可用，可点击下方「刷新行情」重试。':'正在获取 K 线…';
 }
@@ -717,33 +823,33 @@ let renderPending=false;
 function scheduleScreen(){if(renderPending)return;renderPending=true;requestAnimationFrame(()=>{renderPending=false;refreshScreen()})}
 function tick(token,bar,q,time){
  if(epoch!==token)return;lastStream=Date.now();if(q)putQuote(q);
- const last=state.bars.at(-1),interval=periods[activePeriod];
+ const last=listingView?listingView.daily.at(-1):state.bars.at(-1),inputPeriod=listingView?'1d':activePeriod,interval=periods[inputPeriod];
  if(!bar&&q&&!binance(active)&&last&&!sample){
-  const t=candleBucket(time,activePeriod);
+  const t=candleBucket(time,inputPeriod);
   if(t>=last.time)bar=t===last.time?{...last,high:Math.max(last.high,q.price),low:Math.min(last.low,q.price),close:q.price}:{time:t,open:q.price,high:q.price,low:q.price,close:q.price,volume:0};
  }
  if(bar&&(!last||bar.time>=last.time)&&bar.close>0&&Object.values(bar).every(Number.isFinite)){
-  // A stream can arrive before history. Start with its real candle and backfill on the next REST response.
-  if(!last||(sample&&bar.time-last.time>interval))state.bars=[bar];
-  else if(bar.time===last.time)state.bars[state.bars.length-1]=bar;
-  else{state.bars.push(bar);if(!listingView&&state.bars.length>320)state.bars.shift()}
   if(listingView){
-   listingView.bars.set(bar.time,bar);
-   if(listingView.fit)state.count=Math.max(1,state.bars.length);
-   else if(listingView.firstFocus)state.offset=Math.max(0,state.bars.length-state.count);
+   if(last?.time===bar.time&&periods[activePeriod]<=historyDay){
+    listingView.bars.set(bar.time,bar);listingView.daily[listingView.daily.length-1]=bar;
+   }else mergeListing(listingView,[bar]);
    if(!last||bar.time>last.time)paintListingControls();
-  }
+  }else if(!last||(sample&&bar.time-last.time>interval))state.bars=[bar];
+  else if(bar.time===last.time)state.bars[state.bars.length-1]=bar;
+  else{state.bars.push(bar);if(state.bars.length>320)state.bars.shift()}
   sample=false;lastBarUpdate=Date.now();
  }
  scheduleScreen();
 }
 async function getHistory(){
- const token=epoch;if(historyJob===token)return;historyJob=token;const a=active,p=activePeriod,began=Date.now();
+ const token=epoch;if(historyJob===token)return;historyJob=token;const a=active,p=listingView?'1d':activePeriod,began=Date.now();
+ if(listingView)pollDetail(listingView);
  refreshContractStats(a,token);
  try{
   const data=await candles(a,p,recent=>{if(epoch===token&&!state.bars.length&&recent.length){state.bars=recent;chartAt=Date.now();sample=false;refreshScreen()}});
   if(!data.length)throw Error('暂无 K 线');if(epoch!==token)return;
-  if(lastBarUpdate>=began&&!sample&&state.bars.length){const live=state.bars.at(-1),tail=data.at(-1);
+  const live=listingView?listingView.daily.at(-1):state.bars.at(-1);
+  if(lastBarUpdate>=began&&!sample&&live){const tail=data.at(-1);
    if(live.time===tail.time){tail.close=live.close;tail.high=Math.max(live.high,tail.high);tail.low=Math.min(live.low,tail.low);if(binance(a))tail.volume=Math.max(tail.volume,live.volume)}
    else if(live.time>tail.time)data.push(live);
   }
@@ -756,10 +862,10 @@ function refreshQuotes(){
  for(const a of watch.filter(a=>a.market==='crypto')){if(quoteJobs.has(a.id))continue;quoteJobs.add(a.id);coinQuote(a).then(q=>{putQuote(q);renderWatch();if(active.id===a.id){header();feed()}}).catch(()=>{}).finally(()=>quoteJobs.delete(a.id))}
 }
 function choose(a,p=activePeriod){
- listingView?.cancel.abort();listingView=null;
- stopStream();active=a;paintListingControls();const available=a.market==='stock'?Object.keys(stockPeriods):cryptoPeriods;
+ if(listingView){listingView.cancel.abort();clearTimeout(listingView.detailTimer);listingView.stopDetail?.();listingView=null}
+ stopStream();active=a;const available=a.market==='stock'?Object.keys(stockPeriods):cryptoPeriods;
  activePeriod=available.includes(p)?p:'1d';
- const token=++epoch,key=a.id+activePeriod,lastSaved=storeRead('last-chart',{});chartAt=0;lastStream=0;lastBarUpdate=0;pollFailed=false;sample=false;
+ const token=++epoch,inputPeriod=a.market==='crypto'?'1d':activePeriod,key=a.id+inputPeriod,lastSaved=storeRead('last-chart',{});chartAt=0;lastStream=0;lastBarUpdate=0;pollFailed=false;sample=false;
  const cached=cache.get(key)||(lastSaved.key===key&&Array.isArray(lastSaved.data)?lastSaved.data:null);
  state.bars=cached?validBars(cached):[];sample=!!state.bars.length;
  if(!state.bars.length&&key==='BTC-USD1d'){state.bars=coinBars(SNAPSHOT);sample=true}
@@ -772,8 +878,10 @@ function choose(a,p=activePeriod){
  for(const period of available)scrOpt(select,period,periodNames[period]);
  select.value=quickPeriods.includes(activePeriod)?'':activePeriod;
  select.onchange=()=>{if(select.value)choose(a,select.value)};host.append(select);
- displayContractStats(a);resetChart();refreshScreen();getHistory();
- if(a.market==='crypto')stopStream=cryptoStream(a,activePeriod,(bar,q,t)=>tick(token,bar,q,t),()=>{if(epoch===token){lastStream=0;feed()}});
+ displayContractStats(a);state.cursor=null;
+ if(a.market==='crypto')showListingHistory();else{paintListingControls();resetChart()}
+ refreshScreen();getHistory();
+ if(a.market==='crypto')stopStream=cryptoStream(a,inputPeriod,(bar,q,t)=>tick(token,bar,q,t),()=>{if(epoch===token){lastStream=0;feed()}});
 }
 let searchMarket='all';
 function openResult(a){
