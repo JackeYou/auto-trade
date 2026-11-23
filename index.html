@@ -25,6 +25,7 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
 #indicatorMarket{width:min(940px,95vw);padding:23px 25px;max-height:92vh;overflow:auto}#indicatorMarket [hidden]{display:none!important}#indicatorMarket .modalhead{align-items:flex-start;margin-bottom:15px}.imCaption,#imMessage{font-size:13px;color:var(--dim);margin:4px 0 0}.imSearchRow{display:grid;grid-template-columns:minmax(0,1fr) 145px;gap:9px}.imSearchRow input,.imSearchRow select{min-height:39px}#imTabs{display:flex;gap:5px;margin:12px 0 14px;flex-wrap:wrap}#imTabs button{flex:none}.imLayout{display:grid;grid-template-columns:minmax(240px,.93fr) minmax(270px,1.07fr);border:1px solid var(--line);border-radius:9px;overflow:hidden;align-items:stretch}.imListPane{min-width:0;background:#14191d}.imListHead,.imPager,.imMore,.imFormActions{display:flex;align-items:center;gap:9px}.imListHead{justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);font-size:12px;color:var(--dim)}.imListHead strong{color:var(--ink);font-weight:600}#imList{min-height:148px;max-height:min(38vh,340px);overflow-y:auto}.imItem{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;gap:8px;padding:9px 14px;border-bottom:1px solid #252b30;border-left:3px solid transparent}.imItem span{display:block;min-width:0}.imItem strong,.imItem small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.imItem strong{font-size:14px;font-weight:600}.imItem small{font-size:11px;color:var(--dim);margin-top:2px}.imItem[aria-pressed=true]{background:#2b281f;border-left-color:var(--gold)}.imItem em{font-size:11px;color:var(--green);font-style:normal;white-space:nowrap}.imPager{justify-content:space-between;padding:7px 12px;border-top:1px solid var(--line)}.imPager button,.imMore button,.imActions button,.imFormActions button,.imStar{border:1px solid #384048;border-radius:5px;padding:5px 10px;font-size:12px}.imPager button:disabled{opacity:.35;cursor:default}.imDetail{padding:18px 21px;border-left:1px solid var(--line);min-width:0;background:var(--panel)}.imDetailTop{display:flex;align-items:center;justify-content:space-between;gap:8px}.imKind,.imBy,.imInfo,.imEmpty,.imDetail label{font-size:12px;color:var(--dim)}.imDetail h3{font-size:clamp(18px,2.5vw,24px);line-height:1.25;margin:14px 0 4px;overflow-wrap:anywhere}.imSub{font-size:13px;color:#bac3ca;margin:0 0 11px}.imBy{margin:0}.imDescription{font-size:14px;line-height:1.6;margin:15px 0 10px}.imInfo{margin:8px 0}.imDetail label{display:block;margin:12px 0 4px}.imDetail select{width:100%;font-size:13px}.imActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}.imPrimary,.imPrimary:hover{background:var(--gold);border-color:var(--gold)!important;color:#241c0f;font-weight:650}.imDetail a,.imMore a{color:var(--gold);font-size:12px}.imSource{display:inline-block;margin-top:14px}.imStar[aria-pressed=true]{color:var(--gold);border-color:#75613b}.imMore{flex-wrap:wrap;justify-content:space-between;gap:7px 14px;margin-top:13px}.imEmpty{padding:12px}.imImportFields{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}#imForm{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}#imForm label{display:block;font-size:12px;color:var(--dim);margin:6px 0}#imForm input,#imForm textarea{margin-top:4px;font-size:13px}#imCode{height:76px}#imError{color:var(--red);font-size:12px}#imMessage:empty{display:none}
 @media(max-width:680px){#indicatorMarket{padding:16px;width:96vw}.imSearchRow{grid-template-columns:minmax(0,1fr) 100px}#imTabs{gap:3px}#imTabs button{padding:5px 7px}.imLayout{grid-template-columns:1fr}.imDetail{border-left:0;border-top:1px solid var(--line);padding:13px 15px}.imDetail h3{margin-top:8px}#imList{max-height:19vh;min-height:65px}.imDescription{margin-top:9px}.imImportFields{grid-template-columns:1fr 1fr}.imImportFields label:first-child{grid-column:span 2}.sectionhead{flex-wrap:wrap;row-gap:8px}.sectionButtons{justify-content:flex-start}.imMore{justify-content:flex-start}}
 
+#indicatorMarket .modalhead #imImportBtn{font-size:13px;white-space:nowrap}#imForm{margin:0 0 14px;border:1px solid var(--line);border-radius:8px;padding:9px 12px 12px;background:var(--panel)}#imMessage:not(:empty){color:var(--green);margin:0 0 10px}.imDraft{color:var(--gold);font-size:13px;overflow-wrap:anywhere}.imDetail>.imPrimary{border-radius:5px;padding:6px 11px}
 </style>
 </head>
 <body>
@@ -75,16 +76,16 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
  <div class="dateline"><span id="dataOrigin"></span><button id="retry">刷新行情</button></div>
 </main></div>
 <dialog id="indicatorMarket" aria-labelledby="imHeading">
- <div class="modalhead"><div><h2 id="imHeading">指标市场</h2><p class="imCaption">发现 TradingView 内置指标和社区作品</p></div><button class="icon close" aria-label="关闭指标市场">✕</button></div>
- <div class="imSearchRow"><input id="imQuery" type="search" aria-label="搜索指标、作者或关键词" placeholder="搜索指标、作者或关键词，例如 RSI、布林带、LazyBear" autocomplete="off"><select id="imCategory" aria-label="指标分类"><option value="">全部分类</option></select></div>
- <nav id="imTabs" class="filters" aria-label="指标来源和状态"><button data-kind="all" aria-pressed="true">全部</button><button data-kind="built">内置指标</button><button data-kind="community">社区脚本</button><button data-kind="local">本站可用</button><button data-kind="star">已收藏</button><button data-kind="on">图表上</button></nav>
+ <div class="modalhead"><div><h2 id="imHeading">指标市场</h2><p class="imCaption">发现 TradingView 内置指标和社区作品</p></div><div class="imFormActions"><button type="button" id="imImportBtn" class="imPrimary">收录社区指标</button><button class="icon close" aria-label="关闭指标市场">✕</button></div></div>
+ <form id="imForm" hidden><div class="imImportFields"><label>TradingView 作品链接<input id="imUrl" type="text" inputmode="url" spellcheck="false" autocapitalize="none" autocomplete="off" placeholder="粘贴作品链接或分享文字"></label><label>名称（选填）<input id="imName" maxlength="120" placeholder="留空自动命名"></label><label>作者（选填）<input id="imAuthor" maxlength="80" placeholder="TradingView 用户名"></label></div><label>可选 Pine 源码<textarea id="imCode" spellcheck="false" placeholder="兼容的源码可以看图和筛选，其他源码可保存为草稿。"></textarea></label><div class="imFormActions"><button type="submit" class="imPrimary">收录指标</button><button type="button" id="imCancel">取消</button><span id="imError" role="status"></span></div></form>
+ <p id="imMessage" role="status" aria-live="polite"></p>
+ <div class="imSearchRow"><input id="imQuery" type="search" aria-label="搜索指标、作者或粘贴作品链接" placeholder="搜索指标、作者，或粘贴 TradingView 作品链接" autocomplete="off"><select id="imCategory" aria-label="指标分类"><option value="">全部分类</option></select></div>
+ <nav id="imTabs" class="filters" aria-label="指标来源和状态"><button data-kind="all" aria-pressed="true">全部</button><button data-kind="built">内置指标</button><button data-kind="community">社区脚本</button><button data-kind="imported">我的收录</button><button data-kind="local">本站可用</button><button data-kind="star">已收藏</button><button data-kind="on">图表上</button></nav>
  <div class="imLayout">
   <section class="imListPane" aria-label="指标目录"><div class="imListHead"><strong id="imCount" aria-live="polite"></strong><span id="imPage"></span></div><div id="imList" aria-label="选择指标"></div><div id="imPager" class="imPager"><button id="imPrev">上一页</button><button id="imNext">下一页</button></div></section>
   <section id="imDetail" class="imDetail" aria-label="指标详情" tabindex="-1"></section>
  </div>
- <div class="imMore"><a id="imCommunityLink" href="https://www.tradingview.com/scripts/?script_type=indicators" target="_blank" rel="noopener noreferrer">浏览 TradingView 社区指标 ↗</a><a href="https://cn.tradingview.com/support/folders/43000587405/" target="_blank" rel="noopener noreferrer">官方内置指标目录 ↗</a><button id="imImportBtn">＋ 收录原作链接 / Pine 源码</button></div>
- <form id="imForm" hidden><div class="imImportFields"><label>TradingView 作品链接<input id="imUrl" type="url" required placeholder="https://www.tradingview.com/script/…"></label><label>名称<input id="imName" maxlength="120" placeholder="例如 我的趋势指标"></label><label>作者<input id="imAuthor" maxlength="80" placeholder="TradingView 用户名"></label></div><label>可选 Pine 源码<textarea id="imCode" spellcheck="false" placeholder="粘贴你有权使用的源码。兼容的输出线可以看图和筛选。"></textarea></label><div class="imFormActions"><button type="submit" class="imPrimary">收录指标</button><button type="button" id="imCancel">取消</button><span id="imError" role="status"></span></div></form>
- <p id="imMessage" role="status" aria-live="polite"></p>
+ <div class="imMore"><a id="imCommunityLink" href="https://www.tradingview.com/scripts/?script_type=indicators" target="_blank" rel="noopener noreferrer">浏览 TradingView 社区指标 ↗</a><a href="https://cn.tradingview.com/support/folders/43000587405/" target="_blank" rel="noopener noreferrer">官方内置指标目录 ↗</a></div>
 </dialog>
 
 <dialog id="screenDialog" aria-labelledby="screenHeading">
@@ -1032,12 +1033,16 @@ const directoryIndicators=builtInTitles.filter(title=>!featuredTitles.has(title)
 const baseIndicators=[...featuredIndicators.slice(0,3),...communityIndicators.slice(0,2),...featuredIndicators.slice(3),...communityIndicators.slice(2),...directoryIndicators];
 
 function tvScriptLink(raw){
- try{
-  const url=new URL(String(raw).trim());
-  if(url.protocol!=='https:'||url.username||url.password||url.port||!/(^|\.)tradingview\.com$/i.test(url.hostname))return null;
-  const match=url.pathname.match(/^\/script\/([A-Za-z0-9]{8})(-[^/]*)?\/?$/i);
-  return match?{id:'tv-'+match[1],url:'https://www.tradingview.com/script/'+match[1]+(match[2]||'')+'/'}:null;
- }catch{return null}
+ const tokens=String(raw).match(/(?:https?:\/\/|[\w.-]+\.[a-z]{2,}\/)[^\s<>"'()[\]{}，。；！？、（）【】《》“”‘’「」]+/gi)||[];
+ for(const token of tokens){
+  let url;try{url=new URL((/^https?:\/\//i.test(token)?token:'https://'+token).replace(/[.,;!]+$/,''))}catch{continue}
+  if(url.username||url.password||url.port||!/(^|\.)tradingview\.com$/i.test(url.hostname))continue;
+  const match=url.pathname.match(/^\/(?:script|v)\/([a-z\d]{8})(?:-([^/]+))?\/?$/i);if(!match)continue;
+  const [,id,slug]=match;let name=slug||'';
+  try{name=decodeURIComponent(name)}catch{}
+  return {id:'tv-'+id,url:'https://www.tradingview.com/script/'+id+(slug?'-'+slug:'')+'/',name:name.replace(/[-_]+/g,' ').trim()||'社区指标 '+id};
+ }
+ return null;
 }
 function readList(key){const value=storeRead(key,[]);return Array.isArray(value)?value:[]}
 const marketImports=readList('indicator-imports').filter(entry=>entry&&typeof entry.name==='string'&&tvScriptLink(entry.url)?.id===entry.id);
@@ -1048,7 +1053,8 @@ let marketCatalog=new Map(),marketDefs;
 function rebuildMarket(){
  marketCatalog=new Map(baseIndicators.map(entry=>[entry.id,entry]));
  for(const saved of marketImports){
-  const known=marketCatalog.get(saved.id),entry=known?{...known}:{id:saved.id,name:saved.name,original:'',url:tvScriptLink(saved.url).url,author:saved.author||'作者未填写',kind:'community',category:catOther,outputs:[],description:'你收录的 TradingView 社区作品。'};
+  const known=marketCatalog.get(saved.id),entry=known?{...known,name:saved.name||known.name}:{id:saved.id,name:saved.name,original:'',url:tvScriptLink(saved.url).url,author:saved.author||'作者未填写',kind:'community',category:catOther,outputs:[],description:'你收录的 TradingView 社区作品。'};
+  entry.imported=true;entry.draft=saved.draft||'';entry.draftError=saved.draftError||'';
   if(saved.source){
    try{const study=pine(saved.source,[]);entry.source=saved.source;entry.overlay=study.overlay;entry.outputs=study.plots.map((p,i)=>'marketPine:'+entry.id+':'+i);entry.description='已录入兼容的 Pine 源码，可将输出线添加到图表或设为筛选条件。'}catch{}
   }
@@ -1070,8 +1076,11 @@ function marketChartStudies(bars){
 }
 function marketMatches(){
  const {query,category,tab}=marketUi,words=query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+ const link=tvScriptLink(query);
+ if(link)return marketCatalog.has(link.id)?[marketCatalog.get(link.id)]:[];
  return [...marketCatalog.values()].filter(entry=>{
   if(category&&entry.category!==category)return false;
+  if(tab==='imported'&&!entry.imported)return false;
   if(tab==='star'&&!marketStars.has(entry.id)||tab==='on'&&!marketActive.has(entry.id)||tab==='local'&&!entry.outputs.length)return false;
   if((tab==='built'||tab==='community')&&entry.kind!==tab)return false;
   const searchable=[entry.name,entry.original,entry.author,entry.category,...entry.outputs].join(' ').toLocaleLowerCase();
@@ -1089,20 +1098,26 @@ function marketToggle(entry,active){
  renderMarket();
  marketInfo('「'+entry.name+'」'+(active?(adding?'已添加到当前图表。':'已从图表移除。'):(adding?'已加入收藏。':'已移出收藏。')));
 }
-function marketForm(entry){
- $('imForm').hidden=false;$('imUrl').value=entry?.url||'';$('imName').value=entry?.name||'';$('imAuthor').value=entry?.author||'';
- $('imCode').value=entry?.source||'';$('imError').textContent='';marketInfo('');
- (entry?$('imCode'):$('imUrl')).focus();
+function marketForm(entry,link){
+ $('imForm').hidden=false;$('imUrl').value=link?.url||entry?.url||'';$('imName').value=entry?.name||'';$('imAuthor').value=entry?.author==='作者未填写'?'':entry?.author||'';
+ $('imCode').value=entry?.draft||entry?.source||'';$('imError').textContent='';marketInfo('');
+ (entry&&!link?$('imCode'):$('imUrl')).focus();
 }
 function showMarketDetail(entry){
  const host=$('imDetail');host.replaceChildren();
- if(!entry){host.append(elm('p','imEmpty','没有符合条件的指标。可以更换关键词或分类。'));return}
+ if(!entry){
+  const link=tvScriptLink(marketUi.query);
+  if(link)host.append(elm('h3','',link.name),marketButton('收录此作品',()=>marketForm(null,link),'imPrimary'));
+  else host.append(elm('p','imEmpty','没有符合条件的指标。可以更换关键词或分类。'));
+  return;
+ }
  const kind=entry.kind==='built'?'内置指标':'社区脚本',starred=marketStars.has(entry.id);
  const top=elm('div','imDetailTop'),star=marketButton(starred?'★ 已收藏':'☆ 收藏',()=>marketToggle(entry,false),'imStar');
  star.setAttribute('aria-pressed',String(starred));top.append(elm('span','imKind',kind+' · '+entry.category),star);
  host.append(top,elm('h3','',entry.name));
  if(entry.original&&entry.original!==entry.name)host.append(elm('p','imSub',entry.original));
  host.append(elm('p','imBy','作者 · '+entry.author),elm('p','imDescription',entry.description));
+ if(entry.draft)host.append(elm('p','imDraft','源码草稿待适配 · '+entry.draftError+(entry.outputs.length?'。当前可用版本仍可看图和筛选。':'')));
  if(entry.outputs.length){
   const on=marketActive.has(entry.id),actions=elm('div','imActions'),field=elm('label','','筛选输出线'),select=elm('select');
   if(!marketDefs)marketDefs=screenMetrics(false);
@@ -1120,14 +1135,16 @@ function showMarketDetail(entry){
  const url=entry.directory?entry.url:(entry.kind==='built'?entry.url:tvScriptLink(entry.url).url);
  host.append(marketLink(entry.directory?'在官方目录中查看该指标 ↗':entry.kind==='built'?'查看 TradingView 官方说明 ↗':'查看作者的 TradingView 原作 ↗',url,'imSource'));
  if(entry.kind==='community'){
-  const box=elm('div','imActions');box.append(marketButton(entry.source?'更新已录入的 Pine 源码':'录入此作品的 Pine 源码',()=>marketForm(entry)));host.append(box);
+  const box=elm('div','imActions');
+  if(!entry.imported)box.append(marketButton('收录此作品',()=>marketForm(entry,tvScriptLink(entry.url))));
+  box.append(marketButton(entry.draft?'编辑源码草稿':entry.source?'更新已录入的 Pine 源码':entry.imported?'编辑收录信息 / Pine 源码':'录入此作品的 Pine 源码',()=>marketForm(entry)));host.append(box);
  }
 }
 function renderMarket(){
  const rows=marketMatches(),pages=Math.max(1,Math.ceil(rows.length/marketPageSize));
- const query=marketUi.query.trim(),link=$('imCommunityLink');
- link.href='https://www.tradingview.com/scripts/'+(query?'search/'+encodeURIComponent(query)+'/':'')+'?script_type=indicators';
- link.textContent=query?'用此关键词搜索 TradingView 全部社区指标 ↗':'浏览 TradingView 社区指标 ↗';
+ const query=marketUi.query.trim(),link=$('imCommunityLink'),scriptLink=tvScriptLink(query);
+ link.href=scriptLink?.url||'https://www.tradingview.com/scripts/'+(query?'search/'+encodeURIComponent(query)+'/':'')+'?script_type=indicators';
+ link.textContent=scriptLink?'查看这项 TradingView 原作 ↗':query?'用此关键词搜索 TradingView 全部社区指标 ↗':'浏览 TradingView 社区指标 ↗';
  marketUi.page=Math.max(0,Math.min(marketUi.page,pages-1));
  const list=rows.slice(marketUi.page*marketPageSize,(marketUi.page+1)*marketPageSize);
  if(!list.some(entry=>entry.id===marketUi.selected))marketUi.selected=list[0]?.id||'';
@@ -1141,12 +1158,12 @@ function renderMarket(){
   row.append(left);if(marketActive.has(entry.id)||marketStars.has(entry.id)||entry.outputs.length)row.append(elm('em','',[(marketStars.has(entry.id)?'★':''),(marketActive.has(entry.id)?'图表上':entry.outputs.length?'本站可用':'')].filter(Boolean).join(' ')));
   host.append(row);
  }
- if(!list.length)host.append(elm('p','imEmpty',marketUi.tab==='star'?'收藏的指标会出现在这里。':marketUi.tab==='on'?'添加到图表的指标会出现在这里。':'暂无匹配'));
+ if(!list.length)host.append(elm('p','imEmpty',scriptLink?'已识别 TradingView 作品链接。':marketUi.tab==='imported'?'收录的社区作品会出现在这里。':marketUi.tab==='star'?'收藏的指标会出现在这里。':marketUi.tab==='on'?'添加到图表的指标会出现在这里。':'暂无匹配'));
  showMarketDetail(marketCatalog.get(marketUi.selected));
 }
-function marketReveal(id){
- marketUi.tab='all';marketUi.query='';marketUi.category='';$('imQuery').value='';$('imCategory').value='';
- const index=[...marketCatalog.keys()].indexOf(id);marketUi.page=Math.max(0,Math.floor(index/marketPageSize));marketUi.selected=id;
+function marketReveal(id,tab='all'){
+ marketUi.tab=tab;marketUi.query='';marketUi.category='';$('imQuery').value='';$('imCategory').value='';
+ const index=marketMatches().findIndex(entry=>entry.id===id);marketUi.page=Math.max(0,Math.floor(index/marketPageSize));marketUi.selected=id;
 }
 function openIndicatorMarket(id){
  if(typeof id==='string'&&marketCatalog.has(id))marketReveal(id);
@@ -1155,18 +1172,26 @@ function openIndicatorMarket(id){
 }
 function importMarketEntry(event){
  event.preventDefault();
- const link=tvScriptLink($('imUrl').value),code=$('imCode').value.trim(),error=$('imError');
- if(!link){error.textContent='请填写 TradingView 的 https://…/script/… 作品链接。';return}
- const known=marketCatalog.get(link.id),at=marketImports.findIndex(row=>row.id===link.id);
- const name=$('imName').value.trim()||known?.name;
- if(!name){error.textContent='请为这个作品填写名称。';return}
- if(code){try{pine(code,state.bars.slice(-40))}catch(e){error.textContent='此段 Pine 暂无法运行 · '+e.message;return}}
- const saved={...link,name:name.slice(0,120),author:$('imAuthor').value.trim().slice(0,80)||known?.author||'',source:code||marketImports[at]?.source||''};
- const revised=marketImports.slice();if(at<0)revised.push(saved);else revised[at]=saved;
- try{localStorage.setItem('candledesk-v1:indicator-imports',JSON.stringify(revised))}catch{error.textContent='浏览器存储写入失败，尚未收录。';return}
+ const raw=$('imUrl').value,link=tvScriptLink(raw),code=$('imCode').value,error=$('imError');
+ if(!link){
+  error.textContent=/tradingview\.com\/(?:chart|x)\//i.test(raw)?'这是图表分享链接。请打开指标的作者作品页，复制该作品链接。':'请粘贴 TradingView 指标的作品链接，例如 tradingview.com/script/… 或 tradingview.com/v/… 。';
+  $('imUrl').focus();return;
+ }
+ const revised=readList('indicator-imports').filter(entry=>entry&&typeof entry.name==='string'&&tvScriptLink(entry.url)?.id===entry.id);
+ const at=revised.findIndex(row=>row.id===link.id),previous=revised[at],known=marketCatalog.get(link.id);
+ let source=previous?.source||'',draft=previous?.draft||'',draftError=previous?.draftError||'',pineTitle='';
+ if(code.trim()){
+  try{pineTitle=pine(code,state.bars.slice(-40)).title;source=code;draft='';draftError=''}
+  catch(e){draft=code;draftError=e.message}
+ }
+ const name=($('imName').value.trim()||previous?.name||known?.name||pineTitle||link.name).slice(0,120);
+ const author=($('imAuthor').value.trim()||previous?.author||(known?.author==='作者未填写'?'':known?.author)||'').slice(0,80);
+ const saved={id:link.id,url:link.url,name,author,source};if(draft)Object.assign(saved,{draft,draftError});
+ if(at<0)revised.push(saved);else revised[at]=saved;
+ try{localStorage.setItem('candledesk-v1:indicator-imports',JSON.stringify(revised))}catch{error.textContent='当前浏览器无法保存。请允许此网站使用本地存储并确认有可用空间，表单内容已保留。';return}
  marketImports.splice(0,marketImports.length,...revised);rebuildMarket();marketStars.add(link.id);storeWrite('indicator-stars',[...marketStars]);
- calcStudies();marketReveal(link.id);$('imForm').hidden=true;renderMarket();
- marketInfo(saved.source?'Pine 源码已保存，可添加到图表或用于筛选。':'已收藏原作链接，可随时补录 Pine 源码。');
+ calcStudies();marketReveal(link.id,'imported');$('imForm').hidden=true;renderMarket();
+ marketInfo('「'+name+'」已存入「我的收录」。'+(draft?'源码已保留为待适配草稿。':source?'源码可用于图表和筛选。':''));
 }
 function setupIndicatorMarket(){
  $('indicatorMarketBtn').onclick=()=>openIndicatorMarket();
@@ -1175,9 +1200,14 @@ function setupIndicatorMarket(){
  $('imQuery').oninput=()=>{marketUi.query=$('imQuery').value;marketUi.page=0;marketInfo('');renderMarket()};
  $('imCategory').onchange=()=>{marketUi.category=$('imCategory').value;marketUi.page=0;marketInfo('');renderMarket()};
  for(const [id,step] of [['imPrev',-1],['imNext',1]])$(id).onclick=()=>{marketUi.page+=step;marketInfo('');renderMarket();$('imList').scrollTop=0};
- $('imImportBtn').onclick=()=>marketForm();$('imCancel').onclick=()=>{$('imForm').hidden=true};$('imForm').onsubmit=importMarketEntry;
+ $('imImportBtn').onclick=()=>{const link=tvScriptLink($('imQuery').value);marketForm(link&&marketCatalog.get(link.id),link)};
+ $('imCancel').onclick=()=>{$('imForm').hidden=true};$('imForm').onsubmit=importMarketEntry;
  if(typeof location!=='undefined'){
-  const openHash=()=>{if(location.hash==='#indicators'&&!$('indicatorMarket').open)openIndicatorMarket()};
+  const openHash=()=>{
+   if(!['#indicators','#indicators/import'].includes(location.hash))return;
+   if(!$('indicatorMarket').open)openIndicatorMarket();
+   if(location.hash==='#indicators/import')marketForm();
+  };
   openHash();if(typeof window!=='undefined')window.addEventListener('hashchange',openHash);
  }
 }
