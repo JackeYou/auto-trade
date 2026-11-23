@@ -12,6 +12,12 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
 @media(max-width:1120px){.shell{grid-template-columns:220px minmax(0,1fr)}.quote{gap:13px;padding:17px 14px}.metric{padding-left:11px}.watchRow{gap:6px}.clock{gap:5px}aside{padding-left:10px;padding-right:10px}}
 @media(max-width:870px){.shell{grid-template-columns:180px minmax(0,1fr)}.watchRow{grid-template-columns:1fr auto}.watchRow .assetBadge{display:none}.quote{display:grid;grid-template-columns:repeat(3,1fr)}.instrument{grid-column:span 2}.priceblock{text-align:right;margin:0}.metric{border:0;padding:0}.topnav{gap:12px}.top{gap:22px;padding:0 16px}.topnav svg{display:none}}
 @media(max-width:680px){.top{height:54px}.clock small,.topnav{display:none}.shell{display:flex;flex-direction:column}.shell aside{order:2;border:0;border-top:1px solid var(--line);padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.sidehead,.search,.filters,.watch,.sidefoot{margin:0}.watch,.filters,.sidefoot{grid-column:1/-1}.watchRow .assetBadge{display:grid}.watchRow{grid-template-columns:32px 1fr auto}.groupHeading{margin:9px 5px}.search{justify-content:center}.search kbd{display:none}main{padding:16px 10px 5px}.sectionhead{margin-bottom:12px}.quote{margin-bottom:10px}.plot{height:46vh;min-height:300px}.toolbar{padding:8px 6px;flex-wrap:wrap}.periods button{padding:5px 8px}.feed{font-size:11px}.chartLegend,.ohlc{padding:2px 10px;gap:8px}.chartHead{padding:6px 10px}.chartfoot{padding:5px 8px}.dateline{flex-wrap:wrap}.eyebrow{font-size:10px}.editorBtn{padding:6px 10px}.chartfoot span{font-size:11px}.formfoot{flex-wrap:wrap}}</style>
+<style>
+.contractStats{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;background:#151b20;border:1px solid var(--line);border-radius:8px;padding:10px 16px;margin:-5px 0 16px}
+.contractStats div{display:flex;align-items:baseline;gap:8px}.contractStats span{color:var(--dim);font-size:13px}.contractStats b{font:500 14px var(--mono)}
+.searchMarkets{margin:12px 0}.groupAdd{color:var(--gold);font:inherit;padding:0 4px}.groupHeading .groupTotal{margin-left:auto;margin-right:6px}
+.tag.contractTag{background:#30291e;border-color:#5b492c;color:var(--gold)}.resultBtn small{text-align:right;margin-left:8px}.watchTicker{overflow-wrap:anywhere}
+</style>
 </head>
 <body>
 <svg style="display:none" aria-hidden="true"><defs>
@@ -35,7 +41,7 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
 <aside>
  <div class="sidehead"><h2>自选列表</h2><button class="icon small" id="addSymbol" title="添加标的" aria-label="添加标的"><svg><use href="#i-plus"/></svg></button></div>
  <button id="searchOpen" class="search"><svg><use href="#i-search"/></svg>搜索代码或名称<kbd>/</kbd></button>
- <nav id="filters" class="filters" aria-label="自选市场"><button data-filter="all" aria-pressed="true">全部</button><button data-filter="stock">A 股</button><button data-filter="crypto">加密货币</button></nav>
+ <nav id="filters" class="filters" aria-label="自选市场"><button data-filter="all" aria-pressed="true">全部</button><button data-filter="stock">A 股</button><button data-filter="crypto">现货</button><button data-filter="futures">合约</button></nav>
  <div class="watch" id="watch"></div>
  <div class="sidefoot"><span class="sourceDot"></span><span>公开市场数据</span><span class="sideNum" id="watchCount"></span></div>
 </aside>
@@ -46,6 +52,11 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
   <div class="priceblock"><strong id="price">—</strong><span id="change">—</span></div>
   <div class="metric"><label id="highLabel">24h 最高</label><b id="high">—</b></div><div class="metric"><label id="lowLabel">24h 最低</label><b id="low">—</b></div><div class="metric"><label id="volLabel">24h 成交量</label><b id="volume">—</b></div>
  </section>
+ <div id="contractStats" class="contractStats" aria-label="合约行情" hidden>
+  <div><span>标记价格</span><b id="markPrice">—</b></div>
+  <div><span id="contractTermLabel">资金费率</span><b id="contractTerm">—</b></div>
+  <div><span>未平仓量</span><b id="openInterest">—</b></div>
+ </div>
  <section class="chartcard" id="chartcard">
   <div class="chartHead"><div class="chartTitle"><span class="miniBars">▥</span><h2>价格走势</h2></div><div class="chartActions"><button id="chartType" class="icon" title="切换 K 线 / 折线" aria-label="切换 K 线 / 折线"><svg><use href="#i-candle"/></svg></button><span></span><button id="expand" class="icon" title="展开图表" aria-label="展开图表"><svg><use href="#i-expand"/></svg></button></div></div>
   <div class="toolbar"><div class="periods" id="periods"></div><span class="feed" id="feed" role="status"></span></div>
@@ -55,7 +66,10 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
  </section>
  <div class="dateline"><span id="dataOrigin"></span><button id="retry">刷新行情</button></div>
 </main></div>
-<dialog id="symbolDialog"><div class="modalhead"><h2>添加行情标的</h2><button class="icon close" aria-label="关闭">✕</button></div><input id="query" placeholder="名称、沪深代码或 BTC-USD / BTCUSDT" autocomplete="off"><div id="results"></div><p id="searchNote" class="muted"></p></dialog>
+<dialog id="symbolDialog"><div class="modalhead"><h2>添加行情标的</h2><button class="icon close" aria-label="关闭">✕</button></div>
+ <input id="query" aria-label="搜索名称或交易代码" placeholder="搜索名称或代码，如 BTC、ETHUSDT、600519" autocomplete="off">
+ <nav class="filters searchMarkets" id="searchMarkets" aria-label="搜索市场"><button data-market="all">全部</button><button data-market="crypto">现货</button><button data-market="um">U 本位合约</button><button data-market="cm">币本位合约</button></nav>
+ <div id="results"></div><p id="searchNote" class="muted" role="status"></p></dialog>
 <dialog id="editorDialog"><div class="modalhead"><div class="editorTitle"><svg><use href="#i-code"/></svg><h2>指标编辑器</h2></div><button class="icon close" aria-label="关闭">✕</button></div>
  <label for="scripts">当前指标</label><div class="formrow"><select id="scripts"></select><button id="newScript">新建</button><button id="deleteScript">移除</button></div>
  <div class="templateRow"><span>载入模板</span><button data-template="ma">双均线</button><button data-template="boll">布林带</button><button data-template="rsi">RSI</button><button data-template="macd">MACD</button></div>
@@ -174,7 +188,13 @@ const stocks=[
 function asset(row,market){const [id,name,mark,color,bg]=row;return {id,name,mark,color,bg,market}}
 const catalog=[...coins.map(r=>asset(r,'crypto')),...stocks.map(r=>asset(r,'stock'))];
 function symbolFrom(input){
- const value=input.toUpperCase().replace(/\s/g,'');const found=catalog.find(a=>a.id.toUpperCase()===value||a.name===input);if(found)return found;
+ const value=input.toUpperCase().replace(/\s/g,'');
+ const stored=/^(UM|CM):([\p{L}\p{N}_]+)$/u.exec(value);
+ if(stored){
+  const kind=stored[1].toLowerCase();
+  return directories[kind].items.get(value)??contractAsset(kind,stored[2]);
+ }
+ const found=catalog.find(a=>a.id.toUpperCase()===value||a.name===input);if(found)return found;
  let ticker=value.match(/^(?:(SH|SZ))?(\d{6})(?:\.(SH|SZ))?$/);
  if(ticker){const ex=ticker[1]||ticker[3]||(/^[569]/.test(ticker[2])?'SH':'SZ'),id=ex.toLowerCase()+ticker[2];return catalog.find(a=>a.id===id)||asset([id,ticker[2],ex,'#a4bbd9','#27303c'],'stock')}
  const pair=value.match(/^([A-Z0-9]{2,14}?)[-/]?(USDT|USD)$/)||(/^[A-Z][A-Z0-9]{1,9}$/.test(value)?[null,value,'USD']:null);
@@ -184,8 +204,65 @@ function symbolFrom(input){
 const $=id=>document.getElementById(id);
 const storeRead=(k,def)=>{try{return JSON.parse(localStorage.getItem('candledesk-v1:'+k))??def}catch{return def}};
 const storeWrite=(k,v)=>{try{localStorage.setItem('candledesk-v1:'+k,JSON.stringify(v))}catch{}};
-const binance=a=>a.market==='crypto'&&a.id.endsWith('USDT');
-const sourceOf=a=>a.market==='stock'?'腾讯行情':binance(a)?'Binance':'Coinbase';
+const venues={
+ spot:{rest:'https://data-api.binance.vision/api/v3',ws:'wss://data-stream.binance.vision'},
+ um:{label:'U 本位',rest:'https://fapi.binance.com/fapi/v1',ws:'wss://fstream.binance.com/market'},
+ cm:{label:'币本位',rest:'https://dapi.binance.com/dapi/v1',ws:'wss://dstream.binance.com'}
+};
+const binance=a=>Boolean(a.kind)||(a.market==='crypto'&&a.id.endsWith('USDT'));
+const sourceOf=a=>a.market==='stock'?'腾讯行情':a.kind?'Binance 合约':binance(a)?'Binance 现货':'Coinbase';
+const marketOf=a=>a.kind?'futures':a.market;
+const productName=a=>a.kind?venues[a.kind].label+(a.expiry?'交割':'永续'):a.market==='stock'?'A 股':'现货';
+function contractAsset(kind,symbol,base,quote,expiry){
+ const pair=symbol.split('_')[0];
+ if(!base||!quote){
+  const parsed=/^(.+?)(USDT|USDC|USD1|BUSD|USD|BTC|U)$/.exec(pair);
+  base=parsed?.[1]??pair;quote=parsed?.[2]??'';
+ }
+ const date=/_(\d{2})(\d{2})(\d{2})$/.exec(symbol);
+ const end=expiry||(date?Date.UTC(2000+Number(date[1]),Number(date[2])-1,Number(date[3]),8):0);
+ const known=catalog.find(a=>a.id===base+'-USD');
+ return {...asset([kind.toUpperCase()+':'+symbol,known?.name??base,known?.mark??base[0],known?.color??'#a3c4e1',known?.bg??'#26313a'],'crypto'),kind,symbol,base,quote,expiry:end};
+}
+function directoryItems(kind,rows){
+ const items=new Map();
+ for(const row of rows){
+  if(!Array.isArray(row)||typeof row[0]!=='string')continue;
+  const a=contractAsset(kind,...row);
+  if(!a.expiry||a.expiry>Date.now())items.set(a.id,a);
+ }
+ return items;
+}
+const directories={};
+for(const [kind,seeds] of Object.entries({um:['BTCUSDT','ETHUSDT','SOLUSDT'],cm:['BTCUSD_PERP','ETHUSD_PERP']})){
+ const savedList=storeRead('directory-'+kind,null);
+ const rows=Array.isArray(savedList?.rows)?savedList.rows:seeds.map(s=>[s]);
+ directories[kind]={items:directoryItems(kind,rows),updated:Number(savedList?.updated)||0,pending:null,failed:false};
+}
+function loadContracts(kind){
+ const entry=directories[kind];
+ if(entry.pending)return entry.pending;
+ if(entry.updated>Date.now()-600000)return Promise.resolve();
+ entry.failed=false;
+ entry.pending=json(venues[kind].rest+'/exchangeInfo').then(payload=>{
+  if(!Array.isArray(payload.symbols))throw Error('无合约目录');
+  const rows=payload.symbols.filter(s=>(s.contractStatus??s.status)==='TRADING'&&(!s.underlyingType||s.underlyingType==='COIN'))
+   .map(s=>[s.symbol,s.baseAsset,s.quoteAsset,s.contractType==='PERPETUAL'?0:Number(s.deliveryDate)]);
+  entry.items=directoryItems(kind,rows);entry.updated=Date.now();
+  storeWrite('directory-'+kind,{rows,updated:entry.updated});
+ }).catch(()=>{entry.failed=true}).finally(()=>{entry.pending=null});
+ return entry.pending;
+}
+function binanceUrl(a,resource,params={}){
+ const endpoint=venues[a.kind??'spot'].rest;
+ const query=new URLSearchParams({symbol:a.symbol??a.id,...params});
+ return endpoint+'/'+resource+'?'+query;
+}
+function symbolRecord(payload,symbol){
+ const row=Array.isArray(payload)?payload.find(r=>r.symbol===symbol):payload;
+ if(!row||row.symbol!==symbol)throw Error('行情与所选标的不符');
+ return row;
+}
 const periods={'1m':60,'5m':300,'15m':900,'1h':3600,'1d':86400};
 const validBars=list=>Array.from(new Map(list.filter(b=>Object.values(b).every(Number.isFinite)&&b.time>0&&b.close>0&&b.low<=b.high).map(b=>[b.time,b])).values()).sort((a,b)=>a.time-b.time).slice(-320);
 function coinBars(rows){return validBars(rows.map(([time,low,high,open,close,volume])=>({time,open:+open,high:+high,low:+low,close:+close,volume:+volume})))}
@@ -218,7 +295,7 @@ async function candles(a,p){
   return validBars(rows.map(([time,open,close,high,low,volume])=>({time:shTime(time),open:+open,close:+close,high:+high,low:+low,volume:+volume})));
  }
  if(binance(a)){
-  const rows=await json('https://data-api.binance.vision/api/v3/klines?symbol='+a.id+'&interval='+p+'&limit=300');
+  const rows=await json(binanceUrl(a,'klines',{interval:p,limit:300}));
   return validBars(rows.map(([t,o,h,l,c,v])=>({time:t/1000,open:+o,high:+h,low:+l,close:+c,volume:+v})));
  }
  return coinBars(await json('https://api.exchange.coinbase.com/products/'+a.id+'/candles?granularity='+periods[p]));
@@ -233,7 +310,7 @@ async function stockQuotes(items){
 }
 async function coinQuote(a){
  if(binance(a)){
-  const q=await json('https://data-api.binance.vision/api/v3/ticker/24hr?symbol='+a.id);
+  const q=symbolRecord(await json(binanceUrl(a,'ticker/24hr')),a.symbol??a.id);
   return {id:a.id,price:+q.lastPrice,prev:+q.openPrice,high:+q.highPrice,low:+q.lowPrice,volume:+q.volume,stamp:q.closeTime/1000};
  }
  const q=await json('https://api.exchange.coinbase.com/products/'+a.id+'/stats');
@@ -243,11 +320,17 @@ function cryptoStream(a,p,onTick,onState){
  let socket,closed=false,retryTimer,watchdog;
  function connect(){
   if(closed)return;const bn=binance(a);
-  try{socket=new WebSocket(bn?'wss://data-stream.binance.vision/ws/'+a.id.toLowerCase()+'@kline_'+p:'wss://ws-feed.exchange.coinbase.com')}catch{retryTimer=setTimeout(connect,9000);return}
+  const symbol=a.symbol??a.id,streamName=encodeURIComponent(symbol.toLowerCase());
+  let url='wss://ws-feed.exchange.coinbase.com';
+  if(a.kind)url=venues[a.kind].ws+'/stream?streams='+streamName+'@kline_'+p+'/'+streamName+'@ticker';
+  else if(bn)url=venues.spot.ws+'/ws/'+streamName+'@kline_'+p;
+  try{socket=new WebSocket(url)}catch{retryTimer=setTimeout(connect,9000);return}
   const arm=()=>{clearTimeout(watchdog);watchdog=setTimeout(()=>socket.close(),25000)};arm();
   socket.onopen=()=>{if(!bn)socket.send(JSON.stringify({type:'subscribe',product_ids:[a.id],channels:['ticker','heartbeat']}));arm()};
-  socket.onmessage=e=>{if(closed)return;let m;try{m=JSON.parse(e.data)}catch{return}arm();
-   if(bn&&m.k){const k=m.k;onTick({time:k.t/1000,open:+k.o,high:+k.h,low:+k.l,close:+k.c,volume:+k.v},null,m.E/1000)}
+  socket.onmessage=e=>{if(closed)return;let m;try{m=JSON.parse(e.data);m=m.data??m}catch{return}arm();
+   if(bn&&m.s!==symbol)return;
+   if(bn&&m.k&&m.k.i===p){const k=m.k;onTick({time:k.t/1000,open:+k.o,high:+k.h,low:+k.l,close:+k.c,volume:+k.v},null,m.E/1000)}
+   else if(a.kind&&m.e==='24hrTicker')onTick(null,{id:a.id,price:+m.c,prev:+m.o,high:+m.h,low:+m.l,volume:+m.v,stamp:m.E/1000},m.E/1000);
    else if(m.type==='ticker'&&m.product_id===a.id){const t=Date.parse(m.time)/1000;if(!Number.isFinite(t)||!+m.price)return;onTick(null,{id:a.id,price:+m.price,prev:+m.open_24h,high:+m.high_24h,low:+m.low_24h,volume:+m.volume_24h,stamp:t},t)}
   };socket.onerror=()=>socket.close();socket.onclose=()=>{clearTimeout(watchdog);if(!closed){onState();retryTimer=setTimeout(connect,6000)}};
  }
@@ -321,24 +404,28 @@ function chartEvents(){
  $('chartType').onclick=()=>{state.line=!state.line;$('chartType').querySelector('use').setAttribute('href',state.line?'#i-chart':'#i-candle');drawSoon()};
 }
  const saved=storeRead('symbols',null);
-let watch=Array.isArray(saved)?saved.map(id=>symbolFrom(String(id))).filter(Boolean).slice(0,40):catalog.slice(0,6);
+let watch=Array.isArray(saved)?saved.map(id=>symbolFrom(String(id))).filter(Boolean).slice(0,40):[...catalog.slice(0,6),directories.um.items.get('UM:BTCUSDT')].filter(Boolean);
 if(!watch.length)watch=[catalog[0]];
 let active=watch.find(a=>a.id===storeRead('active','BTC-USD'))||watch[0],activePeriod=storeRead('period','1d'),filter='all';
 let scripts=storeRead('scripts',[{id:'ma',source:templates.ma}]);if(!Array.isArray(scripts))scripts=[{id:'ma',source:templates.ma}];
-const quotes=new Map(),cache=new Map(),quoteJobs=new Set();let epoch=0,stopStream=()=>{},historyJob=0,chartAt=0,lastStream=0,pollFailed=false,quoteBatch=false,feedMode='connecting',sample=false;
+const quotes=new Map(),cache=new Map(),quoteJobs=new Set();let epoch=0,stopStream=()=>{},historyJob=0,chartAt=0,lastStream=0,lastBarUpdate=0,pollFailed=false,quoteBatch=false,sample=false;
 const elm=(tag,cls,str)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(str!=null)e.textContent=str;return e};
 function badge(a,big=false){const e=elm('span',(big?'big ':'')+'assetBadge',a.mark);e.style.color=a.color;e.style.background=a.bg;return e}
-function ticker(a){return a.market==='stock'?a.id.slice(2)+'.'+a.id.slice(0,2).toUpperCase():a.id.replace('-',' / ').replace(/([A-Z0-9]+)USDT$/,'$1 / USDT')}
+function ticker(a){if(a.kind)return a.symbol;return a.market==='stock'?a.id.slice(2)+'.'+a.id.slice(0,2).toUpperCase():a.id.replace('-',' / ').replace(/([A-Z0-9]+)USDT$/,'$1 / USDT')}
 function priceChange(q){return q?.prev>0?(q.price/q.prev-1)*100:NaN}
 function pct(n){return Number.isFinite(n)?(n>=0?'+':'')+n.toFixed(2)+'%':'—'}
 function putQuote(q){if(!q||!Number.isFinite(q.price)||q.price<=0)return;const prev=quotes.get(q.id);if(prev&&prev.stamp>q.stamp)return;quotes.set(q.id,q);if(q.name){const a=watch.find(a=>a.id===q.id);if(a&&a.name===a.id.slice(2))a.name=q.name}}
 function renderWatch(){
  const host=$('watch');host.replaceChildren();
- for(const [key,name] of [['crypto','加密货币'],['stock','沪深 A 股']]){
-  if(filter!=='all'&&filter!==key)continue;const items=watch.filter(a=>a.market===key);
-  const head=elm('h3','groupHeading',name);head.append(elm('span','',String(items.length).padStart(2,'0')));host.append(head);
+ for(const [key,name] of [['crypto','加密现货'],['futures','加密合约'],['stock','沪深 A 股']]){
+  if(filter!=='all'&&filter!==key)continue;const items=watch.filter(a=>marketOf(a)===key);
+  const head=elm('h3','groupHeading',name);head.append(elm('span','groupTotal',String(items.length).padStart(2,'0')));
+  if(key==='futures'){
+   const add=elm('button','groupAdd','添加合约');add.onclick=()=>openSearch('um');head.append(add);
+  }
+  host.append(head);
   for(const a of items){const q=quotes.get(a.id),row=elm('button','watchRow'+(a.id===active.id?' selected':''));row.setAttribute('aria-pressed',String(a.id===active.id));
-   const names=elm('span'),values=elm('span','watchValue',num(q?.price)),change=priceChange(q);names.append(elm('span','watchName',a.name),elm('span','watchTicker',ticker(a)));
+   const names=elm('span'),values=elm('span','watchValue',num(q?.price)),change=priceChange(q);names.append(elm('span','watchName',a.name),elm('span','watchTicker',a.kind?ticker(a)+' · '+productName(a):ticker(a)));
    values.append(elm('small',Number.isFinite(change)?change>=0?'up':'down':'muted',pct(change)));row.append(badge(a),names,values);row.onclick=()=>choose(a);if(q?.stamp)row.title='行情时间 '+dt(q.stamp,true);host.append(row);
   }
  }
@@ -346,19 +433,43 @@ function renderWatch(){
 }
 function header(){
  const a=active,q=quotes.get(a.id),last=state.bars.at(-1),prev=state.bars.at(-2);
- $('bigBadge').replaceChildren(badge(a,true));$('assetName').textContent=a.name;$('marketTag').textContent=a.market==='stock'?'A 股':'现货';$('symbolLine').textContent=ticker(a)+' · '+(a.market==='stock'?(a.id.startsWith('sh')?'上交所':'深交所'):sourceOf(a));
+ $('bigBadge').replaceChildren(badge(a,true));$('assetName').textContent=a.name;$('marketTag').textContent=productName(a);$('marketTag').classList.toggle('contractTag',Boolean(a.kind));$('symbolLine').textContent=ticker(a)+' · '+(a.market==='stock'?(a.id.startsWith('sh')?'上交所':'深交所'):sourceOf(a));
  const current=q?.price??last?.close,change=q?priceChange(q):prev?(last.close/prev.close-1)*100:NaN;
  $('price').textContent=num(current);$('change').textContent=pct(change)+(Number.isFinite(change)?' · '+(q?a.market==='stock'?'较昨收':'24h':'较上根 K 线'):'');$('change').className=Number.isFinite(change)?change>=0?'up':'down':'muted';
  const prefix=q?(a.market==='stock'?'当日':'24h'):'本期';
- for(const [id,label,field] of [['high','最高','high'],['low','最低','low'],['vol','成交量','volume']]){$(id+'Label').textContent=prefix+' '+label+(id==='vol'&&a.market==='stock'?' (手)':'');$(id==='vol'?'volume':id).textContent=(id==='vol'?compact:num)(q?q[field]:last?.[field])}
+ const volumeUnit=a.market==='stock'?'手':a.kind==='cm'?'张':a.base;
+ for(const [id,label,field] of [['high','最高','high'],['low','最低','low'],['vol','成交量','volume']]){$(id+'Label').textContent=prefix+' '+label+(id==='vol'&&volumeUnit?' ('+volumeUnit+')':'');$(id==='vol'?'volume':id).textContent=(id==='vol'?compact:num)(q?q[field]:last?.[field])}
+}
+let statsToken=0;
+function displayContractStats(a,mark,interest){
+ $('contractStats').hidden=!a.kind;
+ if(!a.kind)return;
+ $('markPrice').textContent=num(mark?.markPrice?Number(mark.markPrice):NaN);
+ $('contractTermLabel').textContent=a.expiry?'交割日期':'最近资金费率';
+ if(a.expiry)$('contractTerm').textContent=new Date(a.expiry).toISOString().slice(0,10);
+ else{
+  const rate=mark?.lastFundingRate;
+  $('contractTerm').textContent=rate!=null&&rate!==''&&Number.isFinite(Number(rate))?(Number(rate)*100).toFixed(4)+'%':'—';
+ }
+ const size=interest?.openInterest;
+ $('openInterest').textContent=size!=null&&Number.isFinite(Number(size))?compact(Number(size))+' '+(a.kind==='cm'?'张':a.base):'—';
+}
+async function refreshContractStats(a,token){
+ if(!a.kind||statsToken===token)return;
+ statsToken=token;
+ try{
+  const [mark,interest]=await Promise.allSettled(['premiumIndex','openInterest'].map(async resource=>symbolRecord(await json(binanceUrl(a,resource)),a.symbol)));
+  if(epoch===token)displayContractStats(a,mark.value,interest.value);
+ }finally{if(statsToken===token)statsToken=0}
 }
 function feed(){
  const live=Date.now()-lastStream<20000&&lastStream>0;
  let label='连接行情中',kind='';if(sample){label='历史快照';kind='stale'}else if(pollFailed&&(!live||!state.bars.length)){label=state.bars.length?'连接中断 · 缓存':'数据源未连接';kind='stale'}
- else if(state.bars.length&&chartAt){if(live){label='实时推送';kind='live'}else{label=active.market==='stock'?'行情轮询 · 10秒':'行情轮询 · 15秒';kind='live'}}
+ else if(state.bars.length&&(chartAt||live)){if(live){label='实时推送';kind='live'}else{label=active.market==='stock'?'行情轮询 · 10秒':'行情轮询 · 15秒';kind='live'}}
+ if(active.expiry&&active.expiry<=Date.now()){label='已交割 · 历史行情';kind='stale'}
  $('feed').textContent=label;$('feed').className='feed '+kind;
  const bar=state.bars.at(-1);$('barDate').textContent=bar?'最新 K 线 '+dt(bar.time,true):'';
- const q=quotes.get(active.id);$('dataOrigin').textContent='数据源 · '+sourceOf(active)+(q?.stamp?'　报价 '+dt(q.stamp,true):sample?'　历史日线快照':'')+(active.market==='stock'?'　以源站时间为准':'');
+ const q=quotes.get(active.id);$('dataOrigin').textContent='数据源 · '+sourceOf(active)+(q?.stamp?'　报价 '+dt(q.stamp,true):sample?'　历史快照':'')+(active.market==='stock'?'　以源站时间为准':'');
  $('empty').hidden=!!state.bars.length;$('empty').textContent=pollFailed?'行情暂不可用，可点击下方「刷新行情」重试。':'正在获取 K 线…';
 }
 function calcStudies(){
@@ -372,17 +483,26 @@ let renderPending=false;
 function scheduleScreen(){if(renderPending)return;renderPending=true;requestAnimationFrame(()=>{renderPending=false;refreshScreen()})}
 function tick(token,bar,q,time){
  if(epoch!==token)return;lastStream=Date.now();if(q)putQuote(q);
- if(state.bars.length&&!sample){const last=state.bars.at(-1);
-  if(!bar&&q){const t=Math.floor(time/periods[activePeriod])*periods[activePeriod];
-   if(t>=last.time)bar=t===last.time?{...last,high:Math.max(last.high,q.price),low:Math.min(last.low,q.price),close:q.price}:{time:t,open:q.price,high:q.price,low:q.price,close:q.price,volume:0}}
-  if(bar&&bar.time>=last.time){if(bar.time===last.time)state.bars[state.bars.length-1]=bar;else{state.bars.push(bar);if(state.bars.length>320)state.bars.shift()}}
- }scheduleScreen();
+ const last=state.bars.at(-1),interval=periods[activePeriod];
+ if(!bar&&q&&!binance(active)&&last&&!sample){
+  const t=Math.floor(time/interval)*interval;
+  if(t>=last.time)bar=t===last.time?{...last,high:Math.max(last.high,q.price),low:Math.min(last.low,q.price),close:q.price}:{time:t,open:q.price,high:q.price,low:q.price,close:q.price,volume:0};
+ }
+ if(bar&&(!last||bar.time>=last.time)&&bar.close>0&&Object.values(bar).every(Number.isFinite)){
+  // A stream can arrive before history. Start with its real candle and backfill on the next REST response.
+  if(!last||(sample&&bar.time-last.time>interval))state.bars=[bar];
+  else if(bar.time===last.time)state.bars[state.bars.length-1]=bar;
+  else{state.bars.push(bar);if(state.bars.length>320)state.bars.shift()}
+  sample=false;lastBarUpdate=Date.now();
+ }
+ scheduleScreen();
 }
 async function getHistory(){
  const token=epoch;if(historyJob===token)return;historyJob=token;const a=active,p=activePeriod,began=Date.now();
+ refreshContractStats(a,token);
  try{
   const data=await candles(a,p);if(!data.length)throw Error('暂无 K 线');if(epoch!==token)return;
-  if(lastStream>began&&!sample&&state.bars.length){const live=state.bars.at(-1),tail=data.at(-1);
+  if(lastBarUpdate>=began&&!sample&&state.bars.length){const live=state.bars.at(-1),tail=data.at(-1);
    if(live.time===tail.time){tail.close=live.close;tail.high=Math.max(live.high,tail.high);tail.low=Math.min(live.low,tail.low);if(binance(a))tail.volume=Math.max(tail.volume,live.volume)}
    else if(live.time>tail.time)data.push(live);
   }
@@ -395,7 +515,7 @@ function refreshQuotes(){
 }
 function choose(a,p=activePeriod){
  stopStream();active=a;activePeriod=Object.hasOwn(periods,p)?p:'1d';if(a.market==='stock'&&activePeriod==='1m')activePeriod='5m';
- const token=++epoch,key=a.id+activePeriod,lastSaved=storeRead('last-chart',{});chartAt=0;lastStream=0;pollFailed=false;sample=false;
+ const token=++epoch,key=a.id+activePeriod,lastSaved=storeRead('last-chart',{});chartAt=0;lastStream=0;lastBarUpdate=0;pollFailed=false;sample=false;
  const cached=cache.get(key)||(lastSaved.key===key&&Array.isArray(lastSaved.data)?lastSaved.data:null);
  state.bars=cached?validBars(cached):[];sample=!!state.bars.length;
  if(!state.bars.length&&key==='BTC-USD1d'){state.bars=coinBars(SNAPSHOT);sample=true}
@@ -403,23 +523,69 @@ function choose(a,p=activePeriod){
  for(const [period,label] of [['1m','1分'],['5m','5分'],['15m','15分'],['1h','1时'],['1d','日线']]){
   if(a.market==='stock'&&period==='1m')continue;const b=elm('button','',label);b.setAttribute('aria-pressed',String(period===activePeriod));b.onclick=()=>choose(a,period);host.append(b)
  }
- resetChart();refreshScreen();getHistory();
+ displayContractStats(a);resetChart();refreshScreen();getHistory();
  if(a.market==='crypto')stopStream=cryptoStream(a,activePeriod,(bar,q,t)=>tick(token,bar,q,t),()=>{if(epoch===token){lastStream=0;feed()}});
 }
-function setupSearch(){
- const input=$('query'),dlg=$('symbolDialog');
- function search(){
-  const term=input.value.trim(),all=Array.from(new Map([...watch,...catalog].map(a=>[a.id,a])).values());
-  let items=all.filter(a=>(a.id+' '+a.name+' '+ticker(a)).toLowerCase().includes(term.toLowerCase()));
-  const user=term?symbolFrom(term):null;if(user&&!items.some(a=>a.id===user.id))items.unshift(user);
-  const host=$('results');host.replaceChildren();for(const a of items.slice(0,20)){
-   const b=elm('button','resultBtn',a.name);b.append(elm('small','',ticker(a)));b.onclick=()=>{if(!watch.some(w=>w.id===a.id)){if(watch.length>=40){$('searchNote').textContent='最多支持 40 个自选标的';return}watch.push(a);storeWrite('symbols',watch.map(w=>w.id))}
-    filter='all';setFilter();dlg.close();choose(watch.find(w=>w.id===a.id));refreshQuotes()};host.append(b)
-  }$('searchNote').textContent=items.length?'可输入沪深六位代码，或 Coinbase 的 USD、Binance 的 USDT 现货交易对。':'请输入有效代码，例如 600519、ETH-USD 或 ETHUSDT。';
+let searchMarket='all';
+function openResult(a){
+ const existing=watch.find(w=>w.id===a.id);
+ if(!existing){
+  if(watch.length>=40){$('searchNote').textContent='自选已满（40 个标的）';return}
+  watch.push(a);storeWrite('symbols',watch.map(w=>w.id));
  }
- function open(){dlg.showModal();input.value='';search();input.focus()}
- input.oninput=search;input.onkeydown=e=>{if(e.key==='Enter')$('results').querySelector('button')?.click()};$('searchOpen').onclick=$('addSymbol').onclick=open;
- document.addEventListener('keydown',e=>{if(e.key==='/'&&!document.querySelector('dialog[open]')&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();open()}});
+ filter=marketOf(a)===filter?filter:'all';setFilter();
+ $('symbolDialog').close();choose(existing??a);refreshQuotes();
+}
+function renderSearch(){
+ const normalize=s=>s.toUpperCase().replace(/[\s/\-]/g,'');
+ const raw=$('query').value.trim(),term=normalize(raw);
+ const list=new Map();
+ for(const a of [...watch,...catalog,...directories.um.items.values(),...directories.cm.items.values()])list.set(a.id,a);
+ // A bare pair like BTCUSDT keeps its original spot meaning; the contract has a separate result.
+ const spot=raw?symbolFrom(raw):null;
+ if(spot&&!spot.kind&&!list.has(spot.id))list.set(spot.id,spot);
+ const items=[];
+ for(const a of list.values()){
+  const market=a.kind??a.market;
+  if(searchMarket!=='all'&&market!==searchMarket)continue;
+  if(a.expiry&&a.expiry<=Date.now())continue;
+  const code=a.symbol??a.id;
+  const alias=a.kind&&!a.expiry?code.replace(/_PERP$/,'')+'.P':'';
+  const text=[code,a.id,a.name,a.base??'',productName(a),ticker(a),alias].join('|');
+  if(term&&!normalize(text).includes(term))continue;
+  const exact=term&&[code,a.id,alias].some(x=>x&&normalize(x)===term);
+  const rank=exact?0:term&&normalize(a.base??a.name)===term?1:2;
+  items.push({a,rank});
+ }
+ items.sort((l,r)=>l.rank-r.rank);
+ const host=$('results');host.replaceChildren();
+ for(const {a} of items.slice(0,40)){
+  const b=elm('button','resultBtn',a.name),desc=ticker(a)+' · '+productName(a);
+  b.append(elm('small','',desc));b.onclick=()=>openResult(a);host.append(b);
+ }
+ const relevant=searchMarket==='all'?Object.values(directories):[directories[searchMarket]].filter(Boolean);
+ let note=items.length>40?'找到 '+items.length+' 个标的，显示前 40 个，可继续输入代码。':items.length?'选择标的即可查看行情并加入自选。':'没有匹配的标的，请检查代码或切换市场。';
+ if(relevant.some(d=>d.pending))note+=' 正在获取币安合约列表…';
+ else if(relevant.some(d=>d.failed))note+=' 合约列表暂时无法更新，当前使用缓存或常用合约。';
+ $('searchNote').textContent=note;
+}
+function setSearchMarket(market){
+ searchMarket=market;
+ for(const b of $('searchMarkets').children)b.setAttribute('aria-pressed',String(b.dataset.market===market));
+ const kinds=market==='all'?['um','cm']:(directories[market]?[market]:[]);
+ const loads=kinds.map(loadContracts);
+ renderSearch();
+ if(loads.length)Promise.all(loads).then(()=>{if($('symbolDialog').open)renderSearch()});
+}
+function openSearch(market=filter==='futures'?'um':filter==='crypto'?'crypto':'all'){
+ $('query').value='';$('symbolDialog').showModal();setSearchMarket(market);$('query').focus();
+}
+function setupSearch(){
+ const input=$('query');
+ for(const b of $('searchMarkets').children)b.onclick=()=>setSearchMarket(b.dataset.market);
+ input.oninput=renderSearch;input.onkeydown=e=>{if(e.key==='Enter')$('results').querySelector('button')?.click()};
+ $('searchOpen').onclick=$('addSymbol').onclick=()=>openSearch();
+ document.addEventListener('keydown',e=>{if(e.key==='/'&&!document.querySelector('dialog[open]')&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();openSearch()}});
 }
 function setFilter(){for(const b of $('filters').children)b.setAttribute('aria-pressed',String(filter===b.dataset.filter));renderWatch()}
 function scriptTitle(s){try{return pine(s.source,[]).title}catch{return '自定义指标'}}
