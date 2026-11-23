@@ -22,6 +22,9 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
 #screenDialog :is(.scrPresets,.scrActions,.scrPager) button,.scrRemove,.scrOpen,.scrSave{border:1px solid #3c454b;padding:6px 10px;font-size:13px}#screenDialog .runBtn{background:var(--gold);color:#241c10;border-color:var(--gold);font-weight:650}#screenDialog button:disabled{opacity:.45;cursor:default}
 .scrRule{display:grid;grid-template-columns:minmax(160px,2fr) minmax(90px,1fr) minmax(80px,.8fr) minmax(120px,1.6fr) auto;gap:6px;align-items:center;margin-bottom:7px}.scrRule select,.scrRule input{min-width:0;width:100%;padding:7px;font-size:14px}.scrActions{justify-content:flex-end;flex-wrap:wrap}.scrActions button:first-child{margin-right:auto}.scrReports{margin:19px 0 6px;flex-wrap:wrap}.scrReports span,.scrHint,.scrPager{color:var(--dim);font-size:13px}.scrScroll{max-height:42vh;overflow:auto}.scrScroll table{width:100%;border-collapse:collapse;font-size:14px;text-align:left}.scrScroll th,.scrScroll td{white-space:nowrap;padding:7px 8px;border-bottom:1px solid var(--line)}.scrScroll th{position:sticky;top:0;background:#20262b;z-index:1}.scrScroll th button,.scrScroll .scrOpen{padding:0;border:0;text-align:left;font-size:inherit}.scrScroll .scrOpen{color:var(--gold)}.scrScroll td small{display:block;font-size:12px;color:var(--dim)}.scrPager{justify-content:flex-end;margin-top:7px}.scrHint{margin:10px 0 2px}.scrTvHeader,.scrAccount{justify-content:space-between;flex-wrap:wrap;margin:12px 0}.scrTvHeader a,.scrAccount a,.tradingview-widget-copyright a{color:var(--gold);font-size:14px}.scrTvHeader select{min-width:145px}.scrAccount{border-top:1px solid var(--line);padding-top:12px}.scrAccount p{margin:2px 0}.scrWidgetBox{height:min(54vh,580px);min-height:300px}.tradingview-widget-container__widget{width:100%;height:100%}.tradingview-widget-copyright{margin:5px 0}#scrTvStatus{margin-top:20px}
 @media(max-width:680px){.sectionButtons{gap:4px}.sectionButtons .editorBtn{padding:5px 7px;font-size:12px}.sectionButtons .editorBtn svg{display:none}.scrRule{grid-template-columns:1fr 1fr auto;padding:8px 0;border-bottom:1px solid var(--line)}.scrRule>*:first-child{grid-column:span 2}.scrRule .scrRemove{grid-column:3;grid-row:1}.scrRule>*:nth-child(4){grid-column:span 2}.scrSettings{grid-template-columns:1fr 1fr}.scrSettings label:first-child{grid-column:span 2}.scrScroll{max-height:38vh}.scrActions{gap:5px}}
+#indicatorMarket{width:min(940px,95vw);padding:23px 25px;max-height:92vh;overflow:auto}#indicatorMarket [hidden]{display:none!important}#indicatorMarket .modalhead{align-items:flex-start;margin-bottom:15px}.imCaption,#imMessage{font-size:13px;color:var(--dim);margin:4px 0 0}.imSearchRow{display:grid;grid-template-columns:minmax(0,1fr) 145px;gap:9px}.imSearchRow input,.imSearchRow select{min-height:39px}#imTabs{display:flex;gap:5px;margin:12px 0 14px;flex-wrap:wrap}#imTabs button{flex:none}.imLayout{display:grid;grid-template-columns:minmax(240px,.93fr) minmax(270px,1.07fr);border:1px solid var(--line);border-radius:9px;overflow:hidden;align-items:stretch}.imListPane{min-width:0;background:#14191d}.imListHead,.imPager,.imMore,.imFormActions{display:flex;align-items:center;gap:9px}.imListHead{justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);font-size:12px;color:var(--dim)}.imListHead strong{color:var(--ink);font-weight:600}#imList{min-height:148px;max-height:min(38vh,340px);overflow-y:auto}.imItem{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;gap:8px;padding:9px 14px;border-bottom:1px solid #252b30;border-left:3px solid transparent}.imItem span{display:block;min-width:0}.imItem strong,.imItem small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.imItem strong{font-size:14px;font-weight:600}.imItem small{font-size:11px;color:var(--dim);margin-top:2px}.imItem[aria-pressed=true]{background:#2b281f;border-left-color:var(--gold)}.imItem em{font-size:11px;color:var(--green);font-style:normal;white-space:nowrap}.imPager{justify-content:space-between;padding:7px 12px;border-top:1px solid var(--line)}.imPager button,.imMore button,.imActions button,.imFormActions button,.imStar{border:1px solid #384048;border-radius:5px;padding:5px 10px;font-size:12px}.imPager button:disabled{opacity:.35;cursor:default}.imDetail{padding:18px 21px;border-left:1px solid var(--line);min-width:0;background:var(--panel)}.imDetailTop{display:flex;align-items:center;justify-content:space-between;gap:8px}.imKind,.imBy,.imInfo,.imEmpty,.imDetail label{font-size:12px;color:var(--dim)}.imDetail h3{font-size:clamp(18px,2.5vw,24px);line-height:1.25;margin:14px 0 4px;overflow-wrap:anywhere}.imSub{font-size:13px;color:#bac3ca;margin:0 0 11px}.imBy{margin:0}.imDescription{font-size:14px;line-height:1.6;margin:15px 0 10px}.imInfo{margin:8px 0}.imDetail label{display:block;margin:12px 0 4px}.imDetail select{width:100%;font-size:13px}.imActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}.imPrimary,.imPrimary:hover{background:var(--gold);border-color:var(--gold)!important;color:#241c0f;font-weight:650}.imDetail a,.imMore a{color:var(--gold);font-size:12px}.imSource{display:inline-block;margin-top:14px}.imStar[aria-pressed=true]{color:var(--gold);border-color:#75613b}.imMore{flex-wrap:wrap;justify-content:space-between;gap:7px 14px;margin-top:13px}.imEmpty{padding:12px}.imImportFields{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}#imForm{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}#imForm label{display:block;font-size:12px;color:var(--dim);margin:6px 0}#imForm input,#imForm textarea{margin-top:4px;font-size:13px}#imCode{height:76px}#imError{color:var(--red);font-size:12px}#imMessage:empty{display:none}
+@media(max-width:680px){#indicatorMarket{padding:16px;width:96vw}.imSearchRow{grid-template-columns:minmax(0,1fr) 100px}#imTabs{gap:3px}#imTabs button{padding:5px 7px}.imLayout{grid-template-columns:1fr}.imDetail{border-left:0;border-top:1px solid var(--line);padding:13px 15px}.imDetail h3{margin-top:8px}#imList{max-height:19vh;min-height:65px}.imDescription{margin-top:9px}.imImportFields{grid-template-columns:1fr 1fr}.imImportFields label:first-child{grid-column:span 2}.sectionhead{flex-wrap:wrap;row-gap:8px}.sectionButtons{justify-content:flex-start}.imMore{justify-content:flex-start}}
+
 </style>
 </head>
 <body>
@@ -51,7 +54,7 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
  <div class="sidefoot"><span class="sourceDot"></span><span>公开市场数据</span><span class="sideNum" id="watchCount"></span></div>
 </aside>
 <main id="main">
- <div class="sectionhead"><div><div class="eyebrow"><i></i> MARKET TERMINAL</div><h1>行情总览</h1></div><div class="sectionButtons"><button class="editorBtn" id="screenBtn">市场筛选</button><button class="editorBtn" id="editorBtn"><svg><use href="#i-code"/></svg>指标编辑器</button></div></div>
+ <div class="sectionhead"><div><div class="eyebrow"><i></i> MARKET TERMINAL</div><h1>行情总览</h1></div><div class="sectionButtons"><button class="editorBtn" id="indicatorMarketBtn">指标市场</button><button class="editorBtn" id="screenBtn">市场筛选</button><button class="editorBtn" id="editorBtn"><svg><use href="#i-code"/></svg>指标编辑器</button></div></div>
  <section class="quote">
   <div class="instrument"><div id="bigBadge"></div><div><div class="titleline"><h2 id="assetName">比特币</h2><span id="marketTag" class="tag">现货</span></div><div class="symbolLine" id="symbolLine"></div></div></div>
   <div class="priceblock"><strong id="price">—</strong><span id="change">—</span></div>
@@ -71,6 +74,19 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
  </section>
  <div class="dateline"><span id="dataOrigin"></span><button id="retry">刷新行情</button></div>
 </main></div>
+<dialog id="indicatorMarket" aria-labelledby="imHeading">
+ <div class="modalhead"><div><h2 id="imHeading">指标市场</h2><p class="imCaption">发现 TradingView 内置指标和社区作品</p></div><button class="icon close" aria-label="关闭指标市场">✕</button></div>
+ <div class="imSearchRow"><input id="imQuery" type="search" aria-label="搜索指标、作者或关键词" placeholder="搜索指标、作者或关键词，例如 RSI、布林带、LazyBear" autocomplete="off"><select id="imCategory" aria-label="指标分类"><option value="">全部分类</option></select></div>
+ <nav id="imTabs" class="filters" aria-label="指标来源和状态"><button data-kind="all" aria-pressed="true">全部</button><button data-kind="built">内置指标</button><button data-kind="community">社区脚本</button><button data-kind="local">本站可用</button><button data-kind="star">已收藏</button><button data-kind="on">图表上</button></nav>
+ <div class="imLayout">
+  <section class="imListPane" aria-label="指标目录"><div class="imListHead"><strong id="imCount" aria-live="polite"></strong><span id="imPage"></span></div><div id="imList" aria-label="选择指标"></div><div id="imPager" class="imPager"><button id="imPrev">上一页</button><button id="imNext">下一页</button></div></section>
+  <section id="imDetail" class="imDetail" aria-label="指标详情" tabindex="-1"></section>
+ </div>
+ <div class="imMore"><a href="https://www.tradingview.com/scripts/?script_type=indicators" target="_blank" rel="noopener noreferrer">浏览 TradingView 社区指标 ↗</a><a href="https://cn.tradingview.com/support/folders/43000587405/" target="_blank" rel="noopener noreferrer">官方内置指标目录 ↗</a><button id="imImportBtn">＋ 收录原作链接 / Pine 源码</button></div>
+ <form id="imForm" hidden><div class="imImportFields"><label>TradingView 作品链接<input id="imUrl" type="url" required placeholder="https://www.tradingview.com/script/…"></label><label>名称<input id="imName" maxlength="120" placeholder="例如 我的趋势指标"></label><label>作者<input id="imAuthor" maxlength="80" placeholder="TradingView 用户名"></label></div><label>可选 Pine 源码<textarea id="imCode" spellcheck="false" placeholder="粘贴你有权使用的源码。兼容的输出线可以看图和筛选。"></textarea></label><div class="imFormActions"><button type="submit" class="imPrimary">收录指标</button><button type="button" id="imCancel">取消</button><span id="imError" role="status"></span></div></form>
+ <p id="imMessage" role="status" aria-live="polite"></p>
+</dialog>
+
 <dialog id="screenDialog" aria-labelledby="screenHeading">
  <div class="modalhead"><h2 id="screenHeading">市场筛选</h2><button class="icon close" aria-label="关闭市场筛选">✕</button></div>
  <nav class="filters scrTabs" id="scrTabs" aria-label="筛选来源"><button data-tab="site" aria-pressed="true">按本站指标筛选</button><button data-tab="tv" aria-pressed="false">TradingView 官方筛选</button></nav>
@@ -503,8 +519,9 @@ function feed(){
 }
 function calcStudies(){
  state.studies=[];for(const s of scripts){try{state.studies.push({...pine(s.source,state.bars),id:s.id})}catch{}}
+ state.studies.push(...marketChartStudies(state.bars));
  const host=$('legend');host.replaceChildren();
- for(const s of state.studies)for(const p of s.plots){const e=elm('button','legendEntry'),i=elm('i');i.style.background=p.color;e.append(i,document.createTextNode(p.name));e.title='编辑 '+s.title;e.onclick=()=>openEditor(s.id);host.append(e)}
+ for(const s of state.studies)for(const p of s.plots){const e=elm('button','legendEntry'),i=elm('i');i.style.background=p.color;e.append(i,document.createTextNode(p.name));e.title=(s.market?'指标市场 · ':'编辑 ')+s.title;e.onclick=()=>s.market?openIndicatorMarket(s.id):openEditor(s.id);host.append(e)}
  drawSoon();
 }
 function refreshScreen(){header();feed();calcStudies();renderWatch()}
@@ -650,7 +667,7 @@ function screenWindow(a,n,fn){
 function screenMean(a){return a.reduce((sum,v)=>sum+v,0)/a.length}
 function screenWma(a,n){return screenWindow(a,n,w=>w.reduce((s,v,i)=>s+v*(i+1),0)/(n*(n+1)/2))}
 function screenDivide(n,d){return Number.isFinite(n)&&Number.isFinite(d)&&d!==0?n/d:NaN}
-function screenMetrics(){
+function screenMetrics(includeEditor=true){
  const defs=new Map(),ma='均线与趋势',osc='振荡指标',volume='价格与量能',vol='波动与通道';
  const add=(id,label,group,compute,min=1)=>defs.set(id,{id,label,group,compute,min});
  const avg=(series,n,type='sma')=>rollingSeries(series,n,type);
@@ -694,12 +711,71 @@ function screenMetrics(){
   return bp.map((_,i)=>100*(4*ratios[0][i]+2*ratios[1][i]+ratios[2][i])/7);
  });
  for(const [idx,id,name] of [[0,'bbmid','中轨'],[1,'bbhigh','上轨'],[2,'bblow','下轨']])add(id,'布林带'+name+'（20,2）',vol,output(templates.boll,idx));
- for(const script of scripts){
+ add('wma9','WMA 9',ma,c=>screenWma(c.get('close'),9));
+ const trueRanges=bars=>bars.map((b,i)=>i?Math.max(b.high-b.low,Math.abs(b.high-bars[i-1].close),Math.abs(b.low-bars[i-1].close)):b.high-b.low);
+ add('atr10','真实波幅均值 10',vol,c=>avg(trueRanges(c.bars),10,'rma'));
+ add('supertrend','Supertrend（10,3）',ma,c=>{
+  const atr=c.get('atr10');let priorUpper=NaN,priorLower=NaN,bearish=true;
+  return c.bars.map((b,i)=>{
+   if(!Number.isFinite(atr[i]))return NaN;
+   const mid=(b.high+b.low)/2,rawUpper=mid+3*atr[i],rawLower=mid-3*atr[i],prev=c.bars[i-1]?.close;
+   const upper=Number.isFinite(priorUpper)&&prev<=priorUpper?Math.min(priorUpper,rawUpper):rawUpper;
+   const lower=Number.isFinite(priorLower)&&prev>=priorLower?Math.max(priorLower,rawLower):rawLower;
+   if(Number.isFinite(priorUpper))bearish=bearish?b.close<=upper:b.close<lower;
+   priorUpper=upper;priorLower=lower;return bearish?upper:lower;
+  });
+ });
+ add('bbPct','布林带 %b',vol,c=>{const lo=c.get('bblow'),hi=c.get('bbhigh');return c.get('close').map((v,i)=>screenDivide(v-lo[i],hi[i]-lo[i]))});
+ add('bbWidth','布林带宽度（%）',vol,c=>{const lo=c.get('bblow'),hi=c.get('bbhigh');return c.get('bbmid').map((v,i)=>100*screenDivide(hi[i]-lo[i],v))});
+ const flowVolumes=bars=>bars.map(b=>b.high===b.low?0:b.volume*((b.close-b.low)-(b.high-b.close))/(b.high-b.low));
+ add('adl','累积派发线 ADL',volume,c=>{let total=0;return flowVolumes(c.bars).map(v=>total+=v)});
+ add('cmf','蔡金资金流量 CMF 20',volume,c=>{const denom=avg(c.get('volume'),20);return avg(flowVolumes(c.bars),20).map((v,i)=>screenDivide(v,denom[i]))});
+ add('mfi','资金流量指数 MFI 14',osc,c=>{
+  const price=c.bars.map(b=>(b.high+b.low+b.close)/3);
+  const directional=up=>avg(price.map((v,i)=>!i?NaN:(up?v>price[i-1]:v<price[i-1])?v*c.bars[i].volume:0),14);
+  const pos=directional(true),neg=directional(false);return pos.map((v,i)=>100*screenDivide(v,v+neg[i]));
+ });
+ for(const [id,sign] of [['kcHigh',1],['kcLow',-1]])add(id,'肯特纳'+(sign===1?'上轨':'下轨')+'（20,10,2）',vol,c=>{const atr=c.get('atr10');return c.get('ema20').map((v,i)=>v+sign*2*atr[i])});
+ add('obv','能量潮 OBV',volume,c=>{
+  let balance=0;
+  return c.bars.map((b,i)=>i?(balance+=Math.sign(b.close-c.bars[i-1].close)*b.volume):0);
+ });
+ add('roc','ROC 9（%）',osc,c=>c.bars.map((b,i)=>100*screenDivide(b.close-c.bars[i-9]?.close,c.bars[i-9]?.close)));
+ add('dcHigh','唐奇安上轨 20',vol,c=>avg(c.get('high'),20,'highest'));
+ add('dcLow','唐奇安下轨 20',vol,c=>avg(c.get('low'),20,'lowest'));
+ add('dcMid','唐奇安中轨 20',vol,c=>{const lo=c.get('dcLow');return c.get('dcHigh').map((v,i)=>(v+lo[i])/2)});
+ add('wt1','WaveTrend 快线 WT1',osc,c=>{
+  const price=c.bars.map(b=>(b.high+b.low+b.close)/3),esa=avg(price,10,'ema');
+  const dev=avg(price.map((v,i)=>Math.abs(v-esa[i])),10,'ema');
+  return avg(price.map((v,i)=>screenDivide(v-esa[i],.015*dev[i])),21,'ema');
+ });
+ add('wt2','WaveTrend 信号线 WT2',osc,c=>avg(c.get('wt1'),4));
+ add('sqMom','Squeeze Momentum 动量',osc,c=>{
+  const mean=c.get('sma20'),mid=c.get('dcMid');
+  const values=c.bars.map((b,i)=>b.close-(mean[i]+mid[i])/2);
+  return screenWindow(values,20,w=>{
+   const xMean=(w.length-1)/2,yMean=screenMean(w);
+   let covariance=0,variance=0;
+   for(let i=0;i<w.length;i++){covariance+=(i-xMean)*(w[i]-yMean);variance+=(i-xMean)**2}
+   return yMean+xMean*covariance/variance;
+  });
+ });
+ add('sqState','Squeeze Momentum 挤压状态',vol,c=>{
+  const close=c.get('close'),mid=c.get('sma20'),deviation=avg(close,20,'stdev');
+  const range=avg(c.bars.map((b,i)=>i?Math.max(b.high-b.low,Math.abs(b.high-close[i-1]),Math.abs(b.low-close[i-1])):b.high-b.low),20);
+  return mid.map((v,i)=>Number.isFinite(v)&&Number.isFinite(range[i])?Number(2*deviation[i]<1.5*range[i]):NaN);
+ });
+ for(const entry of marketImports){
+  if(!entry.source)continue;
+  try{pine(entry.source,[]).plots.forEach((p,i)=>add('marketPine:'+entry.id+':'+i,entry.name+' / '+p.name,'收录作品的 Pine 输出线',output(entry.source,i)))}catch{}
+ }
+
+ for(const script of includeEditor?scripts:[]){
   try{const parsed=pine(script.source,[]);parsed.plots.forEach((p,i)=>add('pine:'+script.id+':'+i,parsed.title+' / '+p.name,'我的 Pine 输出线',output(script.source,i)))}catch{}
  }
  return defs;
 }
-function screenValues(bars,defs,ids){
+function makeScreenContext(bars,defs){
  const cache=new Map(),studies=new Map();
  const ctx={bars,get(id){
   if(!cache.has(id)){
@@ -708,7 +784,10 @@ function screenValues(bars,defs,ids){
    cache.set(id,series);
   }return cache.get(id);
  },study(src){if(!studies.has(src))studies.set(src,pine(src,bars).plots);return studies.get(src)}};
- const result={};
+ return ctx;
+}
+function screenValues(bars,defs,ids){
+ const ctx=makeScreenContext(bars,defs),result={};
  for(const id of ids){const s=ctx.get(id);result[id]=[s.at(-2)??NaN,s.at(-1)??NaN]}
  return result;
 }
@@ -856,13 +935,27 @@ function scrTab(tab){
  for(const b of $('scrTabs').children)b.setAttribute('aria-pressed',String(b.dataset.tab===tab));
  if(tab==='tv'){scrStop();mountOfficial()}
 }
-function openScreener(){
+function marketScreenRule(id){
+ if(id==='macd'||id==='wt1'||id==='stochK'||id==='srsiK')return rule(id,'up',({macd:'signal',wt1:'wt2',stochK:'stochD',srsiK:'srsiD'})[id],'metric');
+ if(id==='rsi')return rule(id,'lt',30);
+ if(id==='mfi')return rule(id,'lt',20);
+ if(id==='wpr')return rule(id,'lt',-80);
+ if(id==='adx')return rule(id,'gt',25);
+ if(id==='bbPct')return rule(id,'lt',0);
+ if(id==='sqState')return rule(id,'gt',0);
+ if(/^([se]ma\d+|hma|vwma|wma9|supertrend|bb(mid|high|low)|dc(High|Mid|Low)|kc(High|Low)|tenkan|kijun|span[AB])$/.test(id))return rule(id,'lt','close','metric');
+ return rule(id,'gt',0);
+}
+function openScreener(seedMetric){
  const prefs=storeRead('screen-config',{}),defs=screenMetrics();screening.defs=defs;
  for(const [id,key,fallback] of [['scrScope','scope','watch'],['scrTf','tf','1d'],['scrMode','mode','all']]){
   const el=$(id),value=prefs?.[key];el.value=Array.from(el.options).some(o=>o.value===value)?value:fallback;
  }
  const saved=Array.isArray(prefs?.rules)?prefs.rules.filter(r=>r&&typeof r.left==='string'&&Object.hasOwn(screenOps,r.op)&&['number','metric'].includes(r.rhs)):[];
- screening.rules=(saved.length?saved:screenPresets.rsi).map(r=>({...r}));scrClear();scrRules();
+ const seeded=typeof seedMetric==='string'&&defs.has(seedMetric);
+ screening.rules=(saved.length?saved:seeded?[]:screenPresets.rsi).map(r=>({...r}));
+ if(seeded&&!screening.rules.some(r=>r.left===seedMetric))screening.rules.push(marketScreenRule(seedMetric));
+ scrClear();scrRules();if(seeded)scrNote('已选「'+defs.get(seedMetric).label+'」，确认或修改条件后可开始筛选。');
  $('screenDialog').showModal();scrTab('site');
 }
 function setupScreener(){
@@ -877,8 +970,218 @@ function setupScreener(){
  $('scrPrev').onclick=()=>{screening.page--;scrTable()};$('scrNext').onclick=()=>{screening.page++;scrTable()};
  if(typeof location!=='undefined'&&location.hash==='#screener')openScreener();
 }
+const tvFolder='https://www.tradingview.com/support/folders/43000587405-built-in-indicators/';
+const directoryLabels={"1 year active supply %":"一年活跃供应量占比","24-hour Volume":"24 小时成交量","Accumulation Distribution (ADL)":"累积派发线","Active addresses with contracts":"活跃地址与合约","Addresses with balance ≥ X (% of supply)":"持仓地址占供应量比重","Addresses with balance ≥ X (USD)":"持仓地址余额（美元）","Advance/Decline Line":"腾落线","Advance/Decline Ratio":"涨跌家数比率","Advance/Decline Ratio (Bars)":"涨跌比（K 线）","Analyst price forecast":"分析师价格预测","Arnaud Legoux Moving Average":"阿诺勒古移动平均线","Aroon Indicator":"阿隆指标","Aroon Oscillator":"阿隆振荡器","Auto fib extension":"自动斐波那契扩展","Auto Fib Retracement":"自动斐波那契回撤","Auto key levels":"自动关键价位","Auto Pitchfork":"自动干草叉","Auto trendlines":"自动趋势线","Average Daily Range (ADR) indicator":"平均日内波幅","Average Directional Index (ADX)":"平均趋向指数","Average transaction volume":"平均交易量","Average True Range (ATR)":"平均真实波幅","Awesome Oscillator (AO)":"动量震荡指标","Balance of Power (BOP)":"均势指标","Basis":"基差","BBTrend":"布林带趋势","Block height":"区块高度","Blocks mined":"已挖区块数","Bollinger Bands (BB)":"布林带","Bollinger Bands %b (%b)":"布林带百分比","Bollinger BandWidth (BBW)":"布林带宽度","Bollinger Bars":"布林 K 线","Bull Bear Power":"多空力量","Chaikin Money Flow (CMF)":"蔡金资金流量","Chaikin Oscillator":"蔡金振荡器","Chande Kroll Stop":"钱德克罗尔止损","Chande Momentum Oscillator (CMO)":"钱德动量振荡器","Chandelier Exit":"吊灯止损","Chop Zone":"震荡区域","Choppiness Index (CHOP)":"震荡指数","Commodity Channel Index (CCI)":"商品通道指数","Connors RSI (CRSI)":"康纳相对强弱指数","Coppock Curve":"估波曲线","Correlation Coefficient (CC)":"相关系数","Created UTXOs":"已创建 UTXO","Cumulative Volume Delta":"累计成交量差","Cumulative Volume Index (CVI)":"累积成交量指数","Detrended Price Oscillator (DPO)":"区间震荡线","Difficulty":"挖矿难度","Directional Movement (DMI)":"趋向指标","Dividend Yield":"股息率","Donchian Channels (DC)":"唐奇安通道","Double Exponential Moving Average (EMA)":"双指数移动平均线","Ease of Movement (EOM)":"简易波动指标","El Salvador Government balance":"萨尔瓦多政府余额","Elder's Force Index (EFI)":"艾尔德力量指数","Envelope (ENV)":"均线包络线","ETF balances":"ETF 余额","ETF flows":"ETF 资金流","Ethereum new deposits":"以太坊新增存款","Ethereum new unique depositors":"以太坊新增独立存款者","Ethereum new value staked":"以太坊新增质押价值","Ethereum total number of deposits":"以太坊存款总数","Ethereum total unique depositors":"以太坊独立存款者总数","Ethereum total value staked":"以太坊总质押价值","Exponential Moving Average":"指数移动平均线","Fisher Transform":"费雪变换","Funding rate: a guide to market sentiment":"资金费率","Hash Rate":"哈希率","Held tokens in addresses ≥ X (% of supply)":"地址持币占供应量比重","Held tokens in addresses ≥ X (tokens)":"地址持币量","Held tokens in addresses ≥ X (USD)":"地址持币价值（美元）","Historical Volatility":"历史波动率","Hull Moving Average":"赫尔移动平均线","Ichimoku Cloud":"一目均衡表","Index price":"指数价格","Kaufman's Adaptive Moving Average (KAMA)":"考夫曼自适应均线","Keltner Channels (KC)":"肯特纳通道","Klinger Oscillator":"克林格振荡器","Know Sure Thing (KST)":"确然指标","Large transaction volume":"大额交易量","Learn using seasonals":"季节性图表使用说明","Least Squares Moving Average":"最小二乘移动平均线","Linear Regression":"线性回归","Liquidation data: what to watch and why it matters":"强平数据","Long / Short Ratio Accounts":"账户多空比","Long Short Accounts %":"多空账户占比","MA Cross":"均线交叉","Mark price":"标记价格","Mass Index":"梅斯指标","McGinley Dynamic":"麦金利动态指标","Mean block interval":"平均出块间隔","Mean block size in bytes":"平均区块大小","Mean gas used":"平均 Gas 用量","Mean transaction fees":"平均交易手续费","Mean transaction gas limit":"平均交易 Gas 限额","Mean transaction gas price":"平均交易 Gas 价格","Mean transaction size in bytes":"平均交易大小","Mean transfer volume":"平均转账量","Mean UTXO value created":"新建 UTXO 平均价值","Mean UTXO value spent":"已花费 UTXO 平均价值","Median":"中位数","Median block interval":"出块间隔中位数","Median gas used":"Gas 用量中位数","Median transaction fees":"交易费用中位数","Median transaction gas limit":"交易 Gas 限额中位数","Median transaction gas price":"交易 Gas 价格中位数","Median transfer volume":"转账量中位数","Median UTXO value created":"新建 UTXO 价值中位数","Median UTXO value spent":"已花费 UTXO 价值中位数","Momentum":"动量指标","Money Flow (MFI)":"资金流量指数","Moon Phases":"月相","Moving average convergence divergence (MACD) indicator":"指数平滑异同移动平均线","Moving Average Ribbon":"移动平均线带","Moving Averages":"移动平均线","MovingAvg Cross":"移动平均交叉","MovingAvg2Line Cross":"双均线交叉","Multi-Time Period Charts indicator":"多周期图表","Negative Volume Index (NVI)":"负成交量指数","Net Volume":"净成交量","On Balance Volume (OBV)":"能量潮","Open Interest":"未平仓量","Parabolic SAR (SAR)":"抛物线转向指标","Percentage Price Oscillator (PPO)":"百分比价格振荡器","Percentage Volume Oscillator (PVO)":"百分比成交量振荡器","Performance":"表现","Pivot Points High Low":"高低枢轴点","Pivot Points Standard":"标准枢轴点","Positive Volume Index (PVI)":"正成交量指数","Power-Law Model":"幂律模型","Premium":"溢价","Price Momentum Oscillator (PMO)":"价格动量振荡器","Price target - indicator":"目标价格","Price Volume Trend (PVT)":"量价趋势指标","Pring's Special K":"普林格特别指标","Rank Correlation Index (RCI)":"秩相关指数","Rate of Change (ROC)":"变化率","RCI Ribbon":"秩相关指数带","Realized market cap":"已实现市值","Receiving addresses":"接收地址","Relative Strength Index (RSI)":"相对强弱指数","Relative Vigor Index":"相对活力指数","Relative Volatility Index":"相对波动率指数","Relative Volume at Time":"时段相对成交量","Rob Booker - ADX Breakout":"Rob Booker 趋向突破","Rob Booker - Knoxville Divergence":"Rob Booker 诺克斯维尔背离","Rob Booker Intraday Pivot Points":"Rob Booker 日内枢轴","Rob Booker Missed Pivot Points":"Rob Booker 错失枢轴","Rob Booker Reversal":"Rob Booker 反转","Rob Booker Ziv Ghost Pivots":"Rob Booker 幽灵枢轴","RSI divergence indicator":"RSI 背离","RVT ratio, 90 days":"90 天 RVT 比率","Seasonality":"季节性","Sending addresses":"发送地址","Simple Moving Average":"简单移动平均线","SMI Ergodic Indicator":"SMI 遍历指标","SMI Ergodic Oscillator":"SMI 遍历振荡器","Smoothed Moving Average":"平滑移动平均线","Spent Output Profit Ratio (SOPR)":"已花费输出利润率","Spent UTXOs":"已花费 UTXO","Stochastic (STOCH)":"随机指标","Stochastic Momentum Index (SMI)":"随机动量指数","Stochastic RSI (STOCH RSI)":"随机相对强弱指数","Stock-to-Flow Ratio in USD":"存量流量比（美元）","Supertrend":"超级趋势","Supply Equality Ratio":"供应平等比率","Supply in Profit":"盈利中的供应量","Technical Ratings":"技术评级","Time Weighted Average Price":"时间加权平均价","Top trader long/short accounts":"大户多空账户","Top trader long/short accounts ratio":"大户账户多空比","Top trader long/short positions":"大户多空持仓","Top trader long/short positions ratio":"大户持仓多空比","Total block size in bytes":"总区块大小","Total gas used":"总 Gas 用量","Total transactions size in bytes":"交易总大小","Total UTXO value created":"新建 UTXO 总价值","Total UTXO value spent":"已花费 UTXO 总价值","Total UTXOs":"UTXO 总数","Trading Sessions":"交易时段","Transaction fees":"交易手续费","Transaction rate":"交易速率","Transfer count":"转账次数","Transfer rate":"转账速率","Trend Strength Index":"趋势强度指数","Triple EMA":"三重指数移动平均线","TRIX":"三重指数平滑平均线","True Strength Index":"真实强弱指数","Ulcer Index":"溃疡指数","Ultimate Oscillator (UO)":"终极振荡指标","Understanding crypto open interest":"加密合约未平仓量","Up/Down Volume":"上涨和下跌成交量","US spot crypto ETF balances":"美国现货加密 ETF 余额","US spot crypto ETF flows":"美国现货加密 ETF 资金流","Visible Average Price":"可见均价","Volatility Stop":"波动率止损","Volume":"成交量","Volume Delta":"成交量差","Volume Weighted Average Price (VWAP)":"成交量加权平均价","Volume-Weighted Moving Average (VWMA)":"成交量加权移动平均线","Vortex Indicator":"旋涡指标","VWAP Auto Anchored":"自动锚定 VWAP","Weighted Moving Average":"加权移动平均线","Williams %R (%R)":"威廉指标","Williams Alligator":"威廉鳄鱼线","Williams fractal indicator":"威廉分形","Woodies CCI":"伍迪顺势指标","Zigzag indicator":"之字转向指标"};
+const builtInTitles=Object.keys(directoryLabels);
+const catTrend='均线与趋势',catOsc='动量与振荡',catVol='波动与通道',catQty='成交量',catChain='链上与市场',catOther='其他指标';
+const featuredIndicators=[
+ ['Relative Strength Index (RSI)','相对强弱指数','rsi',43000502338,catOsc,'rsi','14 根 K 线，按上涨和下跌幅度衡量动量。'],
+ ['Moving average convergence divergence (MACD) indicator','MACD 指数平滑异同移动平均线','macd',43000502344,catOsc,'macd signal hist','12 / 26 / 9，显示快慢均线差、信号线和柱差的数值。'],
+ ['Bollinger Bands (BB)','布林带','bb',43000501840,catVol,'bbmid bbhigh bblow','20 期简单均线，上下轨各取 2 倍标准差。',true],
+ ['Simple Moving Average','简单移动平均线 SMA','sma',43000696841,catTrend,'sma20','取最近 20 根 K 线收盘价的算术平均。',true],
+ ['Exponential Moving Average','指数移动平均线 EMA','ema',43000592270,catTrend,'ema20','20 期均线，赋予近期收盘价更高权重。',true],
+ ['Average True Range (ATR)','平均真实波幅','atr',43000501823,catVol,'atr','14 期真实波幅的 Wilder 平滑值，单位与报价一致。'],
+ ['Stochastic (STOCH)','随机指标 STOCH','stoch',43000502332,catOsc,'stochK stochD','按 14 / 3 / 3 计算 %K 和 %D。'],
+ ['Stochastic RSI (STOCH RSI)','随机相对强弱指数','srsi',43000502333,catOsc,'srsiK srsiD','先计算 RSI，再计算随机位置，周期 14 / 14 / 3 / 3。'],
+ ['Average Directional Index (ADX)','平均趋向指数','adx',43000589099,catTrend,'adx','14 期方向变化，使用 14 期平滑衡量趋势强度。'],
+ ['Directional Movement (DMI)','趋向指标','dmi',43000502250,catTrend,'diP diM adx','显示 +DI、−DI 和 ADX 三条 14 期输出线。'],
+ ['Commodity Channel Index (CCI)','商品通道指数','cci',43000502001,catOsc,'cci','比较典型价格与 20 期均值的偏离程度。'],
+ ['On Balance Volume (OBV)','能量潮','obv',43000502593,catQty,'obv','按收盘涨跌累计成交量，本站从当前历史窗口首根归零。'],
+ ['Donchian Channels (DC)','唐奇安通道','donchian',43000502253,catVol,'dcHigh dcMid dcLow','20 期最高价、最低价和通道中线。',true],
+ ['Hull Moving Average','赫尔移动平均线 HMA','hma',43000589149,catTrend,'hma','取 9 期 Hull 均线，使用加权均线减少滞后。',true],
+ ['Volume-Weighted Moving Average (VWMA)','成交量加权移动平均线','vwma',43000592293,catTrend,'vwma','用每根 K 线成交量对最近 20 期收盘价加权。',true],
+ ['Volume','成交量 VOL','vol',43000591617,catQty,'volume','显示各根 K 线的交易量，单位跟随当前行情源。'],
+ ['Supertrend','超级趋势','st',43000634738,catTrend,'supertrend','以 10 期 ATR 和 3 倍系数计算随趋势切换的移动轨道。',true],
+ ['Bollinger Bands %b (%b)','布林带百分比 %b','bbpct',43000501971,catVol,'bbPct','在 20 期、2 倍标准差的布林带中量度价格位置，0 为下轨，1 为上轨。'],
+ ['Bollinger BandWidth (BBW)','布林带宽度 BBW','bbw',43000501972,catVol,'bbWidth','上下轨宽度除以中轨，结果以百分比表示。'],
+ ['Keltner Channels (KC)','肯特纳通道','kc',43000502266,catVol,'ema20 kcHigh kcLow','20 期 EMA 为中轨，上下轨使用 2 倍的 10 期 ATR。',true],
+ ['Money Flow (MFI)','资金流量指数','mfi',43000502348,catOsc,'mfi','14 期。按典型价格的变化方向累计正负资金流量。'],
+ ['Chaikin Money Flow (CMF)','蔡金资金流量','cmf',43000501974,catQty,'cmf','以 20 期成交量加权计量收盘价在每根 K 线高低区间的位置。'],
+ ['Accumulation Distribution (ADL)','累积派发线','adl',43000501770,catQty,'adl','按每根 K 线的收盘位置累计成交量，从当前历史窗口开始计算。'],
+ ['Weighted Moving Average','加权移动平均线 WMA','wma',43000594680,catTrend,'wma9','显示 9 期线性加权均线。',true],
+ ['Moving Average Ribbon','移动平均线带','ribbon',43000644913,catTrend,'sma20 sma50 sma100 sma200','叠加 20、50、100、200 期简单均线。',true],
+ ['Ichimoku Cloud','一目均衡表','ichi',43000589152,catTrend,'tenkan kijun spanA spanB','显示转换线、基准线及当前云带 A/B 数值，周期为 9 / 26 / 52。',true],
+ ['Awesome Oscillator (AO)','动量震荡指标','ao',43000501826,catOsc,'ao','计算中间价的 5 期与 34 期简单均线之差。'],
+ ['Bull Bear Power','多空力量 BBP','bbp',43000717955,catOsc,'bbp bull bear','使用 13 期 EMA 计算多头、空头与合计力量。'],
+ ['Momentum','动量 MOM','mom',43000589187,catOsc,'mom','当前收盘价与 10 根 K 线前收盘价的差额。'],
+ ['Rate of Change (ROC)','变化率','roc',43000502343,catOsc,'roc','当前收盘价相对 9 根 K 线前的百分比变化。'],
+ ['Ultimate Oscillator (UO)','终极振荡指标','uo',43000502328,catOsc,'uo','汇总 7、14 和 28 期的买入压力与真实波幅。'],
+ ['Williams %R (%R)','威廉指标','wpr',43000501985,catOsc,'wpr','在 −100 至 0 的范围中显示收盘价在 14 期区间的位置。']
+].map(([original,name,id,article,category,outputs,description,overlay=false])=>({id,name,original,category,outputs:outputs.split(' '),description,overlay,kind:'built',author:'TradingView',url:'https://www.tradingview.com/support/solutions/'+article+'/'}));
+const communityIndicators=[
+ ['2KE8wTuF-Indicator-WaveTrend-Oscillator-WT','WaveTrend Oscillator [WT]','波浪趋势振荡器','LazyBear',catOsc,'wt1 wt2','取 HLC3，通道周期 10、平均周期 21。本站显示 WT1 及其 4 期信号线。'],
+ ['nqQ1DT5a-Squeeze-Momentum-Indicator-LazyBear','Squeeze Momentum Indicator [LazyBear]','挤压动量','LazyBear',catVol,'sqMom sqState','20 期线性回归动量，以及布林带（2 倍标准差）落入肯特纳通道（1.5 倍平均真实波幅）的状态，1 表示挤压、0 表示其他。'],
+ ['AqXxNS7j-Chandelier-Exit-everget','Chandelier Exit [everget]','吊灯止损','everget',catTrend,'','基于真实波幅的跟踪止损指标。原作页包含作者说明、图表和版本更新。'],
+ ['U1SJ8ubc-HalfTrend-everget','HalfTrend [everget]','半趋势指标','everget',catTrend,'','根据价格变化和波幅标出趋势转换。可在作者的 TradingView 图表中查看。'],
+ ['r6dAP7yi','SuperTrend','超级趋势','KivancOzbilgic',catTrend,'','根据真实波幅和价格方向跟踪趋势。可在作者的作品页查看原版。']
+].map(([slug,original,name,author,category,outputs,description])=>({id:'tv-'+slug.split('-')[0],name,original,author,category,outputs:outputs?outputs.split(' '):[],description,overlay:false,kind:'community',url:'https://www.tradingview.com/script/'+slug+'/'}));
+function directoryCategory(title){
+ if(/volume|money flow|accumulation distribution|force index|ease of movement/i.test(title)&&!/transaction|transfer|gas/i.test(title))return catQty;
+ if(/averag|trend|cross|pitchfork|retracement|fib |pivot|sar |alligator|zigzag|ribbon|Aroon|chandelier/i.test(title))return catTrend;
+ if(/band|volatil|range|channel|chop|stop|ulcer/i.test(title))return catVol;
+ if(/oscillat|momentum|rsi|stoch|convergence|divergence|strength|transform|smi |trix|coppock|vigor|balance of power/i.test(title))return catOsc;
+ if(/utxo|gas |block|address|balance|transaction|transfer|supply|ethereum|crypto|fee|equal|token|stake|trader|funding|interest|liquidation|premium|basis|realized|etf|hash|mined|deposit|chain/i.test(title))return catChain;
+ return catOther;
+}
+const featuredTitles=new Set(featuredIndicators.map(row=>row.original));
+const directoryIndicators=builtInTitles.filter(title=>!featuredTitles.has(title)).map(original=>({
+ id:'dir-'+original,name:directoryLabels[original]||original,original,author:'TradingView',kind:'built',category:directoryCategory(original),
+ outputs:[],description:'这个条目来自 TradingView 内置指标目录。打开官方目录并选择该指标，即可查看原版说明。',
+ directory:true,url:tvFolder+'#:~:text='+encodeURIComponent(original)
+}));
+const baseIndicators=[...featuredIndicators.slice(0,3),...communityIndicators.slice(0,2),...featuredIndicators.slice(3),...communityIndicators.slice(2),...directoryIndicators];
+
+function tvScriptLink(raw){
+ try{
+  const url=new URL(String(raw).trim());
+  if(url.protocol!=='https:'||url.username||url.password||url.port||!/(^|\.)tradingview\.com$/i.test(url.hostname))return null;
+  const match=url.pathname.match(/^\/script\/([A-Za-z0-9]{8})(-[^/]*)?\/?$/i);
+  return match?{id:'tv-'+match[1],url:'https://www.tradingview.com/script/'+match[1]+(match[2]||'')+'/'}:null;
+ }catch{return null}
+}
+function readList(key){const value=storeRead(key,[]);return Array.isArray(value)?value:[]}
+const marketImports=readList('indicator-imports').filter(entry=>entry&&typeof entry.name==='string'&&tvScriptLink(entry.url)?.id===entry.id);
+const marketStars=new Set(readList('indicator-stars')),marketActive=new Set(readList('indicator-chart'));
+const marketUi={tab:'all',query:'',category:'',page:0,selected:'rsi'};
+const marketPageSize=12,studyColors=[colors.orange,colors.blue,colors.teal,colors.purple,colors.red];
+let marketCatalog=new Map(),marketDefs;
+function rebuildMarket(){
+ marketCatalog=new Map(baseIndicators.map(entry=>[entry.id,entry]));
+ for(const saved of marketImports){
+  const known=marketCatalog.get(saved.id),entry=known?{...known}:{id:saved.id,name:saved.name,original:'',url:tvScriptLink(saved.url).url,author:saved.author||'作者未填写',kind:'community',category:catOther,outputs:[],description:'你收录的 TradingView 社区作品。'};
+  if(saved.source){
+   try{const study=pine(saved.source,[]);entry.source=saved.source;entry.overlay=study.overlay;entry.outputs=study.plots.map((p,i)=>'marketPine:'+entry.id+':'+i);entry.description='已录入兼容的 Pine 源码，可将输出线添加到图表或设为筛选条件。'}catch{}
+  }
+  marketCatalog.set(entry.id,entry);
+ }
+ marketDefs=null;
+}
+function marketChartStudies(bars){
+ if(!marketActive.size)return [];
+ if(!marketDefs)marketDefs=screenMetrics(false);
+ const ctx=makeScreenContext(bars,marketDefs),studies=[];
+ for(const id of marketActive){
+  const entry=marketCatalog.get(id);if(!entry?.outputs.length)continue;
+  if(entry.source){try{studies.push({...pine(entry.source,bars),id,market:true,title:entry.name})}catch{}continue}
+  const plots=entry.outputs.map((key,i)=>({name:marketDefs.get(key).label,color:studyColors[i%studyColors.length],width:1.5,values:ctx.get(key)}));
+  studies.push({id,market:true,title:entry.name,overlay:entry.overlay,plots});
+ }
+ return studies;
+}
+function marketMatches(){
+ const {query,category,tab}=marketUi,words=query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+ return [...marketCatalog.values()].filter(entry=>{
+  if(category&&entry.category!==category)return false;
+  if(tab==='star'&&!marketStars.has(entry.id)||tab==='on'&&!marketActive.has(entry.id)||tab==='local'&&!entry.outputs.length)return false;
+  if((tab==='built'||tab==='community')&&entry.kind!==tab)return false;
+  const searchable=[entry.name,entry.original,entry.author,entry.category,...entry.outputs].join(' ').toLocaleLowerCase();
+  return words.every(word=>searchable.includes(word));
+ });
+}
+function marketButton(label,action,cls=''){const button=elm('button',cls,label);button.type='button';button.onclick=action;return button}
+function marketLink(label,url,cls=''){const a=elm('a',cls,label);a.href=url;a.target='_blank';a.rel='noopener noreferrer';return a}
+function marketInfo(message){$('imMessage').textContent=message}
+function marketToggle(entry,active){
+ const set=active?marketActive:marketStars,adding=!set.has(entry.id);
+ if(adding)set.add(entry.id);else set.delete(entry.id);
+ storeWrite(active?'indicator-chart':'indicator-stars',[...set]);
+ if(active)calcStudies();
+ renderMarket();
+ marketInfo('「'+entry.name+'」'+(active?(adding?'已添加到当前图表。':'已从图表移除。'):(adding?'已加入收藏。':'已移出收藏。')));
+}
+function marketForm(entry){
+ $('imForm').hidden=false;$('imUrl').value=entry?.url||'';$('imName').value=entry?.name||'';$('imAuthor').value=entry?.author||'';
+ $('imCode').value=entry?.source||'';$('imError').textContent='';marketInfo('');
+ (entry?$('imCode'):$('imUrl')).focus();
+}
+function showMarketDetail(entry){
+ const host=$('imDetail');host.replaceChildren();
+ if(!entry){host.append(elm('p','imEmpty','没有符合条件的指标。可以更换关键词或分类。'));return}
+ const kind=entry.kind==='built'?'内置指标':'社区脚本',starred=marketStars.has(entry.id);
+ const top=elm('div','imDetailTop'),star=marketButton(starred?'★ 已收藏':'☆ 收藏',()=>marketToggle(entry,false),'imStar');
+ star.setAttribute('aria-pressed',String(starred));top.append(elm('span','imKind',kind+' · '+entry.category),star);
+ host.append(top,elm('h3','',entry.name));
+ if(entry.original&&entry.original!==entry.name)host.append(elm('p','imSub',entry.original));
+ host.append(elm('p','imBy','作者 · '+entry.author),elm('p','imDescription',entry.description));
+ if(entry.outputs.length){
+  const on=marketActive.has(entry.id),actions=elm('div','imActions'),field=elm('label','','筛选输出线'),select=elm('select');
+  if(!marketDefs)marketDefs=screenMetrics(false);
+  field.htmlFor='imOutput';select.id='imOutput';select.setAttribute('aria-label','用于筛选的指标输出线');
+  for(const key of entry.outputs)scrOpt(select,key,marketDefs.get(key).label);
+  select.value=entry.outputs[0];
+  host.append(elm('p','imInfo',(entry.source?'使用已录入的 Pine 源码':'按原作公开定义在本站计算')+' · '+(entry.overlay?'叠加主图':'独立副图')),field,select);
+  actions.append(marketButton(on?'从图表移除':'添加到图表',()=>marketToggle(entry,true),on?'':'imPrimary'),
+   marketButton('用于筛选',()=>{$('indicatorMarket').close();openScreener(select.value)}));
+  if(on)actions.append(marketButton('查看图表',()=>{$('indicatorMarket').close();$('chartcard').scrollIntoView?.({block:'nearest'})}));
+  host.append(actions);
+ }else{
+  host.append(elm('p','imInfo','当前可查看原版和收藏。'));
+ }
+ const url=entry.directory?entry.url:(entry.kind==='built'?entry.url:tvScriptLink(entry.url).url);
+ host.append(marketLink(entry.directory?'在官方目录中查看该指标 ↗':entry.kind==='built'?'查看 TradingView 官方说明 ↗':'查看作者的 TradingView 原作 ↗',url,'imSource'));
+ if(entry.kind==='community'){
+  const box=elm('div','imActions');box.append(marketButton(entry.source?'更新已录入的 Pine 源码':'录入此作品的 Pine 源码',()=>marketForm(entry)));host.append(box);
+ }
+}
+function renderMarket(){
+ const rows=marketMatches(),pages=Math.max(1,Math.ceil(rows.length/marketPageSize));
+ marketUi.page=Math.max(0,Math.min(marketUi.page,pages-1));
+ const list=rows.slice(marketUi.page*marketPageSize,(marketUi.page+1)*marketPageSize);
+ if(!list.some(entry=>entry.id===marketUi.selected))marketUi.selected=list[0]?.id||'';
+ for(const tab of $('imTabs').children)tab.setAttribute('aria-pressed',String(tab.dataset.kind===marketUi.tab));
+ $('imCount').textContent=rows.length+' 个指标';$('imPage').textContent=rows.length?(marketUi.page+1)+' / '+pages:'';
+ $('imPrev').disabled=marketUi.page===0;$('imNext').disabled=marketUi.page>=pages-1;$('imPager').hidden=pages===1;
+ const host=$('imList');host.replaceChildren();
+ for(const entry of list){
+  const row=marketButton('',()=>{marketUi.selected=entry.id;marketInfo('');renderMarket();$('imDetail').focus({preventScroll:true})},'imItem'),left=elm('span');
+  row.dataset.id=entry.id;row.setAttribute('aria-pressed',String(entry.id===marketUi.selected));left.append(elm('strong','',entry.name),elm('small','',entry.author+' · '+(entry.original&&entry.original!==entry.name?entry.original:entry.category)));
+  row.append(left);if(marketActive.has(entry.id)||marketStars.has(entry.id)||entry.outputs.length)row.append(elm('em','',[(marketStars.has(entry.id)?'★':''),(marketActive.has(entry.id)?'图表上':entry.outputs.length?'本站可用':'')].filter(Boolean).join(' ')));
+  host.append(row);
+ }
+ if(!list.length)host.append(elm('p','imEmpty',marketUi.tab==='star'?'收藏的指标会出现在这里。':marketUi.tab==='on'?'添加到图表的指标会出现在这里。':'暂无匹配'));
+ showMarketDetail(marketCatalog.get(marketUi.selected));
+}
+function marketReveal(id){
+ marketUi.tab='all';marketUi.query='';marketUi.category='';$('imQuery').value='';$('imCategory').value='';
+ const index=[...marketCatalog.keys()].indexOf(id);marketUi.page=Math.max(0,Math.floor(index/marketPageSize));marketUi.selected=id;
+}
+function openIndicatorMarket(id){
+ if(typeof id==='string'&&marketCatalog.has(id))marketReveal(id);
+ $('imForm').hidden=true;marketInfo('');renderMarket();
+ if(!$('indicatorMarket').open)$('indicatorMarket').showModal();
+}
+function importMarketEntry(event){
+ event.preventDefault();
+ const link=tvScriptLink($('imUrl').value),code=$('imCode').value.trim(),error=$('imError');
+ if(!link){error.textContent='请填写 TradingView 的 https://…/script/… 作品链接。';return}
+ const known=marketCatalog.get(link.id),at=marketImports.findIndex(row=>row.id===link.id);
+ const name=$('imName').value.trim()||known?.name;
+ if(!name){error.textContent='请为这个作品填写名称。';return}
+ if(code){try{pine(code,state.bars.slice(-40))}catch(e){error.textContent='此段 Pine 暂无法运行 · '+e.message;return}}
+ const saved={...link,name:name.slice(0,120),author:$('imAuthor').value.trim().slice(0,80)||known?.author||'',source:code||marketImports[at]?.source||''};
+ const revised=marketImports.slice();if(at<0)revised.push(saved);else revised[at]=saved;
+ try{localStorage.setItem('candledesk-v1:indicator-imports',JSON.stringify(revised))}catch{error.textContent='浏览器存储写入失败，尚未收录。';return}
+ marketImports.splice(0,marketImports.length,...revised);rebuildMarket();marketStars.add(link.id);storeWrite('indicator-stars',[...marketStars]);
+ calcStudies();marketReveal(link.id);$('imForm').hidden=true;renderMarket();
+ marketInfo(saved.source?'Pine 源码已保存，可添加到图表或用于筛选。':'已收藏原作链接，可随时补录 Pine 源码。');
+}
+function setupIndicatorMarket(){
+ $('indicatorMarketBtn').onclick=()=>openIndicatorMarket();
+ for(const category of [catTrend,catOsc,catVol,catQty,catChain,catOther])scrOpt($('imCategory'),category,category);
+ for(const button of $('imTabs').children)button.onclick=()=>{marketUi.tab=button.dataset.kind;marketUi.page=0;marketInfo('');renderMarket()};
+ $('imQuery').oninput=()=>{marketUi.query=$('imQuery').value;marketUi.page=0;marketInfo('');renderMarket()};
+ $('imCategory').onchange=()=>{marketUi.category=$('imCategory').value;marketUi.page=0;marketInfo('');renderMarket()};
+ for(const [id,step] of [['imPrev',-1],['imNext',1]])$(id).onclick=()=>{marketUi.page+=step;marketInfo('');renderMarket();$('imList').scrollTop=0};
+ $('imImportBtn').onclick=()=>marketForm();$('imCancel').onclick=()=>{$('imForm').hidden=true};$('imForm').onsubmit=importMarketEntry;
+ if(typeof location!=='undefined'){
+  const openHash=()=>{if(location.hash==='#indicators'&&!$('indicatorMarket').open)openIndicatorMarket()};
+  openHash();if(typeof window!=='undefined')window.addEventListener('hashchange',openHash);
+ }
+}
+rebuildMarket();
+
 function clock(){$('clock').textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Shanghai',hour12:false})}
-clock();setInterval(clock,1000);setupEditor();setupSearch();chartEvents();choose(active);refreshQuotes();setupScreener();
+clock();setInterval(clock,1000);setupEditor();setupSearch();chartEvents();choose(active);refreshQuotes();setupScreener();setupIndicatorMarket();
 let nextBars=0,nextQuotes=0;
 setInterval(()=>{if(document.hidden)return;const now=Date.now();if(now>=nextBars){nextBars=now+(active.market==='stock'?10000:15000);getHistory()}if(now>=nextQuotes){nextQuotes=now+10000;refreshQuotes()}feed()},2000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){getHistory();refreshQuotes()}});</script></body></html>
