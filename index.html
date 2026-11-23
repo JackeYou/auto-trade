@@ -82,7 +82,7 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
   <section class="imListPane" aria-label="指标目录"><div class="imListHead"><strong id="imCount" aria-live="polite"></strong><span id="imPage"></span></div><div id="imList" aria-label="选择指标"></div><div id="imPager" class="imPager"><button id="imPrev">上一页</button><button id="imNext">下一页</button></div></section>
   <section id="imDetail" class="imDetail" aria-label="指标详情" tabindex="-1"></section>
  </div>
- <div class="imMore"><a href="https://www.tradingview.com/scripts/?script_type=indicators" target="_blank" rel="noopener noreferrer">浏览 TradingView 社区指标 ↗</a><a href="https://cn.tradingview.com/support/folders/43000587405/" target="_blank" rel="noopener noreferrer">官方内置指标目录 ↗</a><button id="imImportBtn">＋ 收录原作链接 / Pine 源码</button></div>
+ <div class="imMore"><a id="imCommunityLink" href="https://www.tradingview.com/scripts/?script_type=indicators" target="_blank" rel="noopener noreferrer">浏览 TradingView 社区指标 ↗</a><a href="https://cn.tradingview.com/support/folders/43000587405/" target="_blank" rel="noopener noreferrer">官方内置指标目录 ↗</a><button id="imImportBtn">＋ 收录原作链接 / Pine 源码</button></div>
  <form id="imForm" hidden><div class="imImportFields"><label>TradingView 作品链接<input id="imUrl" type="url" required placeholder="https://www.tradingview.com/script/…"></label><label>名称<input id="imName" maxlength="120" placeholder="例如 我的趋势指标"></label><label>作者<input id="imAuthor" maxlength="80" placeholder="TradingView 用户名"></label></div><label>可选 Pine 源码<textarea id="imCode" spellcheck="false" placeholder="粘贴你有权使用的源码。兼容的输出线可以看图和筛选。"></textarea></label><div class="imFormActions"><button type="submit" class="imPrimary">收录指标</button><button type="button" id="imCancel">取消</button><span id="imError" role="status"></span></div></form>
  <p id="imMessage" role="status" aria-live="polite"></p>
 </dialog>
@@ -955,7 +955,7 @@ function openScreener(seedMetric){
  const seeded=typeof seedMetric==='string'&&defs.has(seedMetric);
  screening.rules=(saved.length?saved:seeded?[]:screenPresets.rsi).map(r=>({...r}));
  if(seeded&&!screening.rules.some(r=>r.left===seedMetric))screening.rules.push(marketScreenRule(seedMetric));
- scrClear();scrRules();if(seeded)scrNote('已选「'+defs.get(seedMetric).label+'」，确认或修改条件后可开始筛选。');
+ scrClear();scrRules();if(seeded){scrPersist();scrNote('已选「'+defs.get(seedMetric).label+'」，确认或修改条件后可开始筛选。')}
  $('screenDialog').showModal();scrTab('site');
 }
 function setupScreener(){
@@ -1125,6 +1125,9 @@ function showMarketDetail(entry){
 }
 function renderMarket(){
  const rows=marketMatches(),pages=Math.max(1,Math.ceil(rows.length/marketPageSize));
+ const query=marketUi.query.trim(),link=$('imCommunityLink');
+ link.href='https://www.tradingview.com/scripts/'+(query?'search/'+encodeURIComponent(query)+'/':'')+'?script_type=indicators';
+ link.textContent=query?'用此关键词搜索 TradingView 全部社区指标 ↗':'浏览 TradingView 社区指标 ↗';
  marketUi.page=Math.max(0,Math.min(marketUi.page,pages-1));
  const list=rows.slice(marketUi.page*marketPageSize,(marketUi.page+1)*marketPageSize);
  if(!list.some(entry=>entry.id===marketUi.selected))marketUi.selected=list[0]?.id||'';
