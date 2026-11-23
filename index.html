@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101317">
+<title>烛图 · A股与加密货币行情</title>
+<style>:root{color-scheme:dark;--bg:#0d1013;--panel:#14181c;--line:#2b3035;--dim:#969fa8;--ink:#f0f2f3;--gold:#f5bd58;--green:#48c6a0;--red:#f1767d;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font:16px/1.45 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;background:transparent;border:0}button:hover{color:#fff;background:#272d32}button:focus-visible,a:focus-visible,summary:focus-visible,canvas:focus-visible{outline:2px solid var(--gold);outline-offset:2px}svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;flex:none}h1,h2,p{margin:0}button,select{border-radius:5px}a{color:inherit;text-decoration:none}.top{height:66px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 26px;gap:36px;background:#131619}.brand,.topnav,.topnav>* , .clock,.editorBtn,.search,.editorTitle,.instrument,.titleline,.chartTitle,.sidefoot,.viewControls,.formfoot,.templateRow,.formrow,.sectionhead,.sidehead,.modalhead,.chartHead,.toolbar,.chartActions,.periods,.chartfoot,.dateline,.legendEntry{display:flex;align-items:center}.brand{gap:10px;flex:none}.brand b{font-size:21px;letter-spacing:.1em}.wordmark,.eyebrow,.sideNum,.clock,.symbolLine,.quote b,.ohlc,.chartfoot,.dateline,.watchTicker,.watchValue,.chartLegend{font-family:var(--mono);font-variant-numeric:tabular-nums}.wordmark{font-size:12px;letter-spacing:.08em;color:#c3c9cd;border-left:1px solid #42484c;padding-left:12px}.logo{width:32px;height:32px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;gap:3px}.logo i{height:11px;width:4px;background:#202124;border-radius:1px;position:relative;transform:translateY(3px)}.logo i:before{content:"";position:absolute;inset:-3px 1.5px;background:inherit}.logo i:nth-child(2){height:15px;transform:translateY(-1px)}.logo i:nth-child(3){height:10px;transform:translateY(-4px)}.topnav{height:100%;gap:22px}.topnav>*{gap:7px;height:100%;font-size:14px;padding:0 2px;color:var(--dim);border-radius:0}.topnav .activeNav{color:var(--gold);border-bottom:2px solid var(--gold)}.clock{margin-left:auto;gap:8px;font-size:13px;color:#c6cbd1}.clock svg,.clock small{color:var(--dim)}.shell{display:grid;grid-template-columns:255px minmax(0,1fr);min-height:calc(100vh - 66px)}aside{padding:25px 15px 0;background:#121519;border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}.sidehead,.modalhead,.sectionhead,.chartHead,.toolbar,.chartfoot,.dateline{justify-content:space-between}.sidehead{padding:0 5px}.sidehead h2,.chartTitle h2,.modalhead h2{font-size:17px;font-weight:650}.icon{display:inline-grid;place-items:center;width:32px;height:32px;color:var(--dim);line-height:1}.icon.small{width:27px;height:27px}.sidehead .icon,.viewControls{border:1px solid var(--line)}.search{margin:17px 2px 14px;padding:8px 9px;gap:7px;background:#1b2024;border:1px solid #30363c;color:#9ba4ac;font-size:13px;text-align:left}.search kbd{margin-left:auto;border:1px solid #3b4248;border-radius:3px;padding:0 5px}.filters{display:flex;background:#0e1114;padding:3px;gap:2px;border:1px solid #242a2e;border-radius:6px}.filters button{flex:1;padding:5px 0;font-size:13px;color:var(--dim)}.filters [aria-pressed=true]{background:#30353b;color:#f4f5f6}.groupHeading{color:#9aa3ab;font-size:12px;font-weight:500;display:flex;justify-content:space-between;letter-spacing:.05em;margin:22px 6px 7px}.groupHeading span{font:12px var(--mono);color:#929ba4}.watchRow{width:100%;display:grid;grid-template-columns:31px minmax(0,1fr) auto;align-items:center;gap:9px;text-align:left;padding:10px 7px;border:1px solid transparent;border-radius:6px;min-height:57px}.watchRow.selected{background:#2a261f;border-color:#59482d}.watchName{font-size:14px;font-weight:600;display:block;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.watchTicker{display:block;font-size:12px;color:#9da5ab;margin-top:2px}.watchValue{text-align:right;font-size:13px}.watchValue small{display:block;font-size:12px;margin-top:2px}.up{color:var(--green)}.down{color:var(--red)}.muted{color:var(--dim)}.assetBadge{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;font:bold 15px/1 system-ui;letter-spacing:-.04em}.big.assetBadge{width:44px;height:44px;font-size:24px}.sidefoot{font-size:12px;color:var(--dim);border-top:1px solid var(--line);padding:16px 4px;margin-top:auto;gap:7px}.sideNum{margin-left:auto}.sourceDot,.feed:before{width:6px;height:6px;background:#929aa2;border-radius:50%;content:"";display:inline-block}.feed.live:before{background:var(--green)}.feed.stale:before{background:var(--gold)}main{padding:26px clamp(16px,2.5vw,44px) 20px;min-width:0;max-width:2200px;width:100%;margin:auto;align-self:start}.sectionhead{margin-bottom:20px}.eyebrow{font-size:11px;color:var(--gold);letter-spacing:.14em;display:flex;align-items:center;gap:8px}.eyebrow i{width:15px;height:2px;background:var(--gold)}h1{font-size:clamp(26px,2.3vw,38px);font-weight:650;letter-spacing:-.03em;line-height:1.3;margin-top:5px}.editorBtn{gap:8px;padding:8px 14px;font-size:14px;border:1px solid #514531;color:var(--gold);background:#221e17}.quote,.chartcard{background:var(--panel);border:1px solid var(--line);border-radius:10px}.quote{display:flex;align-items:center;gap:clamp(12px,2vw,32px);padding:21px 22px;margin-bottom:16px;min-height:98px;flex-wrap:wrap}.instrument{gap:12px}.titleline{gap:9px}.titleline h2{font-size:20px}.tag{font-size:11px;background:#262d31;color:#c1cbd3;border:1px solid #39424a;padding:1px 5px;border-radius:4px}.symbolLine{font-size:12px;color:#99a4ac;margin-top:3px}.priceblock{margin-right:auto}.priceblock strong{font:600 clamp(22px,2.1vw,34px)/1.2 var(--mono);letter-spacing:-.06em;display:block}.priceblock span{font:12px var(--mono)}.metric{border-left:1px solid var(--line);padding-left:clamp(12px,1.6vw,29px)}.metric label,.metric b{display:block}.metric label{font-size:12px;color:var(--dim)}.metric b{font-weight:500;font-size:14px;margin-top:5px}.chartcard{overflow:hidden}.chartHead{padding:11px 17px;border-bottom:1px solid var(--line)}.chartTitle,.chartActions,.periods{gap:8px}.miniBars{font-size:20px;color:var(--gold)}.chartActions span{height:15px;border-left:1px solid var(--line)}.toolbar{gap:8px;padding:12px 17px 6px}.periods{gap:2px}.periods button{font:13px var(--mono);padding:6px 10px;color:var(--dim)}.periods [aria-pressed=true]{background:#3b3020;color:var(--gold)}.feed{display:inline-flex;align-items:center;gap:6px;color:var(--dim);font-size:12px}.chartLegend,.ohlc{padding:3px 19px;min-height:22px;display:flex;flex-wrap:wrap;gap:13px;font-size:12px;color:#a4adb5}.legendEntry{gap:5px;padding:0;color:var(--dim);font:inherit}.legendEntry i{width:11px;height:2px}.ohlc{gap:14px}.ohlc b{font-weight:500;color:#d0d6db}.plot{position:relative;height:clamp(340px,49vh,730px);margin:0 6px;touch-action:pan-y}canvas{width:100%;height:100%;display:block;cursor:crosshair}.chartfoot{border-top:1px solid var(--line);padding:7px 14px;gap:11px;color:#949ea8;font-size:12px}.viewControls{border-radius:4px}.viewControls .icon{width:27px;height:23px}.viewControls svg{width:13px}.chartfoot span:nth-child(2){margin-left:auto}.dateline{gap:10px;padding:11px 2px;color:var(--dim);font-size:12px}.dateline button{color:var(--dim);font-size:12px;padding:3px 6px}.empty{position:absolute;top:41%;left:8%;right:12%;text-align:center;color:#aeb7be;font-size:14px;pointer-events:none}#tooltip{position:absolute;pointer-events:none;font:12px var(--mono);background:#262d32;border:1px solid #40494f;border-radius:4px;padding:4px 7px;color:#e5e8ea}.chartcard.expanded{position:fixed;inset:10px;z-index:5;display:flex;flex-direction:column;box-shadow:0 0 0 22px var(--bg)}.expanded .plot{flex:1;height:auto}
+dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-radius:12px;background:#171c20;color:var(--ink);padding:23px;box-shadow:0 20px 90px #0009}dialog::backdrop{background:#070a0dd1}#editorDialog{width:min(670px,94vw)}.modalhead{margin-bottom:18px}.editorTitle{gap:10px}.editorTitle svg{color:var(--gold)}.modalhead button{font-size:18px}input:not([type=file]),select,textarea{width:100%;border:1px solid #394148;background:#0f1316;border-radius:5px;padding:10px;color:#e6e9eb}textarea{font:14px/1.65 var(--mono);height:220px;resize:vertical;tab-size:2;margin-top:5px}dialog label,summary,.templateRow span{font-size:13px;color:var(--dim)}.formrow,.formfoot,.templateRow{gap:8px}.formrow{margin:5px 0 12px}.formrow select{flex:1;width:0}.formrow button,.formfoot button,.templateRow button{font-size:13px;white-space:nowrap;border:1px solid #384047;padding:7px 10px}.templateRow{flex-wrap:wrap;margin-bottom:15px}.templateRow button{padding:4px 8px;color:#c6cdd3}.formfoot{margin-top:13px}.formfoot .primary{margin-left:auto;background:var(--gold);color:#211c13;font-weight:650;border-color:transparent}details{margin:7px 0}summary{cursor:pointer}details p,#searchNote,#editorMsg{font-size:13px;margin:8px 0;color:var(--dim)}#editorMsg.error{color:var(--red)}#results{max-height:45vh;overflow:auto;margin-top:8px}.resultBtn{display:flex;width:100%;justify-content:space-between;text-align:left;padding:10px;border-bottom:1px solid var(--line)}.resultBtn small{color:var(--dim)}[hidden]{display:none!important}
+@media(min-width:1600px){.shell{grid-template-columns:285px minmax(0,1fr)}}
+@media(max-width:1120px){.shell{grid-template-columns:220px minmax(0,1fr)}.quote{gap:13px;padding:17px 14px}.metric{padding-left:11px}.watchRow{gap:6px}.clock{gap:5px}aside{padding-left:10px;padding-right:10px}}
+@media(max-width:870px){.shell{grid-template-columns:180px minmax(0,1fr)}.watchRow{grid-template-columns:1fr auto}.watchRow .assetBadge{display:none}.quote{display:grid;grid-template-columns:repeat(3,1fr)}.instrument{grid-column:span 2}.priceblock{text-align:right;margin:0}.metric{border:0;padding:0}.topnav{gap:12px}.top{gap:22px;padding:0 16px}.topnav svg{display:none}}
+@media(max-width:680px){.top{height:54px}.clock small,.topnav,.wordmark{display:none}.shell{display:flex;flex-direction:column}.shell aside{order:2;border:0;border-top:1px solid var(--line);padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.sidehead,.search,.filters,.watch,.sidefoot{margin:0}.watch,.filters,.sidefoot{grid-column:1/-1}.watchRow .assetBadge{display:grid}.watchRow{grid-template-columns:32px 1fr auto}.groupHeading{margin:9px 5px}.search{justify-content:center}.search kbd{display:none}main{padding:16px 10px 5px}.sectionhead{margin-bottom:12px}.quote{margin-bottom:10px}.plot{height:46vh;min-height:300px}.toolbar{padding:8px 6px;flex-wrap:wrap}.periods button{padding:5px 8px}.feed{font-size:11px}.chartLegend,.ohlc{padding:2px 10px;gap:8px}.chartHead{padding:6px 10px}.chartfoot{padding:5px 8px}.dateline{flex-wrap:wrap}.eyebrow{font-size:10px}.editorBtn{padding:6px 10px}.chartfoot span{font-size:11px}.formfoot{flex-wrap:wrap}}</style>
+</head>
+<body>
+<svg style="display:none" aria-hidden="true"><defs>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h17M8 14l4-5 4 2 5-7"/></symbol>
+<symbol id="i-candle" viewBox="0 0 24 24"><path d="M7 3v4m0 9v5m10-18v8m0 6v4"/><rect x="4.5" y="7" width="5" height="9" rx="1"/><rect x="14.5" y="11" width="5" height="6" rx="1"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-13-2 16"/></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+<symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 0 6M4 5v5h5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l4 2"/></symbol>
+</defs></svg>
+<header class="top">
+ <a class="brand" href="#main" aria-label="烛图行情工作台"><span class="logo"><i></i><i></i><i></i></span><b>烛图</b><span class="wordmark">CANDLE DESK</span></a>
+ <div class="topnav"><span class="activeNav"><svg><use href="#i-chart"/></svg>行情工作台</span><button id="topEditor"><svg><use href="#i-code"/></svg>指标编辑器</button></div>
+ <div class="clock"><svg><use href="#i-clock"/></svg><span id="clock"></span><small>UTC+8</small></div>
+</header>
+<div class="shell">
+<aside>
+ <div class="sidehead"><h2>自选列表</h2><button class="icon small" id="addSymbol" title="添加标的" aria-label="添加标的"><svg><use href="#i-plus"/></svg></button></div>
+ <button id="searchOpen" class="search"><svg><use href="#i-search"/></svg>搜索代码或名称<kbd>/</kbd></button>
+ <nav id="filters" class="filters" aria-label="自选市场"><button data-filter="all" aria-pressed="true">全部</button><button data-filter="stock">A 股</button><button data-filter="crypto">加密货币</button></nav>
+ <div class="watch" id="watch"></div>
+ <div class="sidefoot"><span class="sourceDot"></span><span>公开市场数据</span><span class="sideNum" id="watchCount"></span></div>
+</aside>
+<main id="main">
+ <div class="sectionhead"><div><div class="eyebrow"><i></i> MARKET TERMINAL</div><h1>行情总览</h1></div><button class="editorBtn" id="editorBtn"><svg><use href="#i-code"/></svg>指标编辑器</button></div>
+ <section class="quote">
+  <div class="instrument"><div id="bigBadge"></div><div><div class="titleline"><h2 id="assetName">比特币</h2><span id="marketTag" class="tag">现货</span></div><div class="symbolLine" id="symbolLine"></div></div></div>
+  <div class="priceblock"><strong id="price">—</strong><span id="change">—</span></div>
+  <div class="metric"><label id="highLabel">24h 最高</label><b id="high">—</b></div><div class="metric"><label id="lowLabel">24h 最低</label><b id="low">—</b></div><div class="metric"><label id="volLabel">24h 成交量</label><b id="volume">—</b></div>
+ </section>
+ <section class="chartcard" id="chartcard">
+  <div class="chartHead"><div class="chartTitle"><span class="miniBars">▥</span><h2>价格走势</h2></div><div class="chartActions"><button id="chartType" class="icon" title="切换 K 线 / 折线" aria-label="切换 K 线 / 折线"><svg><use href="#i-candle"/></svg></button><span></span><button id="expand" class="icon" title="展开图表" aria-label="展开图表"><svg><use href="#i-expand"/></svg></button></div></div>
+  <div class="toolbar"><div class="periods" id="periods"></div><span class="feed" id="feed" role="status"></span></div>
+  <div class="chartLegend" id="legend"></div><div class="ohlc" id="ohlc"></div>
+  <div class="plot" id="plot"><canvas id="canvas" tabindex="0" aria-label="行情图。左右方向键平移，加减键缩放"></canvas><div class="empty" id="empty" hidden></div><div id="tooltip" hidden></div></div>
+  <div class="chartfoot"><div class="viewControls"><button class="icon small" id="zoomOut" title="缩小" aria-label="缩小"><svg><use href="#i-minus"/></svg></button><button class="icon small" id="zoomIn" title="放大" aria-label="放大"><svg><use href="#i-plus"/></svg></button><button class="icon small" id="resetView" title="回到最新" aria-label="回到最新"><svg><use href="#i-reset"/></svg></button></div><span id="barDate"></span><span>UTC+8</span></div>
+ </section>
+ <div class="dateline"><span id="dataOrigin"></span><button id="retry">刷新行情</button></div>
+</main></div>
+<dialog id="symbolDialog"><div class="modalhead"><h2>添加行情标的</h2><button class="icon close" aria-label="关闭">✕</button></div><input id="query" placeholder="名称、沪深代码或 BTC-USD / BTCUSDT" autocomplete="off"><div id="results"></div><p id="searchNote" class="muted"></p></dialog>
+<dialog id="editorDialog"><div class="modalhead"><div class="editorTitle"><svg><use href="#i-code"/></svg><h2>指标编辑器</h2></div><button class="icon close" aria-label="关闭">✕</button></div>
+ <label for="scripts">当前指标</label><div class="formrow"><select id="scripts"></select><button id="newScript">新建</button><button id="deleteScript">移除</button></div>
+ <div class="templateRow"><span>载入模板</span><button data-template="ma">双均线</button><button data-template="boll">布林带</button><button data-template="rsi">RSI</button><button data-template="macd">MACD</button></div>
+ <label for="code">Pine 源码</label><textarea id="code" spellcheck="false" autocapitalize="off"></textarea>
+ <details><summary>支持的 Pine 语法</summary><p>支持 indicator / study、常量、变量、四则运算、历史引用 [n]、input.int / float / source、plot、hline、ta.sma / ema / rma / rsi / stdev / highest / lowest / macd / bb。支持 overlay 主图与副图。当前支持单行语句、固定颜色和线图；遇到其他语法会提示具体行号。</p></details>
+ <p id="editorMsg" role="status"></p><div class="formfoot"><button id="importScript">导入 .pine</button><button id="exportScript">导出</button><input hidden type="file" id="file" accept=".pine,.txt,text/plain"><button class="primary" id="apply">保存并应用</button></div>
+</dialog>
+<script>const SNAPSHOT = [[1779926400,72445.11,74462.4,74316.71,73512.56,8579.08613888],[1780012800,72364.13,74224.84,73512.55,73366.77,9057.16460696],[1780099200,73107.24,74029.01,73366.77,73770.69,4015.02525805],[1780185600,73288,74156.59,73770.69,73575.17,3318.87878933],[1780272000,70555,73978.52,73575.18,71314.42,10835.86426218],[1780358400,66100.01,71315.67,71314.43,66658.35,15741.32305621],[1780444800,63985.01,67416.5,66658.45,64040,15790.02945596],[1780531200,61309.25,64695,64039.99,63806.02,25533.586511],[1780617600,59073.01,63906.02,63806.02,61032,28732.71500543],[1780704000,59448.45,61499.41,61031.98,60850.48,9073.41539934],[1780790400,60706.4,64234.45,60850.48,63302.73,9793.1727327],[1780876800,62365.43,64200.02,63302.03,63062.98,11755.65646469],[1780963200,60713.5,63490.49,63062.97,61685.8,11218.32861079],[1781049600,60708.92,62809.04,61685.81,61449.46,9040.95804487],[1781136000,61449.47,63866.82,61449.47,63563.42,9449.25103044],[1781222400,62739.81,64347.32,63563.44,63538.43,8179.86676422],[1781308800,63400.92,64727.27,63538.44,64429.99,4146.44545759],[1781395200,63640,65764.16,64424.98,65706.62,4719.21113394],[1781481600,65302.08,67264,65704.23,66276.8,8071.56079236],[1781568000,65300.03,66944,66276.79,65616.64,6347.81359553],[1781654400,63851.02,66384.01,65616.64,64446.04,7644.1962471],[1781740800,62159.76,64752.51,64446.05,62879.01,7475.48695466],[1781827200,62246.24,63595.93,62879.01,63475.2,3592.2486366],[1781913600,63131.38,64312.73,63475.08,64222.99,3866.36413615],[1782000000,63171.19,64508.4,64223,63235.63,3741.2101443],[1782086400,63235.61,65553.39,63235.63,63950.61,7944.1273781],[1782172800,61862.27,64211.95,63950.61,62644.86,6931.61213742],[1782259200,59010.74,63156.34,62644.86,60983.13,15635.11089006],[1782345600,58000,61868.39,60983.14,59703.65,15027.87126075],[1782432000,58243.36,60660,59703.66,60002.53,14344.89687871],[1782518400,59765.1,60838.92,60002.97,59934.84,4263.41546366],[1782604800,58810.11,60455,59934.84,59474.01,4245.96241874],[1782691200,58800,60702.63,59473.99,60162.73,10607.13260857],[1782777600,58056,60191.99,60162.73,58523.93,9465.93232684],[1782864000,57717.55,61287.33,58523.93,59961.45,10684.76298705],[1782950400,59520.02,62147.89,59961.46,61484.02,9926.92193918],[1783036800,61162.79,62899.99,61484.02,62520.22,5258.18045215],[1783123200,62274.16,63410,62520.22,63086.45,3145.81597083],[1783209600,62384.08,63940.79,63086.46,63580.44,3932.92874482],[1783296000,61250,64658.85,63580.45,64001.84,9896.48050701],[1783382400,62583,64272.92,64001.85,63323.27,8692.3130837],[1783468800,61453.09,63720.88,63322.07,62237.7,7237.78820087],[1783555200,61636.05,63448.46,62237.7,63175.25,6006.35289135],[1783641600,62865.01,64669.42,63175.25,64128.49,7404.52499746],[1783728000,63769.84,64458.7,64128.49,63773.04,2617.29724763],[1783814400,63588.2,64250.56,63773.05,63740.32,2633.31782959],[1783900800,61750.9,64388.01,63740.32,62264.94,9591.1892568],[1783987200,62190.4,65055.04,62264.94,64988.64,7504.53812142],[1784073600,64431.11,65559.5,64988.65,64716.63,5757.28000036],[1784160000,63690.78,64946.07,64712.04,63770.6,5101.5478066],[1784246400,62452.52,64353.56,63770.6,63894,7455.05858276],[1784332800,63842.35,64827.93,63893.99,64796.36,3120.98182893],[1784419200,64238.08,64918.7,64796.36,64681.78,2337.25546535],[1784505600,63702.01,65756.09,64681.79,65213.05,8359.60489964],[1784592000,65106.79,66923.95,65213.05,66516.18,7284.09774035],[1784678400,65484,66698.55,66516.17,66086.61,5859.41989993],[1784764800,64564.09,66287.74,66086.6,65051.23,6960.21139899],[1784851200,63641,65762.78,65051.24,64083.32,7327.49813634],[1784937600,63732,64387.43,64083.31,64295.61,2180.46852205],[1785024000,64229.6,65511.36,64295.61,65341.07,2390.56790196],[1785110400,63545,65705.08,65341.07,63694.43,5069.45269918],[1785196800,62645.39,64041.02,63693.44,63847.12,6232.18054403],[1785283200,63194.45,64665.3,63847.12,63896.14,8092.70552294],[1785369600,63502.91,65118.08,63896.14,64721.9,8025.87127027],[1785456000,62358.96,65360,64721.9,62825.9,8260.37090197],[1785542400,62209.81,63093,62826.69,62764.2,3060.55404241],[1785628800,62743.87,63730.49,62764.2,63499.49,3283.94724012],[1785715200,62210.14,64032.43,63499.49,63466.51,7086.70328594],[1785801600,63250,64497.24,63466.51,64050.51,6227.77436334],[1785888000,63814.8,64988.78,64050.51,64603.03,6932.34404967],[1785974400,64087.41,64944.16,64603.02,64267.3,4520.43206155],[1786060800,64099.35,65348.97,64267.3,64891.61,6181.48293213],[1786147200,64789.89,65150.16,64891.6,64908.72,2494.26436439],[1786233600,64675.22,65426,64908.71,64848.69,3044.21136585],[1786320000,63733.03,65341.83,64848.68,63911.88,6197.02944527],[1786406400,63158,64439.38,63911.88,63531.75,6020.29333133],[1786492800,63235.88,64416.3,63531.75,63411.72,6570.08215862],[1786579200,62772.84,63949.9,63411.71,63425.35,5119.66743787],[1786665600,62468.21,63561.45,63425.35,62975.19,5116.86738135],[1786752000,62830.01,63123.68,62975.18,63018.75,1233.57820711],[1786838400,62631.18,63318.09,63018.75,62836.66,1794.19400235],[1786924800,62679.42,64588,62836.67,64484.18,6069.64648358],[1787011200,63979.36,65020,64477.26,64681.33,5099.57954731],[1787097600,64112.04,70022.44,64681.33,69300.01,16917.83327784],[1787184000,68853.22,73391.43,69300.01,73011.87,16155.04322781],[1787270400,73004.7,79500,73010.86,78325.54,20245.16913846],[1787356800,76471.7,78828.37,78325.54,77054.44,5400.20084011],[1787443200,75538.12,78055.25,77054.44,77729.36,4600.67451175],[1787529600,76652,79999.99,77729.36,78981.59,11216.61146606],[1787616000,77832,81265.3,78981.59,78526.8,10819.3622223],[1787702400,77601.02,79239.09,78526.79,79026.18,6497.47138279],[1787788800,78551.99,80835.82,79026.18,80275.34,9599.70176084],[1787875200,76845.71,81479.5,80275.35,77839.19,11750.1430688],[1787961600,77348.65,78334.44,77839.19,78233.93,2765.11334273],[1788048000,77000,79394.55,78233.92,77665.14,4007.1655077],[1788134400,77369.59,79257.14,77672.1,78562.74,7716.42678336],[1788220800,76366.12,79195.32,78562.74,77398.69,7523.97854815],[1788307200,76219.18,77750,77398.7,77307.36,4983.63357935],[1788393600,76929.29,82283,77307.36,81263.99,11050.40122438],[1788480000,78626,81438.01,81263.99,79675.12,6701.30838176],[1788566400,79458.74,80200.67,79675.12,79831.57,2147.97686767],[1788652800,79250,80564.24,79833.86,80339.13,2000.39186862],[1788739200,78666,80462.23,80339.13,79091.97,3292.97954149],[1788825600,77589,79477.07,79091.97,78447.11,5149.1413426],[1788912000,77727,79752.73,78449.28,78283.98,5255.8427141],[1788998400,76440,78554.18,78283.98,76536.55,6390.76117588],[1789084800,76030,79852.22,76536.55,77208.55,7310.99918713],[1789171200,77049.56,77495,77208.55,77262.85,1669.17865116],[1789257600,76457.09,77425.43,77262.85,76799.85,2218.40141229],[1789344000,76347.27,79591.17,76799.85,78175.01,6547.43119962],[1789430400,74887.5,78242.76,78175,75584.17,10155.2013027],[1789516800,74911.53,76499.99,75584.17,76144.99,6945.70295886],[1789603200,75921.88,77105.42,76144.99,76348.74,5353.30278119],[1789689600,76205.46,81388.47,76348.74,80875.04,12360.2523087],[1789776000,80822.48,81925,80875.04,81233.91,3325.31440002],[1789862400,80085,81472.04,81233.91,81159.64,3612.2748174],[1789948800,80837.42,87397,81160.33,86594.94,14077.54012157],[1790035200,85059.28,86734,86594.94,86198.05,8943.87588877],[1790121600,83513,87282.81,86198.05,84378.31,7836.10064765],[1790208000,82708.96,84929.78,84378.31,84385.46,6839.37550902],[1790294400,83091.19,85250,84385.47,84093.13,7277.8815177],[1790380800,83777.77,84470.44,84093.13,84416.65,1990.34470923],[1790467200,84113.56,85158.5,84416.64,84462.14,2958.05456342],[1790553600,82510.37,84992,84463.08,83456.74,6680.12066817],[1790640000,82736,84557.01,83456.74,83638.42,4975.86563586],[1790726400,82911.86,85613.72,83638.42,83556.14,7049.23875006],[1790812800,83107.03,85244,83556.14,84848.73,6608.91869362],[1790899200,83850.02,87249.05,84848.73,84504.88,8762.22618618],[1790985600,84425.07,85021.57,84504.88,84742.22,1921.24898945],[1791072000,84700.02,86792.81,84742.22,86507.11,2622.78236607],[1791158400,84944.2,86996,86502.65,85748.96,5354.90806311],[1791244800,85100.01,86698.35,85748.96,85539.77,4698.57646281],[1791331200,82717.3,85601.11,85539.77,83275.06,7688.7646354],[1791417600,80314.7,83473.42,83275.05,81692.79,8586.66801134],[1791504000,81534.02,83452.99,81692.79,82544.71,4446.62213697],[1791590400,82458.02,83093.39,82544.71,82910.8,1612.8723611],[1791676800,82714.25,84110.99,82910.8,83678.29,2130.40222253],[1791763200,81634.08,84261.99,83678.29,81742.5,4726.89306846],[1791849600,80927.48,84070.33,81735.6,83101.99,5184.64684673],[1791936000,81332.15,84062.11,83101.99,81566.29,6527.90385989],[1792022400,79676.02,82555.08,81566.28,82131.46,7047.11193631],[1792108800,80693.69,82831.01,82131.46,81500.04,5082.36614966],[1792195200,80700,81655.47,81500.04,81378.21,1890.36284234],[1792281600,80564.57,82183.56,81387.16,82006.85,2937.79903063],[1792368000,81634.43,83076.23,82006.85,81837.69,4758.01891866],[1792454400,81080.64,83344.25,81837.7,82938.26,5237.79241647],[1792540800,82535,84856.07,82938.26,84024.67,7643.91983004],[1792627200,80789.61,84305.25,84024.67,81307.16,7277.26547644],[1792713600,80401.34,81962,81305.9,81078.04,4904.75790284],[1792800000,79107,81106.03,81079.63,80769.67,3705.20481407],[1792886400,79732.29,80925,80769.67,80053.16,2077.13196666],[1792972800,79255,80710.04,80053.16,80008.79,6746.31852811],[1793059200,79365.93,81182,80008.79,80799.51,4356.18246596],[1793145600,80270.68,81715.01,80799.5,81249.31,5146.98648948],[1793232000,77699,81890,81249.32,77780.33,9933.61506153],[1793318400,76141.02,78634.8,77782.75,77180.42,13656.04596728],[1793404800,76954.57,77645.12,77180.42,77423.98,2434.22274337],[1793491200,77370,78298.82,77423.98,78230.55,3035.64400621],[1793577600,76553,78762.3,78232.49,76674.13,7782.90667531],[1793664000,76238.54,77981.38,76674.12,77336.75,6274.72005413],[1793750400,75600.64,81130.79,77336.75,80428.31,13198.73808115],[1793836800,75035.1,80843.85,80428.3,75969.06,15496.66874133],[1793923200,74722,76306.26,75969.06,75731.04,8332.69452264],[1794009600,75452.88,76152.43,75731.05,75753.96,2438.26653906],[1794096000,73477,76094.99,75753.95,74754.08,3709.69063831],[1794182400,73636,75500,74756.52,75259.28,10186.63613065],[1794268800,72643.48,75340.23,75257.77,73697.87,10577.16077662],[1794355200,73110,74737.15,73697.88,73927.63,8133.45787114],[1794441600,71008,74123.71,73927.63,71369.9,10490.82533238],[1794528000,67555,71429.46,71369.9,68236.54,16647.8102392],[1794614400,63270,68380,68236.54,64118.79,16354.5408147],[1794700800,61946.17,66100,64118.86,65315.35,15513.9449576],[1794787200,63833.47,65626.98,65315.35,64816.79,13678.69500169],[1794873600,63256.75,65383.29,64816.79,64873.18,11768.55318977],[1794960000,62000,64933.39,64873.18,62981.71,12482.67554433],[1795046400,61350,64023.69,62981.71,61913.23,13357.17735378],[1795132800,57655.17,62562.15,61911.58,58814.99,23600.19903793],[1795219200,55106,60883.03,58815.33,60086,17117.92437611],[1795305600,58636.18,61568.11,60086,61163.01,8857.86778295],[1795392000,60286.92,61866.57,61163.01,61385.27,3502.19575462]];
+ const colors={orange:'#f3b74f',yellow:'#edcf5b',blue:'#679af1',aqua:'#5acbd3',teal:'#41bfa7',green:'#59bc83',lime:'#9cdb78',red:'#ed777e',purple:'#a58ae5',fuchsia:'#d98dd0',white:'#e6e8ec',gray:'#99a3ac',silver:'#bec6ce',black:'#141618',navy:'#5077b5',maroon:'#aa5366',olive:'#a0a253'};
+const templates={
+ ma:'//@version=6\nindicator("双均线", overlay=true)\nfast = input.int(7, "快速周期")\nslow = input.int(25, "慢速周期")\nplot(ta.sma(close, fast), "MA 7", color=color.orange)\nplot(ta.sma(close, slow), "MA 25", color=color.purple)',
+ boll:'//@version=6\nindicator("布林带", overlay=true)\n[basis, upper, lower] = ta.bb(close, 20, 2)\nplot(basis, "中轨", color=color.orange)\nplot(upper, "上轨", color=color.aqua)\nplot(lower, "下轨", color=color.aqua)',
+ rsi:'//@version=6\nindicator("RSI", overlay=false)\nlength = input.int(14, "周期")\nplot(ta.rsi(close, length), "RSI", color=color.purple)\nhline(70, "超买", color=color.red)\nhline(30, "超卖", color=color.teal)',
+ macd:'//@version=6\nindicator("MACD", overlay=false)\n[dif, dea, hist] = ta.macd(close, 12, 26, 9)\nplot(dif, "DIF", color=color.orange)\nplot(dea, "DEA", color=color.blue)\nplot(hist, "柱差", color=color.teal)'};
+function pine(source,bars){
+ const fail=msg=>{throw Error(msg)};
+ if(source.length>20000)fail('源码限 20,000 字符');
+ const env=Object.create(null), plots=[], n=bars.length;
+ for(const key of ['open','high','low','close','volume'])env[key]=bars.map(b=>b[key]);
+ const series=v=>Array.isArray(v)?v:Array(n).fill(v);
+ const math=(a,b,op)=>Array.isArray(a)||Array.isArray(b)?series(a).map((v,i)=>op(v,Array.isArray(b)?b[i]:b)):op(a,b);
+ env.hl2=bars.map(b=>(b.high+b.low)/2);env.hlc3=bars.map(b=>(b.high+b.low+b.close)/3);env.ohlc4=bars.map(b=>(b.high+b.low+b.open+b.close)/4);
+ Object.assign(env,{true:true,false:false,na:NaN});
+ for(const [name,v] of Object.entries(colors))env['color.'+name]=v;
+ const period=v=>Number.isInteger(v)&&v>=1&&v<=2000?v:fail('周期须为 1 到 2000 的整数');
+ function rolling(data,len,kind){
+  len=period(len);const input=series(data);let prior=NaN;const buf=[];
+  return input.map(v=>{
+   if(!Number.isFinite(v))return NaN;
+   if(kind==='ema'){prior=Number.isFinite(prior)?prior+(v-prior)*2/(len+1):v;return prior}
+   if(kind==='rma'&&Number.isFinite(prior)){prior+=(v-prior)/len;return prior}
+   buf.push(v);if(buf.length>len)buf.shift();if(buf.length<len)return NaN;
+   if(kind==='highest')return Math.max(...buf);if(kind==='lowest')return Math.min(...buf);
+   const mean=buf.reduce((a,b)=>a+b,0)/len;
+   if(kind==='stdev')return Math.sqrt(buf.reduce((sum,x)=>sum+(x-mean)**2,0)/len);
+   prior=mean;return mean;
+  });
+ }
+ let title='自定义指标',overlay=false;
+ const lines=source.split(/\r?\n/);
+ for(let line=0;line<lines.length;line++){
+  try{
+   const raw=lines[line].trim();if(!raw||raw.startsWith('//'))continue;
+   const re=/\s+|\/\/.*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|#[\da-fA-F]{6}(?:[\da-fA-F]{2})?|(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*|[+\-*/%(),=[\]]/gy;
+   const tok=[];let at=0,m;while(at<raw.length){re.lastIndex=at;m=re.exec(raw);if(!m)fail('无法识别 '+raw.slice(at,at+14));at=re.lastIndex;if(m[0].startsWith('//'))break;if(m[0].trim())tok.push(m[0])}
+   let i=0;const take=t=>tok[i]===t?(i++,true):false;
+   const need=t=>{if(!take(t))fail('缺少 '+t)};
+   function call(name,args,kw){
+    const get=(pos,key,def)=>Object.hasOwn(kw,key)?kw[key]:args[pos]??def;
+    function allowed(keys,max){
+     const bad=Object.keys(kw).find(k=>!keys.includes(k));if(bad)fail('暂不支持参数 '+bad);
+     if(args.length>max)fail('位置参数过多');
+     for(let j=0;j<Math.min(max,args.length);j++)if(Object.hasOwn(kw,keys[j]))fail('参数重复 '+keys[j]);
+    }
+    if(name==='indicator'||name==='study'){allowed(['title','shorttitle','overlay'],3);title=get(0,'title','自定义指标');overlay=get(2,'overlay',false);if(typeof title!=='string'||typeof overlay!=='boolean')fail('请检查名称与 overlay');return}
+    if(name==='plot'||name==='hline'){
+     const keys=name==='plot'?['series','title','color','linewidth']:['price','title','color'];allowed(keys,keys.length);
+     const value=get(0,keys[0]);if(value===undefined)fail('缺少绘图数值');
+     const values=series(value);if(values.some(x=>typeof x!=='number'))fail('绘图值须为数值');
+     const color=get(2,'color',Object.values(colors)[plots.length%8]);if(typeof color!=='string'||!/^#[0-9a-f]{6}([0-9a-f]{2})?$/i.test(color))fail('颜色须为固定颜色');
+     const width=get(3,'linewidth',1.5);if(typeof width!=='number'||width<=0||width>10)fail('线宽无效');
+     plots.push({name:String(get(1,'title',title)),color,values,width});if(plots.length>16)fail('每个指标最多 16 条线');return
+    }
+    if(['input','input.int','input.float','input.source'].includes(name)){
+     allowed(['defval','title','minval','maxval','step'],2);const v=get(0,'defval');if(v===undefined)fail('缺少默认值');return v
+    }
+    const fn=name.replace(/^ta\./,'');
+    if(['sma','ema','rma','rsi','stdev','highest','lowest'].includes(fn)){
+     allowed(['source','length'],2);let src=get(0,'source'), len=get(1,'length');
+     if(len===undefined&&['highest','lowest'].includes(fn)){len=src;src=env[fn==='highest'?'high':'low']}
+     if(src===undefined)fail('缺少数据序列');
+     if(fn!=='rsi')return rolling(src,len,fn);
+     const x=series(src), delta=x.map((v,i)=>i?v-x[i-1]:NaN);
+     const up=rolling(delta.map(d=>Math.max(0,d)),len,'rma'),down=rolling(delta.map(d=>Math.max(0,-d)),len,'rma');
+     return up.map((v,i)=>down[i]===0?(v===0?NaN:100):100-100/(1+v/down[i]));
+    }
+    if(fn==='bb'){allowed(['series','length','mult'],3);const src=get(0,'series'),len=get(1,'length'),mult=get(2,'mult');if(!Number.isFinite(mult))fail('缺少布林带倍数');const mid=rolling(src,len,'sma'),dev=rolling(src,len,'stdev');return {tuple:[mid,mid.map((v,i)=>v+mult*dev[i]),mid.map((v,i)=>v-mult*dev[i])]}}
+    if(fn==='macd'){allowed(['source','fastlen','slowlen','siglen'],4);const src=get(0,'source'),fast=rolling(src,get(1,'fastlen'),'ema'),slow=rolling(src,get(2,'slowlen'),'ema'),diff=fast.map((v,i)=>v-slow[i]),sig=rolling(diff,get(3,'siglen'),'ema');return {tuple:[diff,sig,diff.map((v,i)=>v-sig[i])]}}
+    if(['math.abs','math.max','math.min'].includes(name)){allowed([],name==='math.abs'?1:2);if(args.length!==(name==='math.abs'?1:2))fail('参数数量不正确');return math(args[0],args[1],name==='math.abs'?Math.abs:name==='math.max'?Math.max:Math.min)}
+    fail('暂不支持 '+name);
+   }
+   function atom(){
+    if(take('-'))return math(0,atom(),(a,b)=>a-b);if(take('+'))return atom();
+    let value;if(take('(')){value=expr();need(')')}else{
+     const t=tok[i++];if(t===undefined)fail('缺少表达式');
+     if(/^['"]/.test(t))value=t.slice(1,-1).replace(/\\(['"\\])/g,'$1');
+     else if(t.startsWith('#'))value=t;
+     else if(/^[.\d]/.test(t))value=Number(t);
+     else if(take('(')){
+      const args=[],kw=Object.create(null);if(!take(')')){
+       do{if(tok[i+1]==='='){const k=tok[i];i+=2;if(Object.hasOwn(kw,k))fail('参数重复 '+k);kw[k]=expr()}else{if(Object.keys(kw).length)fail('位置参数需在命名参数之前');args.push(expr())}}while(take(','));need(')');
+      }value=call(t,args,kw);
+     }else if(Object.hasOwn(env,t))value=env[t];else fail('未知变量 '+t);
+    }
+    while(take('[')){const back=expr();need(']');if(!Number.isInteger(back)||back<0||back>2000)fail('历史偏移须为 0 到 2000 的整数');const a=series(value);value=a.map((_,i)=>a[i-back]??NaN)}
+    return value;
+   }
+   const ops={'+':(a,b)=>a+b,'-':(a,b)=>a-b,'*':(a,b)=>a*b,'/':(a,b)=>b===0?NaN:a/b,'%':(a,b)=>a%b};
+   function expr(min=0){let left=atom();while(Object.hasOwn(ops,tok[i])){const op=tok[i],rank='*/%'.includes(op)?2:1;if(rank<min)break;i++;left=math(left,expr(rank+1),ops[op])}return left}
+   let names=[];if(take('[')){do{names.push(tok[i++])}while(take(','));need(']');need('=')}else if(tok[i+1]==='='){names=[tok[i]];i+=2}
+   const result=expr();if(i!==tok.length)fail('暂不支持 '+tok.slice(i).join(' '));
+   if(names.length){const vals=result?.tuple??[result];if(names.length!==vals.length||names.some(k=>!/^[a-zA-Z_]\w*$/.test(k)))fail('变量赋值格式不正确');names.forEach((k,j)=>{env[k]=vals[j]})}
+  }catch(e){throw Error('第 '+(line+1)+' 行 · '+e.message)}
+ }
+ if(!plots.length)fail('至少需要一条 plot 或 hline 语句');
+ return {title,overlay,plots};
+}
+ const coins=[
+ ['BTC-USD','比特币','₿','#f7ab38','#33291c'],['ETH-USD','以太坊','Ξ','#a0adee','#292b40'],['SOL-USD','Solana','≋','#72dcc1','#193331']
+];
+const stocks=[
+ ['sh600519','贵州茅台','茅','#eb928e','#39272a'],['sz300750','宁德时代','宁','#8eaef1','#222d40'],['sh601318','中国平安','平','#e9b676','#3a3025'],
+ ['sh600036','招商银行','招','#e28a93','#352729'],['sz000001','平安银行','平','#e4b273','#352d22'],
+ ['sz002594','比亚迪','比','#de8a91','#36292d'],['sh688981','中芯国际','芯','#a891dc','#322b40'],['sz000858','五粮液','五','#ca9d86','#382d27']
+];
+function asset(row,market){const [id,name,mark,color,bg]=row;return {id,name,mark,color,bg,market}}
+const catalog=[...coins.map(r=>asset(r,'crypto')),...stocks.map(r=>asset(r,'stock'))];
+function symbolFrom(input){
+ const value=input.toUpperCase().replace(/\s/g,'');const found=catalog.find(a=>a.id.toUpperCase()===value||a.name===input);if(found)return found;
+ let ticker=value.match(/^(?:(SH|SZ))?(\d{6})(?:\.(SH|SZ))?$/);
+ if(ticker){const ex=ticker[1]||ticker[3]||(/^[569]/.test(ticker[2])?'SH':'SZ'),id=ex.toLowerCase()+ticker[2];return catalog.find(a=>a.id===id)||asset([id,ticker[2],ex,'#a4bbd9','#27303c'],'stock')}
+ const pair=value.match(/^([A-Z0-9]{2,14}?)[-/]?(USDT|USD)$/)||(/^[A-Z][A-Z0-9]{1,9}$/.test(value)?[null,value,'USD']:null);
+ if(pair){const id=pair[2]==='USD'?pair[1]+'-USD':pair[1]+'USDT';return catalog.find(a=>a.id===id)||asset([id,pair[1],pair[1][0],'#a3c4e1','#26313a'],'crypto')}
+ return null;
+}
+const $=id=>document.getElementById(id);
+const storeRead=(k,def)=>{try{return JSON.parse(localStorage.getItem('candledesk-v1:'+k))??def}catch{return def}};
+const storeWrite=(k,v)=>{try{localStorage.setItem('candledesk-v1:'+k,JSON.stringify(v))}catch{}};
+const binance=a=>a.market==='crypto'&&a.id.endsWith('USDT');
+const sourceOf=a=>a.market==='stock'?'腾讯行情':binance(a)?'Binance':'Coinbase';
+const periods={'1m':60,'5m':300,'15m':900,'1h':3600,'1d':86400};
+const validBars=list=>Array.from(new Map(list.filter(b=>Object.values(b).every(Number.isFinite)&&b.time>0&&b.close>0&&b.low<=b.high).map(b=>[b.time,b])).values()).sort((a,b)=>a.time-b.time).slice(-320);
+function coinBars(rows){return validBars(rows.map(([time,low,high,open,close,volume])=>({time,open:+open,high:+high,low:+low,close:+close,volume:+volume})))}
+async function json(url){
+ const ctrl=new AbortController(),id=setTimeout(()=>ctrl.abort(),7500);
+ try{const res=await fetch(url,{signal:ctrl.signal,cache:'no-store'});if(!res.ok)throw Error('行情源返回 '+res.status);return await res.json()}finally{clearTimeout(id)}
+}
+let reqId=0;
+function remoteVars(url,keys,charset='utf-8'){
+ return new Promise((resolve,reject)=>{
+  const tag=document.createElement('script');tag.charset=charset;tag.referrerPolicy='no-referrer';tag.src=url;
+  function done(ok){
+   clearTimeout(timer);tag.remove();tag.onload=tag.onerror=null;
+   const out=keys.map(k=>window[k]);keys.forEach(k=>{try{delete window[k]}catch{}});
+   if(ok&&out.some(Boolean))resolve(out);else reject(Error('腾讯行情暂时未返回数据'));
+  }
+  const timer=setTimeout(()=>done(false),6500);tag.onload=()=>done(true);tag.onerror=()=>done(false);document.head.appendChild(tag);
+ });
+}
+function shTime(raw){
+ const s=String(raw).replace(/\D/g,'');if(s.length<8)return NaN;
+ return Date.UTC(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8),+(s.slice(8,10)||0)-8,+(s.slice(10,12)||0),+(s.slice(12,14)||0))/1000;
+}
+async function candles(a,p){
+ if(a.market==='stock'){
+  const tf={ '5m':'m5','15m':'m15','1h':'m60','1d':'day' }[p], daily=p==='1d';
+  const key='cdk'+(++reqId),path=daily?'fqkline/get':'kline/mkline',param=daily?a.id+',day,,,300,':a.id+','+tf+',,300';
+  const url='https://web.ifzq.gtimg.cn/appstock/app/'+path+'?_var='+key+'&param='+param+'&r='+Date.now();
+  const [resp]=await remoteVars(url,[key]);const data=resp?.data?.[a.id];const rows=data?.[tf];if(!Array.isArray(rows))throw Error('无该周期数据');
+  return validBars(rows.map(([time,open,close,high,low,volume])=>({time:shTime(time),open:+open,close:+close,high:+high,low:+low,volume:+volume})));
+ }
+ if(binance(a)){
+  const rows=await json('https://data-api.binance.vision/api/v3/klines?symbol='+a.id+'&interval='+p+'&limit=300');
+  return validBars(rows.map(([t,o,h,l,c,v])=>({time:t/1000,open:+o,high:+h,low:+l,close:+c,volume:+v})));
+ }
+ return coinBars(await json('https://api.exchange.coinbase.com/products/'+a.id+'/candles?granularity='+periods[p]));
+}
+async function stockQuotes(items){
+ if(!items.length)return [];
+ const ids=items.map(a=>a.id),raw=await remoteVars('https://qt.gtimg.cn/q='+ids.join(',')+'&t='+Date.now(),ids.map(id=>'v_'+id),'gbk');
+ return raw.map((s,i)=>{
+  const v=String(s||'').split('~');if(!+v[3]||!+v[4])return null;
+  return {id:ids[i],name:v[1],price:+v[3],prev:+v[4],high:+v[33],low:+v[34],volume:+v[6],stamp:shTime(v[30])};
+ }).filter(Boolean);
+}
+async function coinQuote(a){
+ if(binance(a)){
+  const q=await json('https://data-api.binance.vision/api/v3/ticker/24hr?symbol='+a.id);
+  return {id:a.id,price:+q.lastPrice,prev:+q.openPrice,high:+q.highPrice,low:+q.lowPrice,volume:+q.volume,stamp:q.closeTime/1000};
+ }
+ const q=await json('https://api.exchange.coinbase.com/products/'+a.id+'/stats');
+ return {id:a.id,price:+q.last,prev:+q.open,high:+q.high,low:+q.low,volume:+q.volume,stamp:Date.now()/1000};
+}
+function cryptoStream(a,p,onTick,onState){
+ let socket,closed=false,retryTimer,watchdog;
+ function connect(){
+  if(closed)return;const bn=binance(a);
+  try{socket=new WebSocket(bn?'wss://data-stream.binance.vision/ws/'+a.id.toLowerCase()+'@kline_'+p:'wss://ws-feed.exchange.coinbase.com')}catch{retryTimer=setTimeout(connect,9000);return}
+  const arm=()=>{clearTimeout(watchdog);watchdog=setTimeout(()=>socket.close(),25000)};arm();
+  socket.onopen=()=>{if(!bn)socket.send(JSON.stringify({type:'subscribe',product_ids:[a.id],channels:['ticker','heartbeat']}));arm()};
+  socket.onmessage=e=>{if(closed)return;let m;try{m=JSON.parse(e.data)}catch{return}arm();
+   if(bn&&m.k){const k=m.k;onTick({time:k.t/1000,open:+k.o,high:+k.h,low:+k.l,close:+k.c,volume:+k.v},null,m.E/1000)}
+   else if(m.type==='ticker'&&m.product_id===a.id){const t=Date.parse(m.time)/1000;if(!Number.isFinite(t)||!+m.price)return;onTick(null,{id:a.id,price:+m.price,prev:+m.open_24h,high:+m.high_24h,low:+m.low_24h,volume:+m.volume_24h,stamp:t},t)}
+  };socket.onerror=()=>socket.close();socket.onclose=()=>{clearTimeout(watchdog);if(!closed){onState();retryTimer=setTimeout(connect,6000)}};
+ }
+ connect();return ()=>{closed=true;clearTimeout(watchdog);clearTimeout(retryTimer);if(socket){socket.onclose=null;socket.onerror=null;socket.onmessage=null;socket.close()}};
+}
+ const state={bars:[],studies:[],count:88,offset:0,line:false,cursor:null,frame:0,geom:null};
+const num=(v,places)=>Number.isFinite(v)?v.toLocaleString('en-US',{minimumFractionDigits:places??(v>=1?2:4),maximumFractionDigits:places??(v>=1?2:6)}):'—';
+const compact=v=>Number.isFinite(v)?new Intl.NumberFormat('en',{notation:'compact',maximumFractionDigits:2}).format(v):'—';
+const dt=(t,full=false)=>new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',year:full?'numeric':undefined,month:'2-digit',day:'2-digit',hour:full?'2-digit':undefined,minute:full?'2-digit':undefined,hour12:false}).format(t*1000);
+const hhmm=t=>new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',hour:'2-digit',minute:'2-digit',hour12:false}).format(t*1000);
+function drawSoon(){if(!state.frame)state.frame=requestAnimationFrame(()=>{state.frame=0;drawChart()})}
+function setZoom(k){state.count=Math.min(Math.max(15,state.bars.length),Math.max(15,Math.round(state.count*k)));drawSoon()}
+function setOffset(v){state.offset=Math.min(Math.max(0,state.bars.length-Math.min(state.count,state.bars.length)),Math.max(0,Math.round(v)));drawSoon()}
+function resetChart(){state.count=innerWidth<680?45:88;state.offset=0;state.cursor=null;drawSoon()}
+function drawChart(){
+ const canvas=$('canvas'),ctx=canvas.getContext('2d'),box=canvas.getBoundingClientRect(),w=box.width,h=box.height;if(w<1||h<1)return;
+ const dpr=Math.min(devicePixelRatio||1,3);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
+ ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);ctx.font='11px SFMono-Regular, Consolas, monospace';ctx.textBaseline='middle';
+ const x0=9,x1=w-(w<500?63:85),axisY=h-23,grid='#282d32',muted='#8b969f',pos='#45c39c',neg='#e7717b';
+ function stroke(x,y,xx,yy,c,weight=1){ctx.strokeStyle=c;ctx.lineWidth=weight;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(xx,yy);ctx.stroke()}
+ function txt(s,x,y,c=muted,align='left'){ctx.fillStyle=c;ctx.textAlign=align;ctx.fillText(s,x,y);ctx.textAlign='left'}
+ const end=state.bars.length-state.offset,start=Math.max(0,end-state.count),bars=state.bars.slice(start,end),n=bars.length;
+ const panes=state.studies.filter(s=>!s.overlay),over=state.studies.filter(s=>s.overlay).flatMap(s=>s.plots);
+ const volH=Math.min(63,axisY*.15),each=panes.length?Math.min(90,axisY*.43/panes.length):0,mainH=axisY-volH-each*panes.length;
+ const spacing=(x1-x0)/Math.max(1,n),x=i=>x0+(i+.5)*spacing;
+ for(let j=0;j<=5;j++){const y=8+j*(mainH-16)/5;stroke(x0,y,x1,y,grid)}
+ const ticks=w<520?4:7;for(let i=0;i<ticks;i++){const xx=x0+(x1-x0)*i/(ticks-1);stroke(xx,3,xx,axisY,grid)}
+ stroke(x1,0,x1,axisY,grid);stroke(x0,axisY,x1,axisY,grid);
+ if(!n){$('ohlc').textContent='';$('tooltip').hidden=true;state.geom=null;return}
+ function bounds(nums){let lo=Infinity,hi=-Infinity;for(const v of nums)if(Number.isFinite(v)){lo=Math.min(lo,v);hi=Math.max(hi,v)}if(!Number.isFinite(lo))return [0,1];const pad=(hi-lo)*.06||Math.max(Math.abs(lo)*.005,.01);return [lo-pad,hi+pad]}
+ const [lo,hi]=bounds([...bars.flatMap(b=>[b.low,b.high]),...over.flatMap(p=>p.values.slice(start,end))]);
+ const y=v=>8+(hi-v)/(hi-lo)*(mainH-16);state.geom={start,n,spacing,x0,x1,axisY,lo,hi,mainH};
+ for(let i=0;i<=5;i++){const val=hi-(hi-lo)*i/5;txt(num(val),x1+6,y(val))}
+ function poly(values,scale,color,width=1.4){
+  ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;let ready=false;
+  for(let i=0;i<values.length;i++){const v=values[i];if(!Number.isFinite(v)){ready=false;continue}const yy=scale(v);if(ready)ctx.lineTo(x(i),yy);else ctx.moveTo(x(i),yy);ready=true}ctx.stroke();
+ }
+ const bodyW=Math.max(1,Math.min(spacing*.65,16));
+ if(state.line)poly(bars.map(b=>b.close),y,'#eabc67',1.8);
+ else bars.forEach((b,i)=>{const c=b.close>=b.open?pos:neg;stroke(x(i),y(b.high),x(i),y(b.low),c);ctx.fillStyle=c;ctx.fillRect(x(i)-bodyW/2,Math.min(y(b.open),y(b.close)),bodyW,Math.max(1,Math.abs(y(b.open)-y(b.close))))});
+ over.forEach(p=>poly(p.values.slice(start,end),y,p.color,p.width));
+ const last=bars[n-1];const lastY=y(last.close),lastCol=last.close>=last.open?pos:neg;
+ ctx.setLineDash([3,4]);stroke(x0,lastY,x1,lastY,lastCol+'aa');ctx.setLineDash([]);
+ ctx.fillStyle=lastCol;ctx.fillRect(x1,lastY-8,w-x1,16);txt(num(last.close),x1+5,lastY,'#101917');
+ const volBottom=mainH+volH,maxV=Math.max(1,...bars.map(b=>b.volume));
+ stroke(x0,mainH,x1,mainH,grid);bars.forEach((b,i)=>{const bh=b.volume/maxV*(volH-17);ctx.fillStyle=b.close>=b.open?'#337e69':'#894e56';ctx.fillRect(x(i)-bodyW/2,volBottom-bh,bodyW,bh)});
+ txt('VOL',x0+3,mainH+9);txt(compact(maxV),x1+5,mainH+10);
+ panes.forEach((s,j)=>{const top=volBottom+j*each,available=each-14;stroke(x0,top,x1,top,grid);const [low,high]=bounds(s.plots.flatMap(p=>p.values.slice(start,end)));const sy=v=>top+8+(high-v)/(high-low)*available;
+  s.plots.forEach(p=>poly(p.values.slice(start,end),sy,p.color,p.width));txt(s.title,x0+3,top+9,'#aab3ba');txt(num(high),x1+5,top+8);if(each>40)txt(num(low),x1+5,top+each-9);
+ });
+ for(let j=0;j<ticks;j++){const i=Math.round((n-1)*j/(ticks-1)),b=bars[i];const s=activePeriod==='1d'?dt(b.time):j===0||dt(b.time)!==dt(bars[Math.max(0,i-Math.floor(n/ticks))].time)?dt(b.time):hhmm(b.time);txt(s,Math.min(x1-20,Math.max(x0+20,x(i))),h-11,muted,'center')}
+ let chosen=last;const pointer=state.cursor,tip=$('tooltip');tip.hidden=true;
+ if(pointer&&pointer.x>=x0&&pointer.x<=x1&&pointer.y>=0&&pointer.y<=axisY){
+  const i=Math.max(0,Math.min(n-1,Math.floor((pointer.x-x0)/spacing)));chosen=bars[i];
+  ctx.setLineDash([3,4]);stroke(x(i),0,x(i),axisY,'#94a1ad');stroke(x0,pointer.y,x1,pointer.y,'#67727a');ctx.setLineDash([]);
+  tip.hidden=false;tip.textContent=dt(chosen.time,true);tip.style.left=Math.max(0,Math.min(w-145,x(i)-65))+'px';tip.style.top=Math.max(0,axisY-23)+'px';
+ }
+ const info=$('ohlc');info.replaceChildren();for(const [k,v] of [['开',chosen.open],['高',chosen.high],['低',chosen.low],['收',chosen.close]]){const span=document.createElement('span'),b=document.createElement('b');span.append(k+' ');b.textContent=num(v);span.append(b);info.append(span)}
+}
+function chartEvents(){
+ const c=$('canvas');let drag=null;
+ new ResizeObserver(drawSoon).observe($('plot'));
+ c.onpointerdown=e=>{c.setPointerCapture(e.pointerId);drag={x:e.clientX,offset:state.offset};c.focus({preventScroll:true})};
+ c.onpointermove=e=>{const r=c.getBoundingClientRect();state.cursor={x:e.clientX-r.left,y:e.clientY-r.top};if(drag&&state.geom)setOffset(drag.offset+(e.clientX-drag.x)/state.geom.spacing);drawSoon()};
+ c.onpointerup=c.onpointercancel=()=>{drag=null};c.onpointerleave=()=>{state.cursor=null;drawSoon()};
+ c.addEventListener('wheel',e=>{e.preventDefault();setZoom(e.deltaY>0?1.18:.85)},{passive:false});
+ $('zoomIn').onclick=()=>setZoom(.8);$('zoomOut').onclick=()=>setZoom(1.25);$('resetView').onclick=resetChart;
+ c.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','+','=','-','Home','End'].includes(e.key))return;e.preventDefault();if(e.key==='ArrowLeft'||e.key==='ArrowRight')setOffset(state.offset+(e.key==='ArrowLeft'?5:-5));else if(['+','=','-'].includes(e.key))setZoom(e.key==='-'?1.2:.8);else resetChart()};
+ $('expand').onclick=()=>{$('chartcard').classList.toggle('expanded');drawSoon()};
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')$('chartcard').classList.remove('expanded')});
+ $('chartType').onclick=()=>{state.line=!state.line;$('chartType').querySelector('use').setAttribute('href',state.line?'#i-chart':'#i-candle');drawSoon()};
+}
+ const saved=storeRead('symbols',null);
+let watch=Array.isArray(saved)?saved.map(id=>symbolFrom(String(id))).filter(Boolean).slice(0,40):catalog.slice(0,6);
+if(!watch.length)watch=[catalog[0]];
+let active=watch.find(a=>a.id===storeRead('active','BTC-USD'))||watch[0],activePeriod=storeRead('period','1d'),filter='all';
+let scripts=storeRead('scripts',[{id:'ma',source:templates.ma}]);if(!Array.isArray(scripts))scripts=[{id:'ma',source:templates.ma}];
+const quotes=new Map(),cache=new Map(),quoteJobs=new Set();let epoch=0,stopStream=()=>{},historyJob=0,chartAt=0,lastStream=0,pollFailed=false,quoteBatch=false,feedMode='connecting',sample=false;
+const elm=(tag,cls,str)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(str!=null)e.textContent=str;return e};
+function badge(a,big=false){const e=elm('span',(big?'big ':'')+'assetBadge',a.mark);e.style.color=a.color;e.style.background=a.bg;return e}
+function ticker(a){return a.market==='stock'?a.id.slice(2)+'.'+a.id.slice(0,2).toUpperCase():a.id.replace('-',' / ').replace(/([A-Z0-9]+)USDT$/,'$1 / USDT')}
+function priceChange(q){return q?.prev>0?(q.price/q.prev-1)*100:NaN}
+function pct(n){return Number.isFinite(n)?(n>=0?'+':'')+n.toFixed(2)+'%':'—'}
+function putQuote(q){if(!q||!Number.isFinite(q.price)||q.price<=0)return;const prev=quotes.get(q.id);if(prev&&prev.stamp>q.stamp)return;quotes.set(q.id,q);if(q.name){const a=watch.find(a=>a.id===q.id);if(a&&a.name===a.id.slice(2))a.name=q.name}}
+function renderWatch(){
+ const host=$('watch');host.replaceChildren();
+ for(const [key,name] of [['crypto','加密货币'],['stock','沪深 A 股']]){
+  if(filter!=='all'&&filter!==key)continue;const items=watch.filter(a=>a.market===key);
+  const head=elm('h3','groupHeading',name);head.append(elm('span','',String(items.length).padStart(2,'0')));host.append(head);
+  for(const a of items){const q=quotes.get(a.id),row=elm('button','watchRow'+(a.id===active.id?' selected':''));row.setAttribute('aria-pressed',String(a.id===active.id));
+   const names=elm('span'),values=elm('span','watchValue',num(q?.price)),change=priceChange(q);names.append(elm('span','watchName',a.name),elm('span','watchTicker',ticker(a)));
+   values.append(elm('small',Number.isFinite(change)?change>=0?'up':'down':'muted',pct(change)));row.append(badge(a),names,values);row.onclick=()=>choose(a);if(q?.stamp)row.title='行情时间 '+dt(q.stamp,true);host.append(row);
+  }
+ }
+ $('watchCount').textContent=watch.length+' 个标的';
+}
+function header(){
+ const a=active,q=quotes.get(a.id),last=state.bars.at(-1),prev=state.bars.at(-2);
+ $('bigBadge').replaceChildren(badge(a,true));$('assetName').textContent=a.name;$('marketTag').textContent=a.market==='stock'?'A 股':'现货';$('symbolLine').textContent=ticker(a)+' · '+(a.market==='stock'?(a.id.startsWith('sh')?'上交所':'深交所'):sourceOf(a));
+ const current=q?.price??last?.close,change=q?priceChange(q):prev?(last.close/prev.close-1)*100:NaN;
+ $('price').textContent=num(current);$('change').textContent=pct(change)+(Number.isFinite(change)?' · '+(q?a.market==='stock'?'较昨收':'24h':'较上根 K 线'):'');$('change').className=Number.isFinite(change)?change>=0?'up':'down':'muted';
+ const prefix=q?(a.market==='stock'?'当日':'24h'):'本期';
+ for(const [id,label,field] of [['high','最高','high'],['low','最低','low'],['vol','成交量','volume']]){$(id+'Label').textContent=prefix+' '+label+(id==='vol'&&a.market==='stock'?' (手)':'');$(id==='vol'?'volume':id).textContent=(id==='vol'?compact:num)(q?q[field]:last?.[field])}
+}
+function feed(){
+ const live=Date.now()-lastStream<20000&&lastStream>0;
+ let label='连接行情中',kind='';if(sample){label='历史快照';kind='stale'}else if(pollFailed&&(!live||!state.bars.length)){label=state.bars.length?'连接中断 · 缓存':'数据源未连接';kind='stale'}
+ else if(state.bars.length&&chartAt){if(live){label='实时推送';kind='live'}else{label=active.market==='stock'?'行情轮询 · 10秒':'行情轮询 · 15秒';kind='live'}}
+ $('feed').textContent=label;$('feed').className='feed '+kind;
+ const bar=state.bars.at(-1);$('barDate').textContent=bar?'最新 K 线 '+dt(bar.time,true):'';
+ const q=quotes.get(active.id);$('dataOrigin').textContent='数据源 · '+sourceOf(active)+(q?.stamp?'　报价 '+dt(q.stamp,true):sample?'　历史日线快照':'')+(active.market==='stock'?'　以源站时间为准':'');
+ $('empty').hidden=!!state.bars.length;$('empty').textContent=pollFailed?'行情暂不可用，可点击下方「刷新行情」重试。':'正在获取 K 线…';
+}
+function calcStudies(){
+ state.studies=[];for(const s of scripts){try{state.studies.push({...pine(s.source,state.bars),id:s.id})}catch{}}
+ const host=$('legend');host.replaceChildren();
+ for(const s of state.studies)for(const p of s.plots){const e=elm('button','legendEntry'),i=elm('i');i.style.background=p.color;e.append(i,document.createTextNode(p.name));e.title='编辑 '+s.title;e.onclick=()=>openEditor(s.id);host.append(e)}
+ drawSoon();
+}
+function refreshScreen(){header();feed();calcStudies();renderWatch()}
+let renderPending=false;
+function scheduleScreen(){if(renderPending)return;renderPending=true;requestAnimationFrame(()=>{renderPending=false;refreshScreen()})}
+function tick(token,bar,q,time){
+ if(epoch!==token)return;lastStream=Date.now();if(q)putQuote(q);
+ if(state.bars.length&&!sample){const last=state.bars.at(-1);
+  if(!bar&&q){const t=Math.floor(time/periods[activePeriod])*periods[activePeriod];
+   if(t>=last.time)bar=t===last.time?{...last,high:Math.max(last.high,q.price),low:Math.min(last.low,q.price),close:q.price}:{time:t,open:q.price,high:q.price,low:q.price,close:q.price,volume:0}}
+  if(bar&&bar.time>=last.time){if(bar.time===last.time)state.bars[state.bars.length-1]=bar;else{state.bars.push(bar);if(state.bars.length>320)state.bars.shift()}}
+ }scheduleScreen();
+}
+async function getHistory(){
+ const token=epoch;if(historyJob===token)return;historyJob=token;const a=active,p=activePeriod,began=Date.now();
+ try{
+  const data=await candles(a,p);if(!data.length)throw Error('暂无 K 线');if(epoch!==token)return;
+  if(lastStream>began&&!sample&&state.bars.length){const live=state.bars.at(-1),tail=data.at(-1);
+   if(live.time===tail.time){tail.close=live.close;tail.high=Math.max(live.high,tail.high);tail.low=Math.min(live.low,tail.low);if(binance(a))tail.volume=Math.max(tail.volume,live.volume)}
+   else if(live.time>tail.time)data.push(live);
+  }
+  state.bars=data;cache.set(a.id+p,data);storeWrite('last-chart',{key:a.id+p,data});chartAt=Date.now();pollFailed=false;sample=false;
+ }catch{if(epoch===token)pollFailed=true}finally{if(historyJob===token)historyJob=0;if(epoch===token)refreshScreen()}
+}
+function refreshQuotes(){
+ if(!quoteBatch){const group=watch.filter(a=>a.market==='stock');quoteBatch=true;stockQuotes(group).then(rows=>rows.forEach(putQuote)).catch(()=>{}).finally(()=>{quoteBatch=false;renderWatch();header();feed()})}
+ for(const a of watch.filter(a=>a.market==='crypto')){if(quoteJobs.has(a.id))continue;quoteJobs.add(a.id);coinQuote(a).then(q=>{putQuote(q);renderWatch();if(active.id===a.id){header();feed()}}).catch(()=>{}).finally(()=>quoteJobs.delete(a.id))}
+}
+function choose(a,p=activePeriod){
+ stopStream();active=a;activePeriod=Object.hasOwn(periods,p)?p:'1d';if(a.market==='stock'&&activePeriod==='1m')activePeriod='5m';
+ const token=++epoch,key=a.id+activePeriod,lastSaved=storeRead('last-chart',{});chartAt=0;lastStream=0;pollFailed=false;sample=false;
+ const cached=cache.get(key)||(lastSaved.key===key&&Array.isArray(lastSaved.data)?lastSaved.data:null);
+ state.bars=cached?validBars(cached):[];sample=!!state.bars.length;
+ if(!state.bars.length&&key==='BTC-USD1d'){state.bars=coinBars(SNAPSHOT);sample=true}
+ storeWrite('active',a.id);storeWrite('period',activePeriod);const host=$('periods');host.replaceChildren();
+ for(const [period,label] of [['1m','1分'],['5m','5分'],['15m','15分'],['1h','1时'],['1d','日线']]){
+  if(a.market==='stock'&&period==='1m')continue;const b=elm('button','',label);b.setAttribute('aria-pressed',String(period===activePeriod));b.onclick=()=>choose(a,period);host.append(b)
+ }
+ resetChart();refreshScreen();getHistory();
+ if(a.market==='crypto')stopStream=cryptoStream(a,activePeriod,(bar,q,t)=>tick(token,bar,q,t),()=>{if(epoch===token){lastStream=0;feed()}});
+}
+function setupSearch(){
+ const input=$('query'),dlg=$('symbolDialog');
+ function search(){
+  const term=input.value.trim(),all=Array.from(new Map([...watch,...catalog].map(a=>[a.id,a])).values());
+  let items=all.filter(a=>(a.id+' '+a.name+' '+ticker(a)).toLowerCase().includes(term.toLowerCase()));
+  const user=term?symbolFrom(term):null;if(user&&!items.some(a=>a.id===user.id))items.unshift(user);
+  const host=$('results');host.replaceChildren();for(const a of items.slice(0,20)){
+   const b=elm('button','resultBtn',a.name);b.append(elm('small','',ticker(a)));b.onclick=()=>{if(!watch.some(w=>w.id===a.id)){if(watch.length>=40){$('searchNote').textContent='最多支持 40 个自选标的';return}watch.push(a);storeWrite('symbols',watch.map(w=>w.id))}
+    filter='all';setFilter();dlg.close();choose(watch.find(w=>w.id===a.id));refreshQuotes()};host.append(b)
+  }$('searchNote').textContent=items.length?'可输入沪深六位代码，或 Coinbase 的 USD、Binance 的 USDT 现货交易对。':'请输入有效代码，例如 600519、ETH-USD 或 ETHUSDT。';
+ }
+ function open(){dlg.showModal();input.value='';search();input.focus()}
+ input.oninput=search;input.onkeydown=e=>{if(e.key==='Enter')$('results').querySelector('button')?.click()};$('searchOpen').onclick=$('addSymbol').onclick=open;
+ document.addEventListener('keydown',e=>{if(e.key==='/'&&!document.querySelector('dialog[open]')&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();open()}});
+}
+function setFilter(){for(const b of $('filters').children)b.setAttribute('aria-pressed',String(filter===b.dataset.filter));renderWatch()}
+function scriptTitle(s){try{return pine(s.source,[]).title}catch{return '自定义指标'}}
+let editing='';
+function editSelect(id){
+ const sel=$('scripts');sel.replaceChildren();for(const s of scripts){const o=elm('option','',scriptTitle(s));o.value=s.id;sel.append(o)}
+ const o=elm('option','','新指标');o.value='';sel.append(o);sel.value=id;editing=id;
+ $('code').value=scripts.find(s=>s.id===id)?.source??templates.ma;$('deleteScript').disabled=!id;$('editorMsg').textContent='';
+}
+function openEditor(id){if(!$('editorDialog').open)$('editorDialog').showModal();editSelect(id??scripts[0]?.id??'')}
+function setupEditor(){
+ const code=$('code'),msg=$('editorMsg');$('editorBtn').onclick=$('topEditor').onclick=()=>openEditor();$('scripts').onchange=e=>editSelect(e.target.value);$('newScript').onclick=()=>editSelect('');
+ for(const b of document.querySelectorAll('[data-template]'))b.onclick=()=>{code.value=templates[b.dataset.template];msg.textContent='模板已载入，点击保存并应用。';msg.className=''};
+ $('deleteScript').onclick=()=>{scripts=scripts.filter(s=>s.id!==editing);storeWrite('scripts',scripts);editSelect(scripts[0]?.id||'');calcStudies()};
+ $('apply').onclick=()=>{try{
+  pine(code.value,state.bars);if(!editing&&scripts.length>=6)throw Error('最多可同时展示 6 个指标');const id=editing||('s'+Date.now());
+  const item={id,source:code.value};scripts=editing?scripts.map(s=>s.id===editing?item:s):[...scripts,item];storeWrite('scripts',scripts);calcStudies();$('editorDialog').close()
+ }catch(e){msg.className='error';msg.textContent=e.message}};
+ $('importScript').onclick=()=>$('file').click();$('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>80000){msg.textContent='文件过大';return}const src=await f.text();editSelect('');code.value=src;msg.textContent='已导入，点击保存并应用。';e.target.value=''};
+ $('exportScript').onclick=()=>{const url=URL.createObjectURL(new Blob([code.value],{type:'text/plain;charset=utf-8'})),a=elm('a');a.href=url;a.download=(scripts.find(s=>s.id===editing)?scriptTitle(scripts.find(s=>s.id===editing)):'indicator')+'.pine';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+}
+for(const d of document.querySelectorAll('dialog')){d.querySelector('.close').onclick=()=>d.close();d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close()}})}
+for(const b of $('filters').children)b.onclick=()=>{filter=b.dataset.filter;setFilter()};
+$('retry').onclick=()=>{getHistory();refreshQuotes()};
+function clock(){$('clock').textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Shanghai',hour12:false})}
+clock();setInterval(clock,1000);setupEditor();setupSearch();chartEvents();choose(active);refreshQuotes();
+let nextBars=0,nextQuotes=0;
+setInterval(()=>{if(document.hidden)return;const now=Date.now();if(now>=nextBars){nextBars=now+(active.market==='stock'?10000:15000);getHistory()}if(now>=nextQuotes){nextQuotes=now+10000;refreshQuotes()}feed()},2000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){getHistory();refreshQuotes()}});</script></body></html>
