@@ -28,6 +28,7 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
 #indicatorMarket .modalhead #imImportBtn{font-size:13px;white-space:nowrap}#imForm{margin:0 0 14px;border:1px solid var(--line);border-radius:8px;padding:9px 12px 12px;background:var(--panel)}#imMessage:not(:empty){color:var(--green);margin:0 0 10px}.imDraft{color:var(--gold);font-size:13px;overflow-wrap:anywhere}.imDetail>.imPrimary{border-radius:5px;padding:6px 11px}
 .studyGroup{display:inline-flex;align-items:center;max-width:100%;border:1px solid var(--line);border-radius:6px;padding:0 2px}.studyGroup .legendEntry{display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-width:0}.studyGroup .legendEntry i:not(:first-child){margin-left:4px}.studyRemove{align-self:stretch;min-width:26px;border-left:1px solid var(--line);font-size:16px;color:var(--dim);line-height:1}.studyRemove:hover,.studyRemove:focus-visible{color:var(--red)}.toolbar{flex-wrap:wrap;gap:5px}.periods{flex-wrap:wrap}.periods select.morePeriods{width:auto;min-height:28px;padding:3px 6px;font-size:12px;border:1px solid var(--line);border-radius:4px}.codeDetail{border-top:1px solid var(--line);margin-top:15px;padding-top:12px;overflow-wrap:anywhere}.codeDetail h4{font-size:16px;margin:0 0 8px}.codeDetail strong{font-size:13px}.codeDetail p{margin:5px 0 10px;font-size:13px;line-height:1.6}.codeDetail pre,.codeSteps code{background:#11161a;border-radius:5px;padding:8px 10px;color:#d9ddd9;font:12px/1.65 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}.codeDetail pre{margin:5px 0 10px}.codeSteps{padding-left:19px;margin:8px 0}.codeSteps li{font-size:12px;line-height:1.5;margin:5px 0}.codeSteps code{display:block}.fullCode summary{color:var(--gold);cursor:pointer;font-size:12px}.imDetail{max-height:min(60vh,590px);overflow-y:auto}#imThsHub{justify-content:flex-start;padding:0 0 12px;margin-top:0;font-size:13px}#imThsHub a{margin-left:auto}#imThsHub .imInfo{flex-basis:100%}#imFormulaPane select{width:auto;margin-left:8px}@media(max-width:680px){.imDetail{max-height:47vh}.toolbar .feed{margin-left:auto}.periods button{padding:4px 6px}}
 #imThsBoard{flex-basis:100%;min-width:0}#imThsBoard iframe{display:block;width:100%;height:min(430px,56vh);border:1px solid var(--line);border-radius:5px;background:#fff}#indicatorMarket .imListPane .imListHead{min-height:35px}
+.historyRange{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 14px;border-top:1px solid var(--line);font-size:12px}.historyRange[hidden],.historyRange [hidden]{display:none!important}.historyRange strong{font-weight:500;color:var(--dim);margin-right:4px}.historyRange button{border:1px solid var(--line);border-radius:5px;padding:3px 9px}.historyRange button[aria-pressed=true]{border-color:#78643d;color:var(--gold);background:#30291d}#rangeStatus{color:var(--dim);font-variant-numeric:tabular-nums;margin-left:auto}@media(max-width:680px){#rangeStatus:not(:empty){flex-basis:100%;margin-left:0}}
 </style>
 </head>
 <body>
@@ -74,6 +75,7 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
   <div class="chartLegend" id="legend"></div><div class="ohlc" id="ohlc"></div>
   <div class="plot" id="plot"><canvas id="canvas" tabindex="0" aria-label="行情图。左右方向键平移，加减键缩放"></canvas><div class="empty" id="empty" hidden></div><div id="tooltip" hidden></div></div>
   <div class="chartfoot"><div class="viewControls"><button class="icon small" id="zoomOut" title="缩小" aria-label="缩小"><svg><use href="#i-minus"/></svg></button><button class="icon small" id="zoomIn" title="放大" aria-label="放大"><svg><use href="#i-plus"/></svg></button><button class="icon small" id="resetView" title="回到最新" aria-label="回到最新"><svg><use href="#i-reset"/></svg></button></div><span id="barDate"></span><span>UTC+8</span></div>
+  <div class="historyRange" id="historyRange" aria-label="图表时间范围"><strong>时间范围</strong><button id="rangeRecent" aria-pressed="true">近期</button><button id="rangeAll" aria-pressed="false" title="用日线显示当前交易对或合约的全部交易历史">上市至今</button><button id="rangeFirst" hidden>查看首日</button><span id="rangeStatus" role="status"></span></div>
  </section>
  <div class="dateline"><span id="dataOrigin"></span><button id="retry">刷新行情</button></div>
 </main></div>
@@ -265,7 +267,7 @@ const binance=a=>Boolean(a.kind)||(a.market==='crypto'&&a.id.endsWith('USDT'));
 const sourceOf=a=>a.market==='stock'?'腾讯行情':a.kind?'Binance 合约':binance(a)?'Binance 现货':'Coinbase';
 const marketOf=a=>a.kind?'futures':a.market;
 const productName=a=>a.kind?venues[a.kind].label+(a.expiry?'交割':'永续'):a.market==='stock'?'A 股':'现货';
-function contractAsset(kind,symbol,base,quote,expiry){
+function contractAsset(kind,symbol,base,quote,expiry,onboard){
  const pair=symbol.split('_')[0];
  if(!base||!quote){
   const parsed=/^(.+?)(USDT|USDC|USD1|BUSD|USD|BTC|U)$/.exec(pair);
@@ -274,7 +276,7 @@ function contractAsset(kind,symbol,base,quote,expiry){
  const date=/_(\d{2})(\d{2})(\d{2})$/.exec(symbol);
  const end=expiry||(date?Date.UTC(2000+Number(date[1]),Number(date[2])-1,Number(date[3]),8):0);
  const known=catalog.find(a=>a.id===base+'-USD');
- return {...asset([kind.toUpperCase()+':'+symbol,known?.name??base,known?.mark??base[0],known?.color??'#a3c4e1',known?.bg??'#26313a'],'crypto'),kind,symbol,base,quote,expiry:end};
+ return {...asset([kind.toUpperCase()+':'+symbol,known?.name??base,known?.mark??base[0],known?.color??'#a3c4e1',known?.bg??'#26313a'],'crypto'),kind,symbol,base,quote,expiry:end,onboard:Number(onboard)||0};
 }
 function directoryItems(kind,rows){
  const items=new Map();
@@ -299,7 +301,7 @@ function loadContracts(kind){
  entry.pending=json(venues[kind].rest+'/exchangeInfo').then(payload=>{
   if(!Array.isArray(payload.symbols))throw Error('无合约目录');
   const rows=payload.symbols.filter(s=>(s.contractStatus??s.status)==='TRADING'&&(!s.underlyingType||s.underlyingType==='COIN'))
-   .map(s=>[s.symbol,s.baseAsset,s.quoteAsset,s.contractType==='PERPETUAL'?0:Number(s.deliveryDate)]);
+   .map(s=>[s.symbol,s.baseAsset,s.quoteAsset,s.contractType==='PERPETUAL'?0:Number(s.deliveryDate),Number(s.onboardDate)||0]);
   entry.items=directoryItems(kind,rows);entry.updated=Date.now();
   storeWrite('directory-'+kind,{rows,updated:entry.updated});
  }).catch(()=>{entry.failed=true}).finally(()=>{entry.pending=null});
@@ -340,9 +342,11 @@ function groupCandles(bars,p,stock=false){
  return groups.slice(-320);
 }
 function coinBars(rows){return validBars(rows.map(([time,low,high,open,close,volume])=>({time,open:+open,high:+high,low:+low,close:+close,volume:+volume})))}
-async function json(url){
+function binanceBars(rows,limit=320){return validBars(rows.map(([time,o,h,l,c,v])=>({time:time/1000,open:+o,high:+h,low:+l,close:+c,volume:+v})),limit)}
+async function json(url,signal){
  const ctrl=new AbortController(),id=setTimeout(()=>ctrl.abort(),7500);
- try{const res=await fetch(url,{signal:ctrl.signal,cache:'no-store'});if(!res.ok){const error=Error('行情源返回 '+res.status);error.status=res.status;throw error}return await res.json()}finally{clearTimeout(id)}
+ const cancel=()=>ctrl.abort();if(signal?.aborted)cancel();else signal?.addEventListener('abort',cancel,{once:true});
+ try{const res=await fetch(url,{signal:ctrl.signal,cache:'no-store'});if(!res.ok){const error=Error('行情源返回 '+res.status);error.status=res.status;throw error}return await res.json()}finally{clearTimeout(id);signal?.removeEventListener('abort',cancel)}
 }
 let reqId=0;
 function remoteVars(url,keys,charset='utf-8'){
@@ -376,7 +380,7 @@ async function candles(a,p,onRecent){
  }
  if(binance(a)){
   const rows=await json(binanceUrl(a,'klines',{interval:p,limit:300}));
-  return validBars(rows.map(([t,o,h,l,c,v])=>({time:t/1000,open:+o,high:+h,low:+l,close:+c,volume:+v})));
+  return binanceBars(rows);
  }
  return coinbaseHistory(a,p,onRecent);
 }
@@ -443,15 +447,114 @@ function cryptoStream(a,p,onTick,onState){
  }
  connect();return ()=>{closed=true;clearTimeout(watchdog);clearTimeout(retryTimer);if(socket){socket.onclose=null;socket.onerror=null;socket.onmessage=null;socket.close()}};
 }
+const historyDay=86400,archiveFloor=Date.UTC(2009,0,1)/1000;
+const archivedPages=new Map(),completeDailyArchives=new Map();
+let listingView=null;
+const historyDate=t=>new Date(t*1000).toISOString().slice(0,10);
+function paintListingControls(){
+ const v=listingView;$('historyRange').hidden=active.market!=='crypto';$('rangeRecent').setAttribute('aria-pressed',String(!v));
+ $('rangeAll').setAttribute('aria-pressed',String(!!v));$('rangeAll').textContent=v?.error?'重试全部历史':'上市至今';$('rangeFirst').hidden=!v?.complete;
+ let message='';
+ if(v){
+  const first=state.bars[0],last=state.bars.at(-1);
+  const span=first&&last?historyDate(first.time)+' 至 '+historyDate(last.time):'';
+  if(v.complete)message=sourceOf(active)+' · 首根日线 '+span+' · '+state.bars.length+' 根'+(v.onboard&&first&&historyDate(v.onboard)!==historyDate(first.time)?' · 交易所登记挂牌日 '+historyDate(v.onboard):'');
+  else if(v.error)message='全历史尚未加载完成 · '+v.error+(span?' · 已取得 '+span:'');
+  else message='正在按日线加载'+(v.total?' · '+v.done+'/'+v.total+' 段':'')+(span?' · 已取得 '+span:'');
+ }
+ $('rangeStatus').textContent=message;
+}
+function fitListing(view){
+ view.fit=true;view.firstFocus=false;state.offset=0;state.count=Math.max(1,state.bars.length);state.cursor=null;drawSoon();
+}
+function mergeListing(view,bars,olderOnly=false){
+ if(view!==listingView)return;
+ for(const bar of bars)if(!olderOnly||!view.bars.has(bar.time))view.bars.set(bar.time,bar);
+ state.bars=[...view.bars.values()].sort((a,b)=>a.time-b.time);
+ if(view.fit)fitListing(view);
+ if(state.bars.length)sample=false;
+}
+async function archiveRequest(url,view){
+ try{return await json(url,view.cancel.signal)}catch(e){
+  if(view!==listingView||view.cancel.signal.aborted||e.status===418||e.status===429||(e.status&&e.status<500))throw e;
+  await new Promise(resolve=>setTimeout(resolve,500));if(view!==listingView)throw e;
+  return json(url,view.cancel.signal);
+ }
+}
+async function dailyArchivePage(a,start,end,view){
+ const key=a.id+'|'+start+'|'+end;
+ if(archivedPages.has(key))return archivedPages.get(key);
+ let bars;
+ if(binance(a)){
+  const url=binanceUrl(a,'klines',{interval:'1d',startTime:start*1000,endTime:Math.min(Date.now(),end*1000-1),limit:a.kind?200:1000});
+  bars=binanceBars(await archiveRequest(url,view),Infinity);
+ }else{
+  const url='https://api.exchange.coinbase.com/products/'+encodeURIComponent(a.id)+'/candles?'+new URLSearchParams({granularity:'86400',start:new Date(start*1000).toISOString(),end:new Date(Math.min(Date.now(),end*1000)).toISOString()});
+  bars=coinBars(await archiveRequest(url,view));
+ }
+ bars=bars.filter(b=>b.time>=start&&b.time<end);
+ if(end*1000<=Date.now()&&view===listingView){archivedPages.set(key,bars);if(archivedPages.size>200)archivedPages.delete(archivedPages.keys().next().value)}
+ return bars;
+}
+async function loadListingHistory(view){
+ const a=active,end=Math.floor(Math.min(Date.now(),a.expiry||Infinity)/1000/historyDay)*historyDay+historyDay;
+ try{
+  const cached=completeDailyArchives.get(a.id);
+  if(cached?.end===end){mergeListing(view,cached.bars,true);view.complete=true;refreshScreen();paintListingControls();return}
+  let floor=archiveFloor,expected=0,receivedCount=0,sawExpected=false;
+  if(binance(a)&&!a.kind){
+   const first=binanceBars(await archiveRequest(binanceUrl(a,'klines',{interval:'1d',startTime:0,limit:1}),view),1)[0];
+   if(first&&first.time>=archiveFloor&&first.time<end){floor=Math.floor(first.time/historyDay)*historyDay;expected=first.time}
+  }
+  if(view!==listingView)return;
+  const days=a.kind?199:binance(a)?999:299,step=days*historyDay;
+  const windows=[];
+  for(let stop=end;stop>floor;stop-=step)windows.push([Math.max(floor,stop-step),stop]);
+  view.total=windows.length;paintListingControls();
+  for(let i=0;i<windows.length;){
+   if(view!==listingView)return;
+   const batch=windows.slice(i,i+2);i+=batch.length;
+   const results=await Promise.allSettled(batch.map(([start,stop])=>dailyArchivePage(a,start,stop,view)));
+   if(view!==listingView)return;
+   const passed=results.filter(r=>r.status==='fulfilled'),received=passed.flatMap(r=>r.value);view.done+=passed.length;
+   receivedCount+=received.length;if(expected&&received.some(b=>b.time===expected))sawExpected=true;
+   mergeListing(view,received,true);if(received.length){chartAt=Date.now();pollFailed=false;refreshScreen()}
+   paintListingControls();
+   const failure=results.find(r=>r.status==='rejected');if(failure)throw failure.reason;
+   if(i<windows.length&&!binance(a))await new Promise(resolve=>setTimeout(resolve,230));
+  }
+  if(!receivedCount||!state.bars.length)throw Error('历史区间没有返回日线');
+  if(expected&&(!sawExpected||state.bars[0].time!==expected))throw Error('首根日线与行情源记录不一致');
+  view.complete=true;completeDailyArchives.set(a.id,{end,bars:state.bars.slice()});
+  if(completeDailyArchives.size>8)completeDailyArchives.delete(completeDailyArchives.keys().next().value);
+ }catch(e){
+  if(view===listingView)view.error=e.status===429||e.status===418?'行情源限流，稍后可重试':e.message||'行情源连接失败';
+ }finally{if(view===listingView){view.loading=false;paintListingControls();drawSoon()}}
+}
+function showListingHistory(){
+ if(active.market!=='crypto')return;
+ if(listingView&&!listingView.error){fitListing(listingView);return}
+ const previous=listingView?.previous||activePeriod,retained=listingView?.bars;
+ if(activePeriod!=='1d')choose(active,'1d');
+ const initial=sample?[]:state.bars;listingView?.cancel.abort();
+ const onboard=active.kind?(active.onboard||directories[active.kind].items.get(active.id)?.onboard||0)/1000:0;
+ const view={previous,onboard,cancel:new AbortController(),bars:retained||new Map(initial.map(b=>[b.time,b])),fit:true,firstFocus:false,complete:false,loading:true,error:'',done:0,total:0};
+ listingView=view;mergeListing(view,[]);paintListingControls();return loadListingHistory(view);
+}
+function viewListingDay(){
+ if(!listingView?.complete||!state.bars.length)return;
+ listingView.fit=false;listingView.firstFocus=true;state.count=Math.min(state.bars.length,innerWidth<680?45:88);
+ state.offset=state.bars.length-state.count;state.cursor=null;drawSoon();
+}
  const state={bars:[],studies:[],count:88,offset:0,line:false,cursor:null,frame:0,geom:null};
 const num=(v,places)=>Number.isFinite(v)?v.toLocaleString('en-US',{minimumFractionDigits:places??(v>=1?2:4),maximumFractionDigits:places??(v>=1?2:6)}):'—';
 const compact=v=>Number.isFinite(v)?new Intl.NumberFormat('en',{notation:'compact',maximumFractionDigits:2}).format(v):'—';
 const dt=(t,full=false)=>new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',year:full?'numeric':undefined,month:'2-digit',day:'2-digit',hour:full?'2-digit':undefined,minute:full?'2-digit':undefined,hour12:false}).format(t*1000);
 const hhmm=t=>new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',hour:'2-digit',minute:'2-digit',hour12:false}).format(t*1000);
 function drawSoon(){if(!state.frame)state.frame=requestAnimationFrame(()=>{state.frame=0;drawChart()})}
-function setZoom(k){state.count=Math.min(Math.max(15,state.bars.length),Math.max(15,Math.round(state.count*k)));drawSoon()}
-function setOffset(v){state.offset=Math.min(Math.max(0,state.bars.length-Math.min(state.count,state.bars.length)),Math.max(0,Math.round(v)));drawSoon()}
-function resetChart(){state.count=innerWidth<680?45:88;state.offset=0;state.cursor=null;drawSoon()}
+function setZoom(k){if(listingView){listingView.fit=false;listingView.firstFocus=false}state.count=Math.min(Math.max(15,state.bars.length),Math.max(15,Math.round(state.count*k)));setOffset(state.offset)}
+function setOffset(v){if(listingView){listingView.fit=false;listingView.firstFocus=false}state.offset=Math.min(Math.max(0,state.bars.length-Math.min(state.count,state.bars.length)),Math.max(0,Math.round(v)));drawSoon()}
+function resetChart(){if(listingView){listingView.fit=false;listingView.firstFocus=false}state.count=innerWidth<680?45:88;state.offset=0;state.cursor=null;drawSoon()}
 function drawChart(){
  const canvas=$('canvas'),ctx=canvas.getContext('2d'),box=canvas.getBoundingClientRect(),w=box.width,h=box.height;if(w<1||h<1)return;
  const dpr=Math.min(devicePixelRatio||1,3);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
@@ -491,10 +594,11 @@ function drawChart(){
  for(let j=0;j<ticks;j++){
   const i=Math.round((n-1)*j/(ticks-1)),b=bars[i],newDate=j===0||dt(b.time)!==dt(bars[Math.max(0,i-Math.floor(n/ticks))].time);
   let label=periods[activePeriod]>=86400||newDate?dt(b.time):hhmm(b.time);
-  if(periods[activePeriod]>=604800){const iso=new Date((b.time+28800)*1000).toISOString();label=activePeriod==='1y'?iso.slice(0,4):iso.slice(0,7)}
+  const duration=bars[n-1].time-bars[0].time;
+  if(periods[activePeriod]>=604800||duration>31536000){const iso=new Date((b.time+28800)*1000).toISOString();label=activePeriod==='1y'||duration>3*31536000?iso.slice(0,4):iso.slice(0,7)}
   txt(label,Math.min(x1-20,Math.max(x0+20,x(i))),h-11,muted,'center');
  }
- let chosen=last;const pointer=state.cursor,tip=$('tooltip');tip.hidden=true;
+ let chosen=listingView?.firstFocus?bars[0]:last;const pointer=state.cursor,tip=$('tooltip');tip.hidden=true;
  if(pointer&&pointer.x>=x0&&pointer.x<=x1&&pointer.y>=0&&pointer.y<=axisY){
   const i=Math.max(0,Math.min(n-1,Math.floor((pointer.x-x0)/spacing)));chosen=bars[i];
   ctx.setLineDash([3,4]);stroke(x(i),0,x(i),axisY,'#94a1ad');stroke(x0,pointer.y,x1,pointer.y,'#67727a');ctx.setLineDash([]);
@@ -510,7 +614,9 @@ function chartEvents(){
  c.onpointerup=c.onpointercancel=()=>{drag=null};c.onpointerleave=()=>{state.cursor=null;drawSoon()};
  c.addEventListener('wheel',e=>{e.preventDefault();setZoom(e.deltaY>0?1.18:.85)},{passive:false});
  $('zoomIn').onclick=()=>setZoom(.8);$('zoomOut').onclick=()=>setZoom(1.25);$('resetView').onclick=resetChart;
- c.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','+','=','-','Home','End'].includes(e.key))return;e.preventDefault();if(e.key==='ArrowLeft'||e.key==='ArrowRight')setOffset(state.offset+(e.key==='ArrowLeft'?5:-5));else if(['+','=','-'].includes(e.key))setZoom(e.key==='-'?1.2:.8);else resetChart()};
+ $('rangeAll').onclick=showListingHistory;$('rangeFirst').onclick=viewListingDay;
+ $('rangeRecent').onclick=()=>{if(listingView)choose(active,listingView.previous);else resetChart()};
+ c.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','+','=','-','Home','End'].includes(e.key))return;e.preventDefault();if(e.key==='ArrowLeft'||e.key==='ArrowRight')setOffset(state.offset+(e.key==='ArrowLeft'?5:-5));else if(['+','=','-'].includes(e.key))setZoom(e.key==='-'?1.2:.8);else if(e.key==='Home'&&listingView?.complete)viewListingDay();else resetChart()};
  $('expand').onclick=()=>{$('chartcard').classList.toggle('expanded');drawSoon()};
  document.addEventListener('keydown',e=>{if(e.key==='Escape')$('chartcard').classList.remove('expanded')});
  $('chartType').onclick=()=>{state.line=!state.line;$('chartType').querySelector('use').setAttribute('href',state.line?'#i-chart':'#i-candle');drawSoon()};
@@ -620,7 +726,13 @@ function tick(token,bar,q,time){
   // A stream can arrive before history. Start with its real candle and backfill on the next REST response.
   if(!last||(sample&&bar.time-last.time>interval))state.bars=[bar];
   else if(bar.time===last.time)state.bars[state.bars.length-1]=bar;
-  else{state.bars.push(bar);if(state.bars.length>320)state.bars.shift()}
+  else{state.bars.push(bar);if(!listingView&&state.bars.length>320)state.bars.shift()}
+  if(listingView){
+   listingView.bars.set(bar.time,bar);
+   if(listingView.fit)state.count=Math.max(1,state.bars.length);
+   else if(listingView.firstFocus)state.offset=Math.max(0,state.bars.length-state.count);
+   if(!last||bar.time>last.time)paintListingControls();
+  }
   sample=false;lastBarUpdate=Date.now();
  }
  scheduleScreen();
@@ -635,7 +747,8 @@ async function getHistory(){
    if(live.time===tail.time){tail.close=live.close;tail.high=Math.max(live.high,tail.high);tail.low=Math.min(live.low,tail.low);if(binance(a))tail.volume=Math.max(tail.volume,live.volume)}
    else if(live.time>tail.time)data.push(live);
   }
-  state.bars=data;cache.set(a.id+p,data);storeWrite('last-chart',{key:a.id+p,data});chartAt=Date.now();pollFailed=false;sample=false;
+  if(listingView){mergeListing(listingView,data);paintListingControls()}else state.bars=data;
+  cache.set(a.id+p,data);storeWrite('last-chart',{key:a.id+p,data:data.slice(-320)});chartAt=Date.now();pollFailed=false;sample=false;
  }catch{if(epoch===token)pollFailed=true}finally{if(historyJob===token)historyJob=0;if(epoch===token)refreshScreen()}
 }
 function refreshQuotes(){
@@ -643,7 +756,8 @@ function refreshQuotes(){
  for(const a of watch.filter(a=>a.market==='crypto')){if(quoteJobs.has(a.id))continue;quoteJobs.add(a.id);coinQuote(a).then(q=>{putQuote(q);renderWatch();if(active.id===a.id){header();feed()}}).catch(()=>{}).finally(()=>quoteJobs.delete(a.id))}
 }
 function choose(a,p=activePeriod){
- stopStream();active=a;const available=a.market==='stock'?Object.keys(stockPeriods):cryptoPeriods;
+ listingView?.cancel.abort();listingView=null;
+ stopStream();active=a;paintListingControls();const available=a.market==='stock'?Object.keys(stockPeriods):cryptoPeriods;
  activePeriod=available.includes(p)?p:'1d';
  const token=++epoch,key=a.id+activePeriod,lastSaved=storeRead('last-chart',{});chartAt=0;lastStream=0;lastBarUpdate=0;pollFailed=false;sample=false;
  const cached=cache.get(key)||(lastSaved.key===key&&Array.isArray(lastSaved.data)?lastSaved.data:null);
