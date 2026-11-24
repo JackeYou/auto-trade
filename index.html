@@ -18,7 +18,12 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
 @media(min-width:1600px){.shell{grid-template-columns:285px minmax(0,1fr)}}
 @media(max-width:1120px){.shell{grid-template-columns:220px minmax(0,1fr)}.quote{gap:13px;padding:17px 14px}.metric{padding-left:11px}.watchRow{gap:6px}.clock{gap:5px}aside{padding-left:10px;padding-right:10px}}
 @media(max-width:870px){.shell{grid-template-columns:180px minmax(0,1fr)}.watchRow{grid-template-columns:1fr auto}.watchRow .assetBadge{display:none}.quote{display:grid;grid-template-columns:repeat(3,1fr)}.instrument{grid-column:span 2}.priceblock{text-align:right;margin:0}.metric{border:0;padding:0}.topnav{gap:12px}.top{gap:22px;padding:0 16px}.topnav svg{display:none}}
-@media(max-width:680px){.top{height:54px}.clock small,.topnav{display:none}.shell{display:flex;flex-direction:column}.shell aside{order:2;border:0;border-top:1px solid var(--line);padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.sidehead,.search,.filters,.watch,.sidefoot{margin:0}.watch,.filters,.sidefoot{grid-column:1/-1}.watchRow .assetBadge{display:grid}.watchRow{grid-template-columns:32px 1fr auto}.groupHeading{margin:9px 5px}.search{justify-content:center}.search kbd{display:none}main{padding:16px 10px 5px}.sectionhead{margin-bottom:12px}.quote{margin-bottom:10px}.plot{height:46vh;min-height:300px}.toolbar{padding:8px 6px;flex-wrap:wrap}.periods button{padding:5px 8px}.feed{font-size:11px}.chartLegend,.ohlc{padding:2px 10px;gap:8px}.chartHead{padding:6px 10px}.chartfoot{padding:5px 8px}.dateline{flex-wrap:wrap}.eyebrow{font-size:10px}.editorBtn{padding:6px 10px}.chartfoot span{font-size:11px}.formfoot{flex-wrap:wrap}}</style>
+@media(max-width:680px){
+ .top{height:auto;display:grid;grid-template-columns:1fr auto;gap:0 12px;padding:8px 16px 0}
+ .clock{grid-column:2;grid-row:1}.clock small{display:none}
+ .topnav{grid-column:1/-1;grid-row:2;height:44px;gap:clamp(4px,2vw,12px);overflow-x:auto}
+ .topnav>*{flex:none;white-space:nowrap}
+ .shell{display:flex;flex-direction:column}.shell aside{order:2;border:0;border-top:1px solid var(--line);padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.sidehead,.search,.filters,.watch,.sidefoot{margin:0}.watch,.filters,.sidefoot{grid-column:1/-1}.watchRow .assetBadge{display:grid}.watchRow{grid-template-columns:32px 1fr auto}.groupHeading{margin:9px 5px}.search{justify-content:center}.search kbd{display:none}main{padding:16px 10px 5px}.sectionhead{margin-bottom:12px}.quote{margin-bottom:10px}.plot{height:46vh;min-height:300px}.toolbar{padding:8px 6px;flex-wrap:wrap}.periods button{padding:5px 8px}.feed{font-size:11px}.chartLegend,.ohlc{padding:2px 10px;gap:8px}.chartHead{padding:6px 10px}.chartfoot{padding:5px 8px}.dateline{flex-wrap:wrap}.eyebrow{font-size:10px}.editorBtn{padding:6px 10px}.chartfoot span{font-size:11px}.formfoot{flex-wrap:wrap}}</style>
 <style>
 .contractStats{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;background:#151b20;border:1px solid var(--line);border-radius:8px;padding:10px 16px;margin:-5px 0 16px}
 .contractStats div{display:flex;align-items:baseline;gap:8px}.contractStats span{color:var(--dim);font-size:13px}.contractStats b{font:500 14px var(--mono)}
@@ -41,6 +46,8 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
 <body>
 <svg style="display:none" aria-hidden="true"><defs>
 <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h17M8 14l4-5 4 2 5-7"/></symbol>
+<symbol id="i-indicators" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1"/><rect x="14" y="14" width="6.5" height="6.5" rx="1"/></symbol>
+<symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v5l-4 2v-7z"/></symbol>
 <symbol id="i-candle" viewBox="0 0 24 24"><path d="M7 3v4m0 9v5m10-18v8m0 6v4"/><rect x="4.5" y="7" width="5" height="9" rx="1"/><rect x="14.5" y="11" width="5" height="6" rx="1"/></symbol>
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
 <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5"/></symbol>
@@ -53,7 +60,12 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
 </defs></svg>
 <header class="top">
  <a class="brand" href="#main" aria-label="auto-trade 行情工作台"><span class="logo"><i></i><i></i><i></i></span><b>auto-trade</b></a>
- <div class="topnav"><span class="activeNav"><svg><use href="#i-chart"/></svg>行情工作台</span><button id="topEditor"><svg><use href="#i-code"/></svg>指标编辑器</button></div>
+ <nav class="topnav" aria-label="主导航">
+  <a href="#main" class="activeNav" aria-current="page"><svg aria-hidden="true"><use href="#i-chart"/></svg>行情工作台</a>
+  <button type="button" id="indicatorMarketBtn" aria-haspopup="dialog" aria-controls="indicatorMarket"><svg aria-hidden="true"><use href="#i-indicators"/></svg>指标市场</button>
+  <button type="button" id="screenBtn" aria-haspopup="dialog" aria-controls="screenDialog"><svg aria-hidden="true"><use href="#i-filter"/></svg>市场筛选</button>
+  <button type="button" id="topEditor" aria-haspopup="dialog" aria-controls="editorDialog"><svg aria-hidden="true"><use href="#i-code"/></svg>指标编辑器</button>
+ </nav>
  <div class="clock"><svg><use href="#i-clock"/></svg><span id="clock"></span><small>UTC+8</small></div>
 </header>
 <div class="shell">
@@ -65,7 +77,7 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
  <div class="sidefoot"><span class="sourceDot"></span><span>公开市场数据</span><span class="sideNum" id="watchCount"></span></div>
 </aside>
 <main id="main">
- <div class="sectionhead"><div><div class="eyebrow"><i></i> MARKET TERMINAL</div><h1>行情总览</h1></div><div class="sectionButtons"><button class="editorBtn" id="indicatorMarketBtn">指标市场</button><button class="editorBtn" id="screenBtn">市场筛选</button><button class="editorBtn" id="editorBtn"><svg><use href="#i-code"/></svg>指标编辑器</button></div></div>
+ <div class="sectionhead"><div><div class="eyebrow"><i></i> MARKET TERMINAL</div><h1>行情总览</h1></div><div class="sectionButtons"><button class="editorBtn" id="editorBtn"><svg><use href="#i-code"/></svg>指标编辑器</button></div></div>
  <section class="quote">
   <div class="instrument"><div id="bigBadge"></div><div><div class="titleline"><h2 id="assetName">比特币</h2><span id="marketTag" class="tag">现货</span></div><div class="symbolLine" id="symbolLine"></div></div></div>
   <div class="priceblock"><strong id="price">—</strong><span id="change">—</span></div>
