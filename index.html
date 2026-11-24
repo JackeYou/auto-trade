@@ -4,7 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#101317">
+<link rel="preconnect" href="https://data-api.binance.vision" crossorigin>
 <title>auto-trade · A股与加密货币行情</title>
+<style>
+#crosshair{position:absolute;top:0;pointer-events:none;overflow:hidden}
+#crosshair i{position:absolute;left:0;top:0}
+#crosshair i:first-child{height:100%;border-left:1px dashed #94a1ad}
+#crosshair i:last-child{width:100%;border-top:1px dashed #67727a}
+</style>
 <style>:root{color-scheme:dark;--bg:#0d1013;--panel:#14181c;--line:#2b3035;--dim:#969fa8;--ink:#f0f2f3;--gold:#f5bd58;--green:#48c6a0;--red:#f1767d;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font:16px/1.45 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:var(--bg)}
 *{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;background:transparent;border:0}button:hover{color:#fff;background:#272d32}button:focus-visible,a:focus-visible,summary:focus-visible,canvas:focus-visible{outline:2px solid var(--gold);outline-offset:2px}svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;flex:none}h1,h2,p{margin:0}button,select{border-radius:5px}a{color:inherit;text-decoration:none}.top{height:66px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 26px;gap:36px;background:#131619}.brand,.topnav,.topnav>* , .clock,.editorBtn,.search,.editorTitle,.instrument,.titleline,.chartTitle,.sidefoot,.viewControls,.formfoot,.templateRow,.formrow,.sectionhead,.sidehead,.modalhead,.chartHead,.toolbar,.chartActions,.periods,.chartfoot,.dateline,.legendEntry{display:flex;align-items:center}.brand{gap:10px;flex:none}.brand b{font-size:21px;letter-spacing:.1em}.eyebrow,.sideNum,.clock,.symbolLine,.quote b,.ohlc,.chartfoot,.dateline,.watchTicker,.watchValue,.chartLegend{font-family:var(--mono);font-variant-numeric:tabular-nums}.logo{width:32px;height:32px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;gap:3px}.logo i{height:11px;width:4px;background:#202124;border-radius:1px;position:relative;transform:translateY(3px)}.logo i:before{content:"";position:absolute;inset:-3px 1.5px;background:inherit}.logo i:nth-child(2){height:15px;transform:translateY(-1px)}.logo i:nth-child(3){height:10px;transform:translateY(-4px)}.topnav{height:100%;gap:22px}.topnav>*{gap:7px;height:100%;font-size:14px;padding:0 2px;color:var(--dim);border-radius:0}.topnav .activeNav{color:var(--gold);border-bottom:2px solid var(--gold)}.clock{margin-left:auto;gap:8px;font-size:13px;color:#c6cbd1}.clock svg,.clock small{color:var(--dim)}.shell{display:grid;grid-template-columns:255px minmax(0,1fr);min-height:calc(100vh - 66px)}aside{padding:25px 15px 0;background:#121519;border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}.sidehead,.modalhead,.sectionhead,.chartHead,.toolbar,.chartfoot,.dateline{justify-content:space-between}.sidehead{padding:0 5px}.sidehead h2,.chartTitle h2,.modalhead h2{font-size:17px;font-weight:650}.icon{display:inline-grid;place-items:center;width:32px;height:32px;color:var(--dim);line-height:1}.icon.small{width:27px;height:27px}.sidehead .icon,.viewControls{border:1px solid var(--line)}.search{margin:17px 2px 14px;padding:8px 9px;gap:7px;background:#1b2024;border:1px solid #30363c;color:#9ba4ac;font-size:13px;text-align:left}.search kbd{margin-left:auto;border:1px solid #3b4248;border-radius:3px;padding:0 5px}.filters{display:flex;background:#0e1114;padding:3px;gap:2px;border:1px solid #242a2e;border-radius:6px}.filters button{flex:1;padding:5px 0;font-size:13px;color:var(--dim)}.filters [aria-pressed=true]{background:#30353b;color:#f4f5f6}.groupHeading{color:#9aa3ab;font-size:12px;font-weight:500;display:flex;justify-content:space-between;letter-spacing:.05em;margin:22px 6px 7px}.groupHeading span{font:12px var(--mono);color:#929ba4}.watchRow{width:100%;display:grid;grid-template-columns:31px minmax(0,1fr) auto;align-items:center;gap:9px;text-align:left;padding:10px 7px;border:1px solid transparent;border-radius:6px;min-height:57px}.watchRow.selected{background:#2a261f;border-color:#59482d}.watchName{font-size:14px;font-weight:600;display:block;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.watchTicker{display:block;font-size:12px;color:#9da5ab;margin-top:2px}.watchValue{text-align:right;font-size:13px}.watchValue small{display:block;font-size:12px;margin-top:2px}.up{color:var(--green)}.down{color:var(--red)}.muted{color:var(--dim)}.assetBadge{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;font:bold 15px/1 system-ui;letter-spacing:-.04em}.big.assetBadge{width:44px;height:44px;font-size:24px}.sidefoot{font-size:12px;color:var(--dim);border-top:1px solid var(--line);padding:16px 4px;margin-top:auto;gap:7px}.sideNum{margin-left:auto}.sourceDot,.feed:before{width:6px;height:6px;background:#929aa2;border-radius:50%;content:"";display:inline-block}.feed.live:before{background:var(--green)}.feed.stale:before{background:var(--gold)}main{padding:26px clamp(16px,2.5vw,44px) 20px;min-width:0;max-width:2200px;width:100%;margin:auto;align-self:start}.sectionhead{margin-bottom:20px}.eyebrow{font-size:11px;color:var(--gold);letter-spacing:.14em;display:flex;align-items:center;gap:8px}.eyebrow i{width:15px;height:2px;background:var(--gold)}h1{font-size:clamp(26px,2.3vw,38px);font-weight:650;letter-spacing:-.03em;line-height:1.3;margin-top:5px}.editorBtn{gap:8px;padding:8px 14px;font-size:14px;border:1px solid #514531;color:var(--gold);background:#221e17}.quote,.chartcard{background:var(--panel);border:1px solid var(--line);border-radius:10px}.quote{display:flex;align-items:center;gap:clamp(12px,2vw,32px);padding:21px 22px;margin-bottom:16px;min-height:98px;flex-wrap:wrap}.instrument{gap:12px}.titleline{gap:9px}.titleline h2{font-size:20px}.tag{font-size:11px;background:#262d31;color:#c1cbd3;border:1px solid #39424a;padding:1px 5px;border-radius:4px}.symbolLine{font-size:12px;color:#99a4ac;margin-top:3px}.priceblock{margin-right:auto}.priceblock strong{font:600 clamp(22px,2.1vw,34px)/1.2 var(--mono);letter-spacing:-.06em;display:block}.priceblock span{font:12px var(--mono)}.metric{border-left:1px solid var(--line);padding-left:clamp(12px,1.6vw,29px)}.metric label,.metric b{display:block}.metric label{font-size:12px;color:var(--dim)}.metric b{font-weight:500;font-size:14px;margin-top:5px}.chartcard{overflow:hidden}.chartHead{padding:11px 17px;border-bottom:1px solid var(--line)}.chartTitle,.chartActions,.periods{gap:8px}.miniBars{font-size:20px;color:var(--gold)}.chartActions span{height:15px;border-left:1px solid var(--line)}.toolbar{gap:8px;padding:12px 17px 6px}.periods{gap:2px}.periods button{font:13px var(--mono);padding:6px 10px;color:var(--dim)}.periods [aria-pressed=true]{background:#3b3020;color:var(--gold)}.feed{display:inline-flex;align-items:center;gap:6px;color:var(--dim);font-size:12px}.chartLegend,.ohlc{padding:3px 19px;min-height:22px;display:flex;flex-wrap:wrap;gap:13px;font-size:12px;color:#a4adb5}.legendEntry{gap:5px;padding:0;color:var(--dim);font:inherit}.legendEntry i{width:11px;height:2px}.ohlc{gap:14px}.ohlc b{font-weight:500;color:#d0d6db}.plot{position:relative;height:clamp(340px,49vh,730px);margin:0 6px;touch-action:pan-y}canvas{width:100%;height:100%;display:block;cursor:crosshair}.chartfoot{border-top:1px solid var(--line);padding:7px 14px;gap:11px;color:#949ea8;font-size:12px}.viewControls{border-radius:4px}.viewControls .icon{width:27px;height:23px}.viewControls svg{width:13px}.chartfoot span:nth-child(2){margin-left:auto}.dateline{gap:10px;padding:11px 2px;color:var(--dim);font-size:12px}.dateline button{color:var(--dim);font-size:12px;padding:3px 6px}.empty{position:absolute;top:41%;left:8%;right:12%;text-align:center;color:#aeb7be;font-size:14px;pointer-events:none}#tooltip{position:absolute;pointer-events:none;font:12px var(--mono);background:#262d32;border:1px solid #40494f;border-radius:4px;padding:4px 7px;color:#e5e8ea}.chartcard.expanded{position:fixed;inset:10px;z-index:5;display:flex;flex-direction:column;box-shadow:0 0 0 22px var(--bg)}.expanded .plot{flex:1;height:auto}
 dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-radius:12px;background:#171c20;color:var(--ink);padding:23px;box-shadow:0 20px 90px #0009}dialog::backdrop{background:#070a0dd1}#editorDialog{width:min(670px,94vw)}.modalhead{margin-bottom:18px}.editorTitle{gap:10px}.editorTitle svg{color:var(--gold)}.modalhead button{font-size:18px}input:not([type=file]),select,textarea{width:100%;border:1px solid #394148;background:#0f1316;border-radius:5px;padding:10px;color:#e6e9eb}textarea{font:14px/1.65 var(--mono);height:220px;resize:vertical;tab-size:2;margin-top:5px}dialog label,summary,.templateRow span{font-size:13px;color:var(--dim)}.formrow,.formfoot,.templateRow{gap:8px}.formrow{margin:5px 0 12px}.formrow select{flex:1;width:0}.formrow button,.formfoot button,.templateRow button{font-size:13px;white-space:nowrap;border:1px solid #384047;padding:7px 10px}.templateRow{flex-wrap:wrap;margin-bottom:15px}.templateRow button{padding:4px 8px;color:#c6cdd3}.formfoot{margin-top:13px}.formfoot .primary{margin-left:auto;background:var(--gold);color:#211c13;font-weight:650;border-color:transparent}details{margin:7px 0}summary{cursor:pointer}details p,#searchNote,#editorMsg{font-size:13px;margin:8px 0;color:var(--dim)}#editorMsg.error{color:var(--red)}#results{max-height:45vh;overflow:auto;margin-top:8px}.resultBtn{display:flex;width:100%;justify-content:space-between;text-align:left;padding:10px;border-bottom:1px solid var(--line)}.resultBtn small{color:var(--dim)}[hidden]{display:none!important}
@@ -72,8 +79,8 @@ dialog{width:min(550px,94vw);max-height:88vh;border:1px solid #3b4249;border-rad
  <section class="chartcard" id="chartcard">
   <div class="chartHead"><div class="chartTitle"><span class="miniBars">▥</span><h2>价格走势</h2></div><div class="chartActions"><button id="chartType" class="icon" title="切换 K 线 / 折线" aria-label="切换 K 线 / 折线"><svg><use href="#i-candle"/></svg></button><span></span><button id="expand" class="icon" title="展开图表" aria-label="展开图表"><svg><use href="#i-expand"/></svg></button></div></div>
   <div class="toolbar"><div class="periods" id="periods"></div><span class="feed" id="feed" role="status"></span></div>
-  <div class="chartLegend" id="legend"></div><div class="ohlc" id="ohlc"></div>
-  <div class="plot" id="plot"><canvas id="canvas" tabindex="0" aria-label="行情图。左右方向键平移，加减键缩放"></canvas><div class="empty" id="empty" hidden></div><div id="tooltip" hidden></div></div>
+ <div class="chartLegend" id="legend"></div><div class="ohlc" id="ohlc"><span>开 <b></b></span><span>高 <b></b></span><span>低 <b></b></span><span>收 <b></b></span></div>
+  <div class="plot" id="plot"><canvas id="canvas" tabindex="0" aria-label="行情图。左右方向键平移，加减键缩放"></canvas><div class="empty" id="empty" hidden></div><div id="crosshair" hidden><i></i><i></i></div><div id="tooltip" hidden></div></div>
   <div class="chartfoot"><div class="viewControls"><button class="icon small" id="zoomOut" title="缩小" aria-label="缩小"><svg><use href="#i-minus"/></svg></button><button class="icon small" id="zoomIn" title="放大" aria-label="放大"><svg><use href="#i-plus"/></svg></button><button class="icon small" id="resetView" title="回到最新" aria-label="回到最新"><svg><use href="#i-reset"/></svg></button></div><span id="barDate"></span><span>UTC+8</span></div>
   <div class="historyRange" id="historyRange" aria-label="图表时间范围"><strong>时间范围</strong><button id="rangeAll" aria-pressed="false" title="显示当前交易对或合约从首个交易日至今的完整走势">上市至今</button><button id="rangeFirst" hidden>查看首日</button><span id="rangeStatus" role="status"></span></div>
  </section>
@@ -231,8 +238,10 @@ function pine(source,bars){
  if(!plots.length)fail('至少需要一条 plot 或 hline 语句');
  return {title,overlay,plots};
 }
- const coins=[
- ['BTC-USD','比特币','₿','#f7ab38','#33291c'],['ETH-USD','以太坊','Ξ','#a0adee','#292b40'],['SOL-USD','Solana','≋','#72dcc1','#193331']
+// Last completed daily candles from Binance BTCUSDT, in native [time, O, H, L, C, V] order.
+const binanceSnapshot=[[1785110400000,65400.0,65744.6,63605.56,63755.86,14791.90543],[1785196800000,63755.86,64100.0,62742.47,63915.0,13889.82996],[1785283200000,63915.0,64744.81,63267.34,63984.28,16780.11912],[1785369600000,63984.29,65176.6,63603.92,64780.02,17131.58486],[1785456000000,64780.03,65409.56,62466.0,62887.88,20475.60686],[1785542400000,62887.88,63150.0,62275.0,62823.64,7563.08904],[1785628800000,62823.65,63796.33,62806.58,63570.0,8387.01154],[1785715200000,63570.01,64080.0,62300.0,63520.0,15543.29743],[1785801600000,63520.0,64549.16,63322.01,64106.56,13690.47909],[1785888000000,64106.55,65025.22,63880.0,64665.23,12742.85528],[1785974400000,64665.24,64999.0,64172.0,64323.61,9864.43284],[1786060800000,64323.61,65390.99,64166.0,64923.19,11807.40403],[1786147200000,64923.2,65192.54,64784.19,64962.6,5760.14298],[1786233600000,64962.6,65474.46,64730.08,64901.59,7031.23606],[1786320000000,64901.59,65391.14,63806.27,63970.01,13638.40877],[1786406400000,63970.01,64515.43,63238.0,63600.0,12891.63248],[1786492800000,63600.01,64500.0,63310.34,63479.99,13627.06822],[1786579200000,63479.99,64010.0,62802.27,63490.86,10793.85853],[1786665600000,63490.86,63617.45,62535.24,63043.56,12340.82899],[1786752000000,63043.56,63187.98,62920.0,63086.01,5405.16038],[1786838400000,63086.01,63390.0,62716.0,62900.0,4737.23135],[1786924800000,62900.0,64610.01,62751.1,64532.1,14255.64713],[1787011200000,64532.11,65058.81,64027.85,64725.42,11789.91312],[1787097600000,64725.42,70000.0,64166.0,69334.79,29054.29976],[1787184000000,69334.78,73400.0,68902.22,73025.15,35904.79287],[1787270400000,73027.02,79500.0,73027.02,78338.03,44339.56568],[1787356800000,78338.03,78828.15,76500.0,77074.93,18524.50847],[1787443200000,77074.94,78052.85,75545.67,77734.0,15367.23185],[1787529600000,77734.0,80000.0,76670.01,78992.75,30179.29391],[1787616000000,78992.76,81272.62,77851.0,78539.14,24772.51394],[1787702400000,78539.13,79251.6,77632.58,79023.75,14613.75887],[1787788800000,79023.75,80848.74,78546.13,80249.58,16265.53695],[1787875200000,80249.59,81478.87,76888.0,77845.87,19756.43646],[1787961600000,77845.88,78330.0,77382.37,78230.0,7016.30257],[1788048000000,78230.0,79400.0,77000.0,77682.0,9085.42405],[1788134400000,77682.0,79250.0,77392.0,78581.29,15303.90602],[1788220800000,78581.3,79220.61,76420.0,77439.0,14130.63949],[1788307200000,77439.01,77792.0,76264.0,77340.01,13070.9782],[1788393600000,77340.01,82300.0,76968.0,81270.37,19806.42247],[1788480000000,81270.37,81427.75,78660.0,79660.77,19198.62549],[1788566400000,79660.77,80200.0,79442.0,79831.75,9117.2402],[1788652800000,79831.75,80559.99,79233.0,80341.83,8854.81827],[1788739200000,80341.83,80443.99,78680.0,79112.01,10572.45495],[1788825600000,79112.0,79485.0,77620.01,78455.8,19235.06605],[1788912000000,78455.8,79760.0,77770.0,78306.43,14129.92027],[1788998400000,78306.43,78564.39,76464.0,76568.72,15320.36904],[1789084800000,76568.73,79890.0,76046.58,77225.7,19713.27729],[1789171200000,77225.71,77505.67,77059.75,77278.73,8060.44455],[1789257600000,77278.73,77450.0,76500.0,76842.01,6959.68366],[1789344000000,76842.01,79600.0,76388.72,78189.21,15413.48971],[1789430400000,78189.2,78250.46,74967.97,75644.48,21682.71734],[1789516800000,75644.48,76560.76,75064.82,76206.01,14887.98431],[1789603200000,76206.0,77179.47,76000.0,76417.01,10925.02219],[1789689600000,76417.01,81400.0,76296.0,80883.87,23907.77962],[1789776000000,80883.86,81951.0,80844.58,81249.99,10663.76706],[1789862400000,81249.99,81497.33,80126.04,81178.0,10993.68293],[1789948800000,81178.01,87395.67,80850.22,86620.0,31963.17872],[1790035200000,86620.01,86717.6,85114.0,86208.56,21328.45813],[1790121600000,86208.57,87278.54,83500.01,84397.6,22150.93277],[1790208000000,84397.6,84942.45,82874.93,84410.24,18703.61971],[1790294400000,84410.24,85255.0,83183.0,84099.99,18056.26519],[1790380800000,84100.0,84473.58,83798.0,84433.1,8058.06465],[1790467200000,84433.11,85159.03,84132.0,84472.0,9615.12963],[1790553600000,84472.01,84999.0,82563.0,83500.01,20960.72462],[1790640000000,83500.01,84563.99,82775.94,83663.66,13461.55331],[1790726400000,83663.66,85649.95,82956.11,83623.6,18522.82001],[1790812800000,83623.59,85273.65,83186.0,84880.05,16766.05675],[1790899200000,84880.05,87220.0,83888.0,84518.01,26497.91954],[1790985600000,84518.0,85037.63,84456.02,84753.56,6889.63623],[1791072000000,84753.57,86800.0,84719.99,86530.0,7993.11395],[1791158400000,86530.0,86999.11,84972.01,85766.87,16186.7761],[1791244800000,85766.87,86698.99,85136.11,85549.93,12614.47572],[1791331200000,85549.94,85598.22,82787.25,83321.81,20838.08376],[1791417600000,83321.81,83521.15,80393.56,81754.45,21676.96164],[1791504000000,81754.46,83528.98,81603.52,82635.55,12301.61263],[1791590400000,82635.56,83173.29,82545.82,82988.36,7437.72181],[1791676800000,82988.35,84199.0,82804.65,83773.12,6963.51092],[1791763200000,83773.12,84352.0,81750.09,81850.0,13529.90112],[1791849600000,81850.01,84168.0,81033.66,83169.0,14784.0627],[1791936000000,83169.01,84146.72,81444.42,81682.01,18307.57283],[1792022400000,81682.02,82634.3,79800.0,82245.93,22563.14627],[1792108800000,82245.93,82940.81,80809.25,81615.64,14753.9576],[1792195200000,81615.91,81770.01,80819.66,81491.04,7038.87186],[1792281600000,81491.04,82295.47,80684.36,82116.0,10098.21458],[1792368000000,82116.0,83158.0,81748.85,81938.4,12792.25745],[1792454400000,81938.39,83439.0,81200.0,83028.15,13954.54986],[1792540800000,83028.14,84898.0,82635.32,84093.42,16544.48031],[1792627200000,84093.42,84377.21,80939.54,81416.09,19476.41499],[1792713600000,81416.09,82060.88,80513.0,81189.43,12468.50692],[1792800000000,81189.44,81213.64,79220.74,80888.16,11719.54151],[1792886400000,80888.15,81033.69,79845.86,80154.09,6252.92495],[1792972800000,80154.09,80844.7,79368.67,80150.56,15371.34784],[1793059200000,80150.56,81300.0,79506.0,80909.77,13230.64597],[1793145600000,80909.77,81823.0,80397.14,81343.5,13109.37484],[1793232000000,81343.51,81971.0,77910.0,77991.89,23832.18298],[1793318400000,77991.89,78804.01,76325.98,77368.77,24295.94848],[1793404800000,77368.76,77796.01,77114.01,77582.02,6287.54041],[1793491200000,77582.02,78422.23,77517.2,78354.0,6544.36057],[1793577600000,78354.01,78878.01,76705.0,76816.0,12640.71498],[1793664000000,76816.01,78063.3,76388.88,77453.86,12560.17626],[1793750400000,77453.85,81196.01,75736.38,80504.01,22140.42854],[1793836800000,80504.01,80918.01,75208.42,76088.01,26059.74254],[1793923200000,76088.01,76416.24,74888.0,75844.0,17207.67786],[1794009600000,75844.0,76249.99,75571.08,75867.59,5215.90597],[1794096000000,75867.58,76200.0,73510.0,74851.44,9457.65942],[1794182400000,74851.44,75599.22,73750.0,75368.41,15687.17026],[1794268800000,75368.41,75442.01,72727.27,73796.06,16466.18383],[1794355200000,73796.06,74811.45,73209.12,74015.19,16145.87951],[1794441600000,74015.2,74217.49,71113.06,71460.0,15228.24045],[1794528000000,71460.0,71514.01,67568.0,68314.0,29648.75209],[1794614400000,68314.01,68446.21,63320.0,64150.0,32674.75234],[1794700800000,64150.01,66132.01,62006.0,65351.05,29231.16015],[1794787200000,65351.05,65696.16,63905.01,64882.87,21929.23589],[1794873600000,64882.88,65447.0,63336.0,64947.35,28316.76333],[1794960000000,64947.36,65002.0,62062.97,63068.22,18699.69566],[1795046400000,63068.21,64080.8,61428.26,61986.73,19879.6403],[1795132800000,61986.73,62639.52,57778.35,58951.51,38125.92587],[1795219200000,58951.51,60996.0,55130.0,60215.77,48558.10097],[1795305600000,60215.78,61669.99,58768.51,61271.08,20137.13078],[1795392000000,61271.09,64603.12,60386.0,61270.93,27493.88421]];
+const coins=[
+ ['BTCUSDT','比特币','₿','#f7ab38','#33291c'],['ETHUSDT','以太坊','Ξ','#a0adee','#292b40'],['SOLUSDT','Solana','≋','#72dcc1','#193331']
 ];
 const stocks=[
  ['sh600519','贵州茅台','茅','#eb928e','#39272a'],['sz300750','宁德时代','宁','#8eaef1','#222d40'],['sh601318','中国平安','平','#e9b676','#3a3025'],
@@ -251,8 +260,12 @@ function symbolFrom(input){
  const found=catalog.find(a=>a.id.toUpperCase()===value||a.name===input);if(found)return found;
  let ticker=value.match(/^(?:(SH|SZ))?(\d{6})(?:\.(SH|SZ))?$/);
  if(ticker){const ex=ticker[1]||ticker[3]||(/^[569]/.test(ticker[2])?'SH':'SZ'),id=ex.toLowerCase()+ticker[2];return catalog.find(a=>a.id===id)||asset([id,ticker[2],ex,'#a4bbd9','#27303c'],'stock')}
- const pair=value.match(/^([\p{L}\p{N}]{1,40}?)[-/]?(USDT|USD)$/u)||(/^[A-Z][A-Z0-9]{1,9}$/.test(value)?[null,value,'USD']:null);
- if(pair){const id=pair[2]==='USD'?pair[1]+'-USD':pair[1]+'USDT';return catalog.find(a=>a.id===id)||asset([id,pair[1],pair[1][0],'#a3c4e1','#26313a'],'crypto')}
+ const pair=value.match(/^([\p{L}\p{N}]{1,40}?)[-/]?(USDT|USD)$/u)||(/^[A-Z][A-Z0-9]{1,9}$/.test(value)?[null,value,'USDT']:null);
+ if(pair){
+  const base=pair[1],id=pair[2]==='USD'?base+'-USD':base+'USDT';
+  const known=catalog.find(a=>a.id===base+'USDT');
+  return known?{...known,id}:asset([id,base,base[0],'#a3c4e1','#26313a'],'crypto');
+ }
  return null;
 }
 const $=id=>document.getElementById(id);
@@ -275,7 +288,7 @@ function contractAsset(kind,symbol,base,quote,expiry,onboard){
  }
  const date=/_(\d{2})(\d{2})(\d{2})$/.exec(symbol);
  const end=expiry||(date?Date.UTC(2000+Number(date[1]),Number(date[2])-1,Number(date[3]),8):0);
- const known=catalog.find(a=>a.id===base+'-USD');
+ const known=catalog.find(a=>a.id===base+'USDT');
  return {...asset([kind.toUpperCase()+':'+symbol,known?.name??base,known?.mark??base[0],known?.color??'#a3c4e1',known?.bg??'#26313a'],'crypto'),kind,symbol,base,quote,expiry:end,onboard:Number(onboard)||0};
 }
 function directoryItems(kind,rows){
@@ -346,7 +359,11 @@ function binanceBars(rows,limit=320){return validBars(rows.map(([time,o,h,l,c,v]
 async function json(url,signal){
  const ctrl=new AbortController(),id=setTimeout(()=>ctrl.abort(),7500);
  const cancel=()=>ctrl.abort();if(signal?.aborted)cancel();else signal?.addEventListener('abort',cancel,{once:true});
- try{const res=await fetch(url,{signal:ctrl.signal,cache:'no-store'});if(!res.ok){const error=Error('行情源返回 '+res.status);error.status=res.status;throw error}return await res.json()}finally{clearTimeout(id);signal?.removeEventListener('abort',cancel)}
+ try{
+  const res=await fetch(url,{signal:ctrl.signal,cache:'no-store'});
+  if(!res.ok){const error=Error('行情源返回 '+res.status);error.status=res.status;if(res.status===400)error.code=(await res.json().catch(()=>null))?.code;throw error}
+  return await res.json();
+ }finally{clearTimeout(id);signal?.removeEventListener('abort',cancel)}
 }
 let reqId=0;
 function remoteVars(url,keys,charset='utf-8'){
@@ -364,7 +381,7 @@ function shTime(raw){
  const s=String(raw).replace(/\D/g,'');if(s.length<8)return NaN;
  return Date.UTC(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8),+(s.slice(8,10)||0)-8,+(s.slice(10,12)||0),+(s.slice(12,14)||0))/1000;
 }
-async function candles(a,p,onRecent){
+async function candles(a,p,onRecent,signal){
  if(a.market==='stock'){
   const tf=stockPeriods[p],key='cdk'+(++reqId);
   if(tf==='sina'){
@@ -381,10 +398,10 @@ async function candles(a,p,onRecent){
  if(binance(a)){
   const params={interval:p,limit:300};
   if(a.expiry&&a.expiry<=Date.now())params.endTime=a.expiry;
-  const rows=await json(binanceUrl(a,'klines',params));
+  const rows=await json(binanceUrl(a,'klines',params),signal);
   return binanceBars(rows);
  }
- return coinbaseHistory(a,p,onRecent);
+ return coinbaseHistory(a,p,onRecent,signal);
 }
 const coinBasePeriod={'3m':'1m','30m':'15m','2h':'1h','4h':'1h','8h':'1h','12h':'6h','3d':'1d','1w':'1d','1M':'1d'};
 const coinHistoryPages=new Map();
@@ -393,14 +410,15 @@ function coinGroups(bars,p){
  if(grouped.length>1&&bars[0].time>grouped[0].time)grouped.shift();
  return grouped;
 }
-async function coinbaseHistory(a,p,onRecent){
+async function coinbaseHistory(a,p,onRecent,signal){
  const base=coinBasePeriod[p]||p,seconds=periods[base],url='https://api.exchange.coinbase.com/products/'+encodeURIComponent(a.id)+'/candles?granularity='+seconds;
- const latest=coinBars(await json(url));if(base===p||!latest.length)return latest;
+ const latest=coinBars(await json(url,signal));if(base===p||!latest.length)return latest;
  if(onRecent)onRecent(coinGroups(latest,p));
  const size=seconds*299,now=Math.floor(Date.now()/1000),edge=Math.floor(now/size)*size;
  const target=latest.at(-1).time-95*periods[p];
  const pageCount=Math.min(10,Math.ceil(95*periods[p]/size)),pages=[];
  for(let i=0;i<pageCount;i++){
+  if(signal?.aborted)throw signal.reason;
   const end=edge-i*size,key=a.id+'|'+base+'|'+end;
   if(latest[0].time<=target||end<target-size)break;
   if(!coinHistoryPages.has(key)){
@@ -421,10 +439,13 @@ async function stockQuotes(items){
   return {id:ids[i],name:v[1],price:+v[3],prev:+v[4],high:+v[33],low:+v[34],volume:+v[6],stamp:shTime(v[30])};
  }).filter(Boolean);
 }
+function binanceQuote(id,q){
+ return {id,price:+q.lastPrice,prev:+q.openPrice,high:+q.highPrice,low:+q.lowPrice,volume:+q.volume,stamp:q.closeTime/1000};
+}
 async function coinQuote(a){
  if(binance(a)){
   const q=symbolRecord(await json(binanceUrl(a,'ticker/24hr')),a.symbol??a.id);
-  return {id:a.id,price:+q.lastPrice,prev:+q.openPrice,high:+q.highPrice,low:+q.lowPrice,volume:+q.volume,stamp:q.closeTime/1000};
+  return binanceQuote(a.id,q);
  }
  const q=await json('https://api.exchange.coinbase.com/products/'+a.id+'/stats');
  return {id:a.id,price:+q.last,prev:+q.open,high:+q.high,low:+q.low,volume:+q.volume,stamp:Date.now()/1000};
@@ -435,15 +456,14 @@ function cryptoStream(a,p,onTick,onState){
   if(closed)return;const bn=binance(a);
   const symbol=a.symbol??a.id,streamName=encodeURIComponent(symbol.toLowerCase());
   let url='wss://ws-feed.exchange.coinbase.com';
-  if(a.kind)url=venues[a.kind].ws+'/stream?streams='+streamName+'@kline_'+p+'/'+streamName+'@ticker';
-  else if(bn)url=venues.spot.ws+'/ws/'+streamName+'@kline_'+p;
+  if(bn)url=venues[a.kind??'spot'].ws+'/stream?streams='+streamName+'@kline_'+p+'/'+streamName+'@ticker';
   try{socket=new WebSocket(url)}catch{retryTimer=setTimeout(connect,9000);return}
   const arm=()=>{clearTimeout(watchdog);watchdog=setTimeout(()=>socket.close(),25000)};arm();
   socket.onopen=()=>{if(!bn)socket.send(JSON.stringify({type:'subscribe',product_ids:[a.id],channels:['ticker','heartbeat']}));arm()};
   socket.onmessage=e=>{if(closed)return;let m;try{m=JSON.parse(e.data);m=m.data??m}catch{return}arm();
    if(bn&&m.s!==symbol)return;
    if(bn&&m.k&&m.k.i===p){const k=m.k;onTick({time:k.t/1000,open:+k.o,high:+k.h,low:+k.l,close:+k.c,volume:+k.v},null,m.E/1000)}
-   else if(a.kind&&m.e==='24hrTicker')onTick(null,{id:a.id,price:+m.c,prev:+m.o,high:+m.h,low:+m.l,volume:+m.v,stamp:m.E/1000},m.E/1000);
+   else if(bn&&m.e==='24hrTicker')onTick(null,{id:a.id,price:+m.c,prev:+m.o,high:+m.h,low:+m.l,volume:+m.v,stamp:m.E/1000},m.E/1000);
    else if(m.type==='ticker'&&m.product_id===a.id){const t=Date.parse(m.time)/1000;if(!Number.isFinite(t)||!+m.price)return;onTick(null,{id:a.id,price:+m.price,prev:+m.open_24h,high:+m.high_24h,low:+m.low_24h,volume:+m.volume_24h,stamp:t},t)}
   };socket.onerror=()=>socket.close();socket.onclose=()=>{clearTimeout(watchdog);if(!closed){onState();retryTimer=setTimeout(connect,6000)}};
  }
@@ -666,10 +686,10 @@ function updateDetailBar(view,bar,q,time){
  if(!bar||bar.time<last.time||!Object.values(bar).every(Number.isFinite))return;
  if(bar.time===last.time)state.bars[state.bars.length-1]=bar;
  else{state.bars.push(bar);if(state.bars.length>detail.count+100)state.bars.shift()}
- detail.stop=bar.time+seconds;detail.start=detail.stop-detail.count*seconds;state.count=Math.min(detail.count,state.bars.length);scheduleScreen();
+ detail.stop=bar.time+seconds;detail.start=detail.stop-detail.count*seconds;state.count=Math.min(detail.count,state.bars.length);scheduleScreen(true);
 }
 function syncDetailStream(view){
- if(!view.detail?.live||view!==listingView){view.stopDetail?.();view.stopDetail=null;return}
+ if(document.hidden||!view.detail?.live||view!==listingView){view.stopDetail?.();view.stopDetail=null;return}
  if(view.stopDetail)return;
  view.stopDetail=cryptoStream(active,activePeriod,(bar,q,t)=>{view.detailTick=Date.now();updateDetailBar(view,bar,q,t)},()=>{view.detailTick=0});
 }
@@ -686,12 +706,29 @@ async function pollDetail(view){
   }
  }catch{}finally{view.detailPoll=false}
 }
- const state={bars:[],studies:[],count:88,offset:0,line:false,cursor:null,frame:0,geom:null};
-const num=(v,places)=>Number.isFinite(v)?v.toLocaleString('en-US',{minimumFractionDigits:places??(v>=1?2:4),maximumFractionDigits:places??(v>=1?2:6)}):'—';
-const compact=v=>Number.isFinite(v)?new Intl.NumberFormat('en',{notation:'compact',maximumFractionDigits:2}).format(v):'—';
-const dt=(t,full=false)=>new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',year:full?'numeric':undefined,month:'2-digit',day:'2-digit',hour:full?'2-digit':undefined,minute:full?'2-digit':undefined,hour12:false}).format(t*1000);
-const hhmm=t=>new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',hour:'2-digit',minute:'2-digit',hour12:false}).format(t*1000);
-function drawSoon(){if(!state.frame)state.frame=requestAnimationFrame(()=>{state.frame=0;drawChart()})}
+const state={bars:[],studies:[],count:88,offset:0,line:false,cursor:null,frame:0,geom:null};
+const numberFormats=new Map(),compactFormat=new Intl.NumberFormat('en',{notation:'compact',maximumFractionDigits:2});
+function num(v,places){
+ if(!Number.isFinite(v))return '—';
+ const min=places??(v>=1?2:4),max=places??(v>=1?2:6),key=min+','+max;
+ if(!numberFormats.has(key))numberFormats.set(key,new Intl.NumberFormat('en-US',{minimumFractionDigits:min,maximumFractionDigits:max}));
+ return numberFormats.get(key).format(v);
+}
+const compact=v=>Number.isFinite(v)?compactFormat.format(v):'—';
+const shZone={timeZone:'Asia/Shanghai',hour12:false};
+const dayFormat=new Intl.DateTimeFormat('zh-CN',{...shZone,month:'2-digit',day:'2-digit'});
+const dateTimeFormat=new Intl.DateTimeFormat('zh-CN',{...shZone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+const timeFormat=new Intl.DateTimeFormat('en-GB',{...shZone,hour:'2-digit',minute:'2-digit'});
+const clockFormat=new Intl.DateTimeFormat('en-GB',{...shZone,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+const dt=(t,full=false)=>(full?dateTimeFormat:dayFormat).format(t*1000);
+const hhmm=t=>timeFormat.format(t*1000);
+let chartDirty=false;
+function drawSoon(full=true){
+ if(full!==false)chartDirty=true;
+ if(!state.frame)state.frame=requestAnimationFrame(()=>{
+  state.frame=0;if(chartDirty){chartDirty=false;drawChart()}drawCursor();
+ });
+}
 function setZoom(k){
  const v=listingView,seconds=periods[activePeriod],detail=v?.pending||v?.detail;
  if(v?.native){
@@ -761,10 +798,11 @@ function drawChart(){
  for(let j=0;j<=5;j++){const y=8+j*(mainH-16)/5;stroke(x0,y,x1,y,grid)}
  const ticks=w<520?4:7;for(let i=0;i<ticks;i++){const xx=x0+(x1-x0)*i/(ticks-1);stroke(xx,3,xx,axisY,grid)}
  stroke(x1,0,x1,axisY,grid);stroke(x0,axisY,x1,axisY,grid);
- if(!n){$('ohlc').textContent='';$('tooltip').hidden=true;state.geom=null;return}
+ if(!n){state.geom=null;return}
  function bounds(nums){let lo=Infinity,hi=-Infinity;for(const v of nums)if(Number.isFinite(v)){lo=Math.min(lo,v);hi=Math.max(hi,v)}if(!Number.isFinite(lo))return [0,1];const pad=(hi-lo)*.06||Math.max(Math.abs(lo)*.005,.01);return [lo-pad,hi+pad]}
  const [lo,hi]=bounds([...bars.flatMap(b=>[b.low,b.high]),...over.flatMap(p=>p.values.slice(start,end))]);
- const y=v=>8+(hi-v)/(hi-lo)*(mainH-16);state.geom={start,n,spacing,x0,x1,axisY,lo,hi,mainH};
+ const y=v=>8+(hi-v)/(hi-lo)*(mainH-16);state.geom={start,n,spacing,x0,x1,axisY,w};
+ const crosshair=$('crosshair');crosshair.style.left=x0+'px';crosshair.style.width=(x1-x0)+'px';crosshair.style.height=axisY+'px';
  for(let i=0;i<=5;i++){const val=hi-(hi-lo)*i/5;txt(num(val),x1+6,y(val))}
  function poly(values,scale,color,width=1.4){
   ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;let ready=false;
@@ -791,13 +829,26 @@ function drawChart(){
   if(periods[activePeriod]>=604800||duration>31536000){const iso=new Date((b.time+28800)*1000).toISOString();label=activePeriod==='1y'||duration>3*31536000?iso.slice(0,4):iso.slice(0,7)}
   txt(label,Math.min(x1-20,Math.max(x0+20,x(i))),h-11,muted,'center');
  }
- let chosen=listingView?.firstFocus?bars[0]:last;const pointer=state.cursor,tip=$('tooltip');tip.hidden=true;
- if(pointer&&pointer.x>=x0&&pointer.x<=x1&&pointer.y>=0&&pointer.y<=axisY){
-  const i=Math.max(0,Math.min(n-1,Math.floor((pointer.x-x0)/spacing)));chosen=bars[i];
-  ctx.setLineDash([3,4]);stroke(x(i),0,x(i),axisY,'#94a1ad');stroke(x0,pointer.y,x1,pointer.y,'#67727a');ctx.setLineDash([]);
-  tip.hidden=false;tip.textContent=dt(chosen.time,true);tip.style.left=Math.max(0,Math.min(w-145,x(i)-65))+'px';tip.style.top=Math.max(0,axisY-23)+'px';
+}
+const ohlcFields=['open','high','low','close'],ohlcValues=$('ohlc').querySelectorAll('b');
+let cursorBar;
+function drawCursor(){
+ const g=state.geom,p=state.cursor,crosshair=$('crosshair'),tip=$('tooltip');
+ const hover=g&&p&&p.x>=g.x0&&p.x<=g.x1&&p.y>=0&&p.y<=g.axisY;
+ let index=listingView?.firstFocus?0:(g?.n??0)-1;
+ if(hover){
+  index=Math.max(0,Math.min(g.n-1,Math.floor((p.x-g.x0)/g.spacing)));
+  const x=(index+.5)*g.spacing;
+  crosshair.firstElementChild.style.transform='translateX('+x+'px)';
+  crosshair.lastElementChild.style.transform='translateY('+p.y+'px)';
+  tip.style.left=Math.max(0,Math.min(g.w-145,g.x0+x-65))+'px';tip.style.top=Math.max(0,g.axisY-23)+'px';
  }
- const info=$('ohlc');info.replaceChildren();for(const [k,v] of [['开',chosen.open],['高',chosen.high],['低',chosen.low],['收',chosen.close]]){const span=document.createElement('span'),b=document.createElement('b');span.append(k+' ');b.textContent=num(v);span.append(b);info.append(span)}
+ const bar=g?state.bars[g.start+index]:null;
+ if(hover&&bar&&(tip.hidden||cursorBar!==bar))tip.textContent=dt(bar.time,true);
+ crosshair.hidden=tip.hidden=!hover||!bar;
+ if(cursorBar!==bar){
+  cursorBar=bar;ohlcFields.forEach((field,i)=>{ohlcValues[i].textContent=num(bar?.[field])});
+ }
 }
 function chartEvents(){
  const c=$('canvas');let drag=null,wheelRemainder=0;
@@ -817,9 +868,9 @@ function chartEvents(){
     drag.shift=shift;
    }
   }
-  drawSoon();
+  drawSoon(false);
  };
- c.onpointerup=c.onpointercancel=()=>{drag=null};c.onpointerleave=()=>{state.cursor=null;drawSoon()};
+ c.onpointerup=c.onpointercancel=()=>{drag=null};c.onpointerleave=()=>{state.cursor=null;drawSoon(false)};
  c.addEventListener('wheel',e=>{
   e.preventDefault();
   if(!e.ctrlKey&&(e.shiftKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))){
@@ -838,17 +889,34 @@ function chartEvents(){
  const saved=storeRead('symbols',null);
 let watch=Array.isArray(saved)?saved.map(id=>symbolFrom(String(id))).filter(Boolean).slice(0,40):[...catalog.slice(0,6),directories.um.items.get('UM:BTCUSDT')].filter(Boolean);
 if(!watch.length)watch=[catalog[0]];
-let active=watch.find(a=>a.id===storeRead('active','BTC-USD'))||watch[0],activePeriod=storeRead('period','1d'),filter='all';
+const savedActive=storeRead('active','BTCUSDT');
+let active=watch.find(a=>a.id===savedActive)||(!Array.isArray(saved)&&watch.find(a=>a.id===String(savedActive).replace(/-USD$/,'USDT')))||watch[0],activePeriod=storeRead('period','1d'),filter='all';
 let scripts=storeRead('scripts',[{id:'ma',source:templates.ma}]);if(!Array.isArray(scripts))scripts=[{id:'ma',source:templates.ma}];
 const quotes=new Map(),cache=new Map(),quoteJobs=new Set();let epoch=0,stopStream=()=>{},streamPeriod=null,historyJob=0,chartAt=0,lastStream=0,lastBarUpdate=0,pollFailed=false,quoteBatch=false,sample=false;
+const watchRows=new Map(),changedQuotes=new Set(),invalidSpotUntil=new Map();
+let historyCancel,nextBars=0,nextQuotes=0;
 const elm=(tag,cls,str)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(str!=null)e.textContent=str;return e};
 function badge(a,big=false){const e=elm('span',(big?'big ':'')+'assetBadge',a.mark);e.style.color=a.color;e.style.background=a.bg;return e}
 function ticker(a){if(a.kind)return a.symbol;return a.market==='stock'?a.id.slice(2)+'.'+a.id.slice(0,2).toUpperCase():a.id.replace('-',' / ').replace(/([A-Z0-9]+)USDT$/,'$1 / USDT')}
 function priceChange(q){return q?.prev>0?(q.price/q.prev-1)*100:NaN}
 function pct(n){return Number.isFinite(n)?(n>=0?'+':'')+n.toFixed(2)+'%':'—'}
-function putQuote(q){if(!q||!Number.isFinite(q.price)||q.price<=0)return;const prev=quotes.get(q.id);if(prev&&prev.stamp>q.stamp)return;quotes.set(q.id,q);if(q.name){const a=watch.find(a=>a.id===q.id);if(a&&a.name===a.id.slice(2))a.name=q.name}}
+function putQuote(q){
+ if(!q||!Number.isFinite(q.price)||q.price<=0||!Number.isFinite(q.stamp))return;
+ const prev=quotes.get(q.id);if(prev&&prev.stamp>q.stamp)return;
+ quotes.set(q.id,q);
+ if(q.name){const a=watch.find(a=>a.id===q.id);if(a&&a.name===a.id.slice(2))a.name=q.name}
+ changedQuotes.add(q.id);scheduleScreen();
+}
+function setText(node,value){if(node.textContent!==value)node.textContent=value}
+function updateWatchQuote(id){
+ const row=watchRows.get(id),q=quotes.get(id);if(!row||!q)return;
+ const change=priceChange(q);
+ setText(row.price,num(q.price));setText(row.change,pct(change));setText(row.name,row.asset.name);
+ row.change.className=Number.isFinite(change)?change>=0?'up':'down':'muted';
+ row.button.title='行情时间 '+dt(q.stamp,true);
+}
 function renderWatch(){
- const host=$('watch');host.replaceChildren();
+ const host=$('watch');host.replaceChildren();watchRows.clear();
  for(const [key,name] of [['crypto','加密现货'],['futures','加密合约'],['stock','沪深 A 股']]){
   if(filter!=='all'&&filter!==key)continue;const items=watch.filter(a=>marketOf(a)===key);
   const head=elm('h3','groupHeading',name);head.append(elm('span','groupTotal',String(items.length).padStart(2,'0')));
@@ -856,16 +924,19 @@ function renderWatch(){
    const add=elm('button','groupAdd','添加合约');add.onclick=()=>openSearch('um');head.append(add);
   }
   host.append(head);
-  for(const a of items){const q=quotes.get(a.id),row=elm('button','watchRow'+(a.id===active.id?' selected':''));row.setAttribute('aria-pressed',String(a.id===active.id));
-   const names=elm('span'),values=elm('span','watchValue',num(q?.price)),change=priceChange(q);names.append(elm('span','watchName',a.name),elm('span','watchTicker',a.kind?ticker(a)+' · '+productName(a):ticker(a)));
-   values.append(elm('small',Number.isFinite(change)?change>=0?'up':'down':'muted',pct(change)));row.append(badge(a),names,values);row.onclick=()=>choose(a);if(q?.stamp)row.title='行情时间 '+dt(q.stamp,true);host.append(row);
+  for(const a of items){
+   const row=elm('button','watchRow'+(a.id===active.id?' selected':''));row.setAttribute('aria-pressed',String(a.id===active.id));
+   const names=elm('span'),nameNode=elm('span','watchName',a.name),values=elm('span','watchValue'),price=elm('span','','—'),change=elm('small','muted','—');
+   names.append(nameNode,elm('span','watchTicker',a.kind?ticker(a)+' · '+productName(a):ticker(a)));
+   values.append(price,change);row.append(badge(a),names,values);row.onclick=()=>{if(active.id!==a.id)choose(a)};
+   watchRows.set(a.id,{asset:a,button:row,name:nameNode,price,change});updateWatchQuote(a.id);host.append(row);
   }
  }
  $('watchCount').textContent=watch.length+' 个标的';
 }
 function header(){
  const a=active,q=quotes.get(a.id),quoteBars=listingView?.detail?listingView.daily:state.bars,last=quoteBars.at(-1),prev=quoteBars.at(-2);
- $('bigBadge').replaceChildren(badge(a,true));$('assetName').textContent=a.name;$('marketTag').textContent=productName(a);$('marketTag').classList.toggle('contractTag',Boolean(a.kind));$('symbolLine').textContent=ticker(a)+' · '+(a.market==='stock'?(a.id.startsWith('sh')?'上交所':'深交所'):sourceOf(a));
+ setText($('assetName'),a.name);
  const current=q?.price??last?.close,change=q?priceChange(q):prev?(last.close/prev.close-1)*100:NaN;
  $('price').textContent=num(current);$('change').textContent=pct(change)+(Number.isFinite(change)?' · '+(q?a.market==='stock'?'较昨收':'24h':'较上根 K 线'):'');$('change').className=Number.isFinite(change)?change>=0?'up':'down':'muted';
  const prefix=q?(a.market==='stock'?'当日':'24h'):'本期';
@@ -926,12 +997,25 @@ function calcStudies(){
  }
  drawSoon();
 }
-function refreshScreen(){header();feed();calcStudies();renderWatch()}
-let renderPending=false;
-function scheduleScreen(){if(renderPending)return;renderPending=true;requestAnimationFrame(()=>{renderPending=false;refreshScreen()})}
+function refreshScreen(){studiesPending=false;header();feed();calcStudies()}
+let renderPending=false,studiesPending=false,lastPaint=0;
+function scheduleScreen(barsChanged=false){
+ studiesPending||=barsChanged;
+ if(renderPending||document.hidden)return;
+ renderPending=true;
+ const paint=()=>requestAnimationFrame(()=>{
+  renderPending=false;if(document.hidden)return;
+  lastPaint=performance.now();
+  if(studiesPending||changedQuotes.has(active.id)){header();feed()}
+  for(const id of changedQuotes)updateWatchQuote(id);
+  changedQuotes.clear();
+  if(studiesPending){studiesPending=false;calcStudies()}
+ });
+ const wait=150-(performance.now()-lastPaint);if(wait>0)setTimeout(paint,wait);else paint();
+}
 function syncPrimaryStream(){
  const p=chartInputPeriod(),token=epoch;
- if(active.market!=='crypto'||streamPeriod===p)return;
+ if(document.hidden||active.market!=='crypto'||streamPeriod===p)return;
  stopStream();streamPeriod=p;
  stopStream=cryptoStream(active,p,(bar,q,t)=>{if(streamPeriod===p)tick(token,bar,q,t)},()=>{if(epoch===token&&streamPeriod===p){lastStream=0;feed()}});
 }
@@ -951,16 +1035,16 @@ function tick(token,bar,q,time){
   }else if(!last||(sample&&bar.time-last.time>interval))state.bars=[bar];
   else if(bar.time===last.time)state.bars[state.bars.length-1]=bar;
   else{state.bars.push(bar);if(listingView?.native&&state.offset>0)state.offset++;else if(state.bars.length>320)state.bars.shift()}
-  sample=false;lastBarUpdate=Date.now();
+  sample=false;lastBarUpdate=Date.now();scheduleScreen(!archive||!listingView.detail);
  }
- scheduleScreen();
 }
 async function getHistory(){
  const token=epoch;if(historyJob===token)return;historyJob=token;const a=active,p=chartInputPeriod(),began=Date.now();
+ nextBars=began+(a.market==='stock'?10000:15000);historyCancel=new AbortController();
  if(listingView)pollDetail(listingView);
  refreshContractStats(a,token);
  try{
-  const data=await candles(a,p,recent=>{if(epoch===token&&p===chartInputPeriod()&&!state.bars.length&&recent.length){state.bars=recent;chartAt=Date.now();sample=false;refreshScreen()}});
+  const data=await candles(a,p,recent=>{if(epoch===token&&p===chartInputPeriod()&&!state.bars.length&&recent.length){state.bars=recent;chartAt=Date.now();sample=false;refreshScreen()}},historyCancel.signal);
   if(epoch!==token||p!==chartInputPeriod())return;if(!data.length)throw Error('暂无 K 线');
   const archive=listingView&&!listingView.native,live=archive?listingView.daily.at(-1):state.bars.at(-1);
   if(lastBarUpdate>=began&&!sample&&live){const tail=data.at(-1);
@@ -976,18 +1060,47 @@ async function getHistory(){
   cache.set(a.id+p,data);storeWrite('last-chart',{key:a.id+p,data:data.slice(-320)});chartAt=Date.now();pollFailed=false;sample=false;
  }catch{if(epoch===token&&p===chartInputPeriod())pollFailed=true}finally{if(historyJob===token)historyJob=0;if(epoch===token){refreshScreen();if(p!==chartInputPeriod())getHistory()}}
 }
+async function spotQuotes(ids){
+ const query=new URLSearchParams({symbols:JSON.stringify(ids)});
+ try{
+  const rows=await json(venues.spot.rest+'/ticker/24hr?'+query);
+  for(const row of rows)if(ids.includes(row.symbol))putQuote(binanceQuote(row.symbol,row));
+ }catch(e){
+  if(e.code!==-1121)throw e;
+  if(ids.length===1){invalidSpotUntil.set(ids[0],Date.now()+600000);return}
+  const mid=Math.ceil(ids.length/2);
+  await Promise.allSettled([spotQuotes(ids.slice(0,mid)),spotQuotes(ids.slice(mid))]);
+ }
+}
 function refreshQuotes(){
- if(!quoteBatch){const group=watch.filter(a=>a.market==='stock');quoteBatch=true;stockQuotes(group).then(rows=>rows.forEach(putQuote)).catch(()=>{}).finally(()=>{quoteBatch=false;renderWatch();header();feed()})}
- for(const a of watch.filter(a=>a.market==='crypto')){if(quoteJobs.has(a.id))continue;quoteJobs.add(a.id);coinQuote(a).then(q=>{putQuote(q);renderWatch();if(active.id===a.id){header();feed()}}).catch(()=>{}).finally(()=>quoteJobs.delete(a.id))}
+ nextQuotes=Date.now()+10000;
+ const stocks=watch.filter(a=>a.market==='stock');
+ if(stocks.length&&!quoteBatch){quoteBatch=true;stockQuotes(stocks).then(rows=>rows.forEach(putQuote)).catch(()=>{}).finally(()=>{quoteBatch=false})}
+ const spot=[];
+ for(const a of watch){
+  if(a.market!=='crypto'||quoteJobs.has(a.id)||(invalidSpotUntil.get(a.id)||0)>Date.now())continue;
+  quoteJobs.add(a.id);
+  if(!a.kind&&binance(a))spot.push(a.id);
+  else coinQuote(a).then(putQuote).catch(()=>{}).finally(()=>quoteJobs.delete(a.id));
+ }
+ for(let i=0;i<spot.length;i+=20){
+  const ids=spot.slice(i,i+20);
+  spotQuotes(ids).catch(()=>{}).finally(()=>ids.forEach(id=>quoteJobs.delete(id)));
+ }
 }
 function choose(a,p=activePeriod){
+ historyCancel?.abort();
  if(listingView){listingView.cancel.abort();clearTimeout(listingView.detailTimer);listingView.stopDetail?.();listingView=null}
  stopStream();stopStream=()=>{};streamPeriod=null;active=a;const available=a.market==='stock'?Object.keys(stockPeriods):cryptoPeriods;
  activePeriod=available.includes(p)?p:'1d';
  epoch++;const key=a.id+activePeriod,lastSaved=storeRead('last-chart',{});chartAt=0;lastStream=0;lastBarUpdate=0;pollFailed=false;sample=false;
  const cached=cache.get(key)||(lastSaved.key===key&&Array.isArray(lastSaved.data)?lastSaved.data:null);
  state.bars=cached?validBars(cached):[];sample=!!state.bars.length;
+ if(!state.bars.length&&key==='BTCUSDT1d'){state.bars=binanceBars(binanceSnapshot);sample=true}
  if(!state.bars.length&&key==='BTC-USD1d'){state.bars=coinBars(SNAPSHOT);sample=true}
+ $('bigBadge').replaceChildren(badge(a,true));$('marketTag').textContent=productName(a);$('marketTag').classList.toggle('contractTag',Boolean(a.kind));
+ $('symbolLine').textContent=ticker(a)+' · '+(a.market==='stock'?(a.id.startsWith('sh')?'上交所':'深交所'):sourceOf(a));
+ for(const [id,row] of watchRows){const selected=id===a.id;row.button.classList.toggle('selected',selected);row.button.setAttribute('aria-pressed',String(selected))}
  storeWrite('active',a.id);storeWrite('period',activePeriod);const host=$('periods');host.replaceChildren();
  const quickPeriods=['1m','5m','15m','1h','1d','1w'];
  for(const period of quickPeriods){
@@ -1001,7 +1114,8 @@ function choose(a,p=activePeriod){
   const onboard=a.kind?(a.onboard||directories[a.kind].items.get(a.id)?.onboard||0)/1000:0;
   listingView={onboard,cancel:new AbortController(),bars:new Map(),daily:[],overview:[],native:true,fit:false,firstFocus:false,complete:false,loading:false,error:'',done:0,total:0};
  }
- displayContractStats(a);paintListingControls();resetChart();refreshScreen();getHistory();syncPrimaryStream();
+ displayContractStats(a);paintListingControls();resetChart();refreshScreen();
+ if(!document.hidden){getHistory();syncPrimaryStream()}
 }
 let searchMarket='all';
 function openResult(a){
@@ -1031,7 +1145,7 @@ function renderSearch(){
   const text=[code,a.id,a.name,a.base??'',productName(a),ticker(a),alias].join('|');
   if(term&&!normalize(text).includes(term))continue;
   const exact=term&&[code,a.id,alias].some(x=>x&&normalize(x)===term);
-  const rank=exact?0:term&&normalize(a.base??a.name)===term?1:2;
+  const rank=a.id===spot?.id?-1:exact?0:term&&normalize(a.base??a.name)===term?1:2;
   items.push({a,rank});
  }
  items.sort((l,r)=>l.rank-r.rank);
@@ -1799,8 +1913,26 @@ function setupIndicatorMarket(){
 }
 rebuildMarket();
 
-function clock(){$('clock').textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Shanghai',hour12:false})}
-clock();setInterval(clock,1000);setupEditor();setupSearch();chartEvents();choose(active);refreshQuotes();setupScreener();setupIndicatorMarket();
-let nextBars=0,nextQuotes=0;
-setInterval(()=>{if(document.hidden)return;const now=Date.now();if(now>=nextBars){nextBars=now+(active.market==='stock'?10000:15000);getHistory()}if(now>=nextQuotes){nextQuotes=now+10000;refreshQuotes()}feed()},2000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){getHistory();refreshQuotes()}});</script></body></html>
+function clock(){if(!document.hidden)$('clock').textContent=clockFormat.format(Date.now())}
+clock();setInterval(clock,1000);setupEditor();setupSearch();chartEvents();renderWatch();choose(active);
+if(!document.hidden)refreshQuotes();setupScreener();setupIndicatorMarket();
+setInterval(()=>{
+ if(document.hidden)return;
+ const now=Date.now();
+ if(now>=nextBars){
+  const streaming=active.market==='crypto'&&lastStream>now-15000&&lastBarUpdate>now-15000;
+  if(streaming&&!pollFailed&&now-chartAt<60000){
+   nextBars=now+15000;if(listingView)pollDetail(listingView);refreshContractStats(active,epoch);
+  }else getHistory();
+ }
+ if(now>=nextQuotes)refreshQuotes();feed();
+},2000);
+document.addEventListener('visibilitychange',()=>{
+ if(document.hidden){
+  stopStream();stopStream=()=>{};streamPeriod=null;lastStream=0;
+  if(listingView)syncDetailStream(listingView);
+ }else{
+  clock();syncPrimaryStream();if(listingView)syncDetailStream(listingView);
+  getHistory();refreshQuotes();scheduleScreen();
+ }
+});</script></body></html>
