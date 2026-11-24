@@ -1,0 +1,57 @@
+.topnav > * { flex: none; white-space: nowrap; }
+@media (min-width: 871px) and (max-width: 1150px) {
+  .top { gap: 18px; padding-inline: 18px; }
+  .topnav { gap: 14px; }
+  .topnav svg { display: none; }
+}
+@media (min-width: 681px) and (max-width: 870px) {
+  .top { height: auto; display: grid; grid-template-columns: 1fr auto; gap: 0 12px; padding-top: 8px; }
+  .top .clock { grid-area: 1 / 2; }
+  .topnav { grid-area: 2 / 1 / 3 / -1; height: 44px; gap: 18px; }
+}
+@media (max-width: 680px) {
+  .topnav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 38px; height: auto; overflow: visible; }
+  .topnav > * { justify-content: center; padding: 0; }
+}
+.researchDialog { width: min(1060px, 96vw); max-height: 90vh; max-height: 90dvh; overflow: auto; padding: clamp(12px, 2.4vw, 26px); }
+.researchSettings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 14px; }
+.researchDialog label { display: grid; gap: 4px; color: var(--dim); font-size: 13px; }
+.researchDialog :is(input,select,textarea) { min-width: 0; width: 100%; padding: 6px 8px; color: var(--ink); }
+.researchToolbar, .researchActions, .ruleTools, .reportHead { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
+.researchToolbar { align-items: flex-end; margin-block: 15px; }
+.researchToolbar label { min-width: min(190px,100%); }
+.researchDialog :is(.researchToolbar,.ruleTools,.researchActions,.scrPager) button, .pickStrategyRow button {
+  padding: 6px 10px; border: 1px solid var(--line); font-size: 13px;
+}
+.researchDialog button:disabled { opacity: .45; cursor: default; }
+.researchDialog .primary { background: var(--gold); color: #20180c; font-weight: 650; }
+.researchDialog :is(fieldset,.researchReport) { min-width: 0; margin: 14px 0 0; border: 1px solid var(--line); border-radius: 7px; padding: 10px 12px; }
+.researchDialog legend, .researchDialog h3, .researchDialog h4 { font-weight: 600; font-size: 15px; margin: 0; }
+.researchDialog legend { padding: 0 5px; }
+.ruleTools { margin-bottom: 8px; }
+.ruleTools select { width: auto; }
+.researchNote, .researchActions span, #btSaved, .reportHead span { color: var(--dim); font-size: 13px; }
+.researchNote { margin: 12px 0; }
+.researchActions { justify-content: flex-end; }
+.researchActions span { margin-right: auto; }
+.reportHead { justify-content: space-between; margin: 6px 0 10px; }
+.researchMetrics, .researchSegments { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 6px 0 16px; }
+.researchMetrics > div, .researchSegments > div { display: grid; gap: 4px; padding: 8px; border-left: 2px solid var(--line); background: #181d21; }
+.researchMetrics small, .researchSegments small { color: var(--dim); }
+.researchMetrics strong, .researchSegments strong { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.equityLegend { display: inline-flex; align-items: center; gap: 5px; }
+.equityLegend i { width: 17px; height: 2px; background: var(--gold); }
+.equityLegend i + i { background: #88a8ce; margin-left: 8px; }
+#btCurve { margin-bottom: 16px; background: #101418; }
+#btCurve svg { display: block; width: 100%; height: 150px; }
+.equityScale { display: flex; justify-content: space-between; color: var(--dim); font: 12px var(--mono); padding: 3px 7px; }
+.researchDetails summary { cursor: pointer; }
+.pickStrategyRow { display: grid; grid-template-columns: minmax(0,2fr) minmax(0,1fr) auto; gap: 6px; margin: 6px 0; }
+.customPool { margin-top: 10px; }
+#pickResult td:nth-child(3) { min-width: 130px; white-space: normal; }
+@media (max-width: 680px) {
+  .researchSettings, .researchMetrics, .researchSegments { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .researchDialog fieldset, .researchDialog .researchReport { padding-inline: 8px; }
+  .researchToolbar label { flex: 1; min-width: 130px; }
+  .pickStrategyRow { grid-template-columns: minmax(0,1fr) minmax(0,1fr) auto; }
+}
